@@ -309,7 +309,6 @@ class UMFAnalyzer:
         cao = umf.get('CaO', 0)
         k2o = umf.get('K2O', 0)
         na2o = umf.get('Na2O', 0)
-        mgo = umf.get('MgO', 0)
 
         # SiO2:Al2O3 ratio (the most important in glaze chemistry)
         if al2o3 > 0:
@@ -528,22 +527,22 @@ class UMFAnalyzer:
                 )
             elif 'Al2O3' in warning and 'below' in warning:
                 recommendations.append(
-                    f'Low Al₂O₃ may make this glaze runny. Consider adding 2-5% kaolin or clay.'
+                    'Low Al₂O₃ may make this glaze runny. Consider adding 2-5% kaolin or clay.'
                 )
             elif 'Al2O3' in warning and 'exceeds' in warning:
                 recommendations.append(
-                    f'High Al₂O₃ may make this glaze matte or underfired. '
-                    f'Consider adding 5-10% silica or a small amount of frit.'
+                    'High Al₂O₃ may make this glaze matte or underfired. '
+                    'Consider adding 5-10% silica or a small amount of frit.'
                 )
             elif 'B2O3' in warning and 'exceeds' in warning:
                 recommendations.append(
-                    f'High B₂O₃ increases fluidity and may cause running. '
-                    f'Apply thinly (2 coats) and use a catch plate for testing.'
+                    'High B₂O₃ increases fluidity and may cause running. '
+                    'Apply thinly (2 coats) and use a catch plate for testing.'
                 )
             elif 'KNaO' in warning and 'exceeds' in warning:
                 recommendations.append(
-                    f'High alkali content increases thermal expansion and may cause crazing. '
-                    f'Test on your clay body before using on functional ware.'
+                    'High alkali content increases thermal expansion and may cause crazing. '
+                    'Test on your clay body before using on functional ware.'
                 )
 
         # CTE-based recommendations

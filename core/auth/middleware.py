@@ -50,7 +50,7 @@ class AuthMiddleware:
             return
 
         # Check if auth is enabled
-        if not getattr(app.config.get('MODE'), 'AUTH_ENABLED', False):
+        if not getattr(self.app.config.get('MODE'), 'AUTH_ENABLED', False):
             g.current_user = None
             return
 

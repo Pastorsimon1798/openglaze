@@ -6,7 +6,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import pytest
 import json
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 
 class TestRouteImports:

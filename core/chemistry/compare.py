@@ -7,7 +7,7 @@ or compare a tested glaze to a target formula.
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
 
-from .umf import calculate_umf, UMFResult
+from .umf import calculate_umf
 
 
 @dataclass
@@ -170,44 +170,44 @@ class RecipeComparator:
 
         interpretations = {
             'SiO2': {
-                'increased': f'More silica makes glaze more durable, harder, and glossier. May need higher temperature to melt.',
-                'decreased': f'Less silica makes glaze softer, more fluid, and potentially more matte.',
+                'increased': 'More silica makes glaze more durable, harder, and glossier. May need higher temperature to melt.',
+                'decreased': 'Less silica makes glaze softer, more fluid, and potentially more matte.',
             },
             'Al2O3': {
-                'increased': f'More alumina makes glaze stiffer, more matte, and more durable. Raises melting point.',
-                'decreased': f'Less alumina makes glaze more fluid and glossier. May run more.',
+                'increased': 'More alumina makes glaze stiffer, more matte, and more durable. Raises melting point.',
+                'decreased': 'Less alumina makes glaze more fluid and glossier. May run more.',
             },
             'CaO': {
-                'increased': f'More calcium promotes satin/matte surfaces and increases hardness.',
-                'decreased': f'Less calcium reduces hardness and moves glaze toward glossier surfaces.',
+                'increased': 'More calcium promotes satin/matte surfaces and increases hardness.',
+                'decreased': 'Less calcium reduces hardness and moves glaze toward glossier surfaces.',
             },
             'MgO': {
-                'increased': f'More magnesium promotes dry matte surfaces and can cause crawling.',
-                'decreased': f'Less magnesium reduces matte tendency and crawling risk.',
+                'increased': 'More magnesium promotes dry matte surfaces and can cause crawling.',
+                'decreased': 'Less magnesium reduces matte tendency and crawling risk.',
             },
             'K2O': {
-                'increased': f'More potassium increases flux and gloss but raises thermal expansion (crazing risk).',
-                'decreased': f'Less potassium reduces flux and gloss, lowers thermal expansion.',
+                'increased': 'More potassium increases flux and gloss but raises thermal expansion (crazing risk).',
+                'decreased': 'Less potassium reduces flux and gloss, lowers thermal expansion.',
             },
             'Na2O': {
-                'increased': f'More sodium increases flux and gloss but raises thermal expansion (crazing risk).',
-                'decreased': f'Less sodium reduces flux and gloss, lowers thermal expansion.',
+                'increased': 'More sodium increases flux and gloss but raises thermal expansion (crazing risk).',
+                'decreased': 'Less sodium reduces flux and gloss, lowers thermal expansion.',
             },
             'Fe2O3': {
-                'increased': f'More iron darkens color, promotes tenmoku/iron effects.',
-                'decreased': f'Less iron lightens color, reduces iron-based effects.',
+                'increased': 'More iron darkens color, promotes tenmoku/iron effects.',
+                'decreased': 'Less iron lightens color, reduces iron-based effects.',
             },
             'B2O3': {
-                'increased': f'More boron lowers melting point significantly. Running risk at high levels.',
-                'decreased': f'Less boron raises melting point. May need higher cone.',
+                'increased': 'More boron lowers melting point significantly. Running risk at high levels.',
+                'decreased': 'Less boron raises melting point. May need higher cone.',
             },
             'ZnO': {
-                'increased': f'More zinc promotes crystal formation and can cause crawling.',
-                'decreased': f'Less zinc reduces crystal tendency and crawling risk.',
+                'increased': 'More zinc promotes crystal formation and can cause crawling.',
+                'decreased': 'Less zinc reduces crystal tendency and crawling risk.',
             },
             'TiO2': {
-                'increased': f'More titanium increases opacity and can promote crystal growth.',
-                'decreased': f'Less titanium reduces opacity and crystal tendency.',
+                'increased': 'More titanium increases opacity and can promote crystal growth.',
+                'decreased': 'Less titanium reduces opacity and crystal tendency.',
             },
         }
 
@@ -226,12 +226,12 @@ class RecipeComparator:
 
         interpretations = {
             'sio2_al2o3': {
-                'increased': f'Higher SiO₂:Al₂O₃ pushes glaze toward glossy. More durable, harder surface.',
-                'decreased': f'Lower SiO₂:Al₂O₃ pushes glaze toward matte. Softer, potentially more fluid.',
+                'increased': 'Higher SiO₂:Al₂O₃ pushes glaze toward glossy. More durable, harder surface.',
+                'decreased': 'Lower SiO₂:Al₂O₃ pushes glaze toward matte. Softer, potentially more fluid.',
             },
             'flux_alumina': {
-                'increased': f'More flux relative to alumina = more fluid, glossier glaze.',
-                'decreased': f'Less flux relative to alumina = stiffer, more matte glaze.',
+                'increased': 'More flux relative to alumina = more fluid, glossier glaze.',
+                'decreased': 'Less flux relative to alumina = stiffer, more matte glaze.',
             },
         }
 

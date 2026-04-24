@@ -77,11 +77,11 @@ class BatchAnalyzer:
         Returns:
             Dict mapping glaze name to UMF result dict.
         """
-        import sqlite3
+        from core.db import connect_db
 
         glazes = {}
         try:
-            conn = sqlite3.connect(self.db_path)
+            conn = connect_db(self.db_path)
             user_filter = ''
             params = []
             if self.user_id:
@@ -112,11 +112,11 @@ class BatchAnalyzer:
         Returns:
             Dict mapping combination ID to compatibility result dict.
         """
-        import sqlite3
+        from core.db import connect_db
 
         results = {}
         try:
-            conn = sqlite3.connect(self.db_path)
+            conn = connect_db(self.db_path)
             user_filter = ''
             params = []
             if self.user_id:

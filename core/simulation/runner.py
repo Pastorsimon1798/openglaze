@@ -198,10 +198,10 @@ def _compatibility_context(compat) -> str:
 
 def _load_chemistry_rules(db_path: str) -> str:
     """Load relevant chemistry rules from the database."""
-    import sqlite3
+    from core.db import connect_db
 
     try:
-        conn = sqlite3.connect(db_path)
+        conn = connect_db(db_path)
         cursor = conn.cursor()
         cursor.execute("""
             SELECT category, title, description, confidence

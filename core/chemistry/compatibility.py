@@ -16,7 +16,7 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional
 
 from .umf import UMFResult, calculate_umf
-from .thermal_expansion import calculate_cte, cte_compatibility
+from .thermal_expansion import calculate_cte
 from .data_loader import load_layering_rules
 
 logger = logging.getLogger(__name__)
@@ -155,10 +155,10 @@ class CompatibilityAnalyzer:
                         'Add recipe data for both glazes to get a full compatibility analysis.',
                     ],
                 )
-            warnings.append(f'Base glaze recipe not parseable — limited analysis')
+            warnings.append('Base glaze recipe not parseable — limited analysis')
 
         if top_umf is None or not top_umf.success:
-            warnings.append(f'Top glaze recipe not parseable — limited analysis')
+            warnings.append('Top glaze recipe not parseable — limited analysis')
 
         # Only do full analysis if both UMFs are available
         if base_umf and base_umf.success and top_umf and top_umf.success:
@@ -259,8 +259,6 @@ class CompatibilityAnalyzer:
     ) -> List[str]:
         """Build specific, actionable testing recommendations."""
         recommendations = []
-        base_ratio = base_umf.ratios.get('sio2_al2o3', 3.0)
-        top_ratio = top_umf.ratios.get('sio2_al2o3', 3.0)
 
         # Score-based overall recommendation
         if score >= 0.8:
@@ -283,16 +281,16 @@ class CompatibilityAnalyzer:
             if thermal_mismatch > 0:
                 # Top expands more
                 recommendations.append(
-                    f'Top glaze has higher CTE (expands more when heated). Crazing risk on cooling. '
-                    f'Test on your clay body. If crazing occurs: add 5-10% silica to the top glaze, '
-                    f'or replace some feldspar with clay.'
+                    'Top glaze has higher CTE (expands more when heated). Crazing risk on cooling. '
+                    'Test on your clay body. If crazing occurs: add 5-10% silica to the top glaze, '
+                    'or replace some feldspar with clay.'
                 )
             else:
                 # Base expands more
                 recommendations.append(
-                    f'Base glaze has higher CTE (expands more when heated). Shivering risk on cooling. '
-                    f'Test on your clay body. If shivering occurs: add 2-5% nepheline syenite to the base, '
-                    f'or reduce silica in the top glaze.'
+                    'Base glaze has higher CTE (expands more when heated). Shivering risk on cooling. '
+                    'Test on your clay body. If shivering occurs: add 2-5% nepheline syenite to the base, '
+                    'or reduce silica in the top glaze.'
                 )
             recommendations.append(
                 f'CTE difference of {abs_mismatch:.1f}×10⁻⁶/°C is significant. '
@@ -300,51 +298,51 @@ class CompatibilityAnalyzer:
             )
         elif thermal_risk == 'medium':
             recommendations.append(
-                f'Moderate thermal mismatch. Fire a test tile and check for crazing/shivering '
-                f'after the piece has fully cooled (wait 24 hours).'
+                'Moderate thermal mismatch. Fire a test tile and check for crazing/shivering '
+                'after the piece has fully cooled (wait 24 hours).'
             )
 
         # Fluidity recommendations
         if 'run' in fluidity.lower():
             recommendations.append(
-                f'Top glaze is more fluid than base — running risk at edges and drips. '
-                f'Apply top glaze thinly (2 coats max). Test on a vertical tile first. '
-                f'Use a catch plate or kiln wash under test pieces.'
+                'Top glaze is more fluid than base — running risk at edges and drips. '
+                'Apply top glaze thinly (2 coats max). Test on a vertical tile first. '
+                'Use a catch plate or kiln wash under test pieces.'
             )
         elif 'crawl' in fluidity.lower():
             recommendations.append(
-                f'Top glaze is stiffer than base — crawling risk at thin spots. '
-                f'Apply base glaze thickly (3-4 coats), top glaze medium (2-3 coats). '
-                f'Ensure base is fully dry before applying top. Test on flat tile first.'
+                'Top glaze is stiffer than base — crawling risk at thin spots. '
+                'Apply base glaze thickly (3-4 coats), top glaze medium (2-3 coats). '
+                'Ensure base is fully dry before applying top. Test on flat tile first.'
             )
         elif 'moderate' in fluidity.lower():
             recommendations.append(
-                f'Moderate fluidity difference. Standard application (2-3 coats each) should work. '
-                f'Monitor edges on vertical test tile.'
+                'Moderate fluidity difference. Standard application (2-3 coats each) should work. '
+                'Monitor edges on vertical test tile.'
             )
 
         # Oxide interaction recommendations
         for interaction in oxide_interactions:
             if 'suppresses copper red' in interaction.lower():
                 recommendations.append(
-                    f'Iron in one layer suppresses copper red in the other. '
-                    f'If you want red: use an iron-free base, or move copper to the base layer. '
-                    f'If you want a different effect: this may produce interesting browns/greens.'
+                    'Iron in one layer suppresses copper red in the other. '
+                    'If you want red: use an iron-free base, or move copper to the base layer. '
+                    'If you want a different effect: this may produce interesting browns/greens.'
                 )
             elif 'zinc destroys pink' in interaction.lower():
                 recommendations.append(
-                    f'Zinc destroys chrome-tin pink. Remove zinc from one layer, '
-                    f'or accept that pink will not develop.'
+                    'Zinc destroys chrome-tin pink. Remove zinc from one layer, '
+                    'or accept that pink will not develop.'
                 )
             elif 'very high combined iron' in interaction.lower():
                 recommendations.append(
-                    f'High combined iron may produce very dark/muddy results. '
-                    f'Consider reducing iron in one layer, or embrace the tenmoku-like darkness.'
+                    'High combined iron may produce very dark/muddy results. '
+                    'Consider reducing iron in one layer, or embrace the tenmoku-like darkness.'
                 )
             elif 'chromium' in interaction.lower():
                 recommendations.append(
-                    f'Chromium can volatilize and discolor nearby pieces. '
-                    f'Place test tile away from other work in the kiln. Use ventilation.'
+                    'Chromium can volatilize and discolor nearby pieces. '
+                    'Place test tile away from other work in the kiln. Use ventilation.'
                 )
 
         # Cone recommendation

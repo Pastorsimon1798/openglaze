@@ -1,10 +1,11 @@
 """Experiment management operations."""
 
+from core.db import connect_db
 import sqlite3
 from typing import List, Optional
 from datetime import datetime
 
-from .models import Experiment, ExperimentStage
+from .models import Experiment
 
 
 class ExperimentManager:
@@ -32,7 +33,7 @@ class ExperimentManager:
 
     def _get_connection(self) -> sqlite3.Connection:
         """Get database connection."""
-        conn = sqlite3.connect(self.db_path)
+        conn = connect_db(self.db_path)
         conn.row_factory = sqlite3.Row
         return conn
 

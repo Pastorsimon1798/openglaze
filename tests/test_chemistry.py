@@ -1,9 +1,8 @@
 """Tests for the chemistry engine — UMF, CTE, compatibility, parser."""
 
-import pytest
 
-from core.chemistry.umf import calculate_umf, UMFAnalyzer
-from core.chemistry.thermal_expansion import calculate_cte, cte_compatibility, clay_body_compatibility
+from core.chemistry.umf import calculate_umf
+from core.chemistry.thermal_expansion import cte_compatibility, clay_body_compatibility
 from core.chemistry.compatibility import CompatibilityAnalyzer
 from core.chemistry.parser import parse_recipe_string
 from core.chemistry.batch import calculate_batch
@@ -392,7 +391,7 @@ class TestSubstitutions:
         assert result.success is True
 
         # Now test with an unknown that has a substitute
-        result2 = suggest_substitutions('Custer Feldspar 45, Unknown Cobalt Oxide 2, Silica 30, Whiting 23')
+        suggest_substitutions('Custer Feldspar 45, Unknown Cobalt Oxide 2, Silica 30, Whiting 23')
         # The parser will flag "Unknown Cobalt Oxide" as unknown
         # But our suggestion engine won't find it because "Unknown Cobalt Oxide" != "Cobalt Oxide"
         # So let's use the engine directly for a material lookup

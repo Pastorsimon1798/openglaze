@@ -5,10 +5,9 @@ reformulate before wasting kiln space on problematic recipes.
 """
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 from .umf import UMFResult
-from .thermal_expansion import calculate_cte
 
 
 @dataclass

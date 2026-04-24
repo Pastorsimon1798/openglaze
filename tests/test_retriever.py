@@ -1,6 +1,5 @@
 """Tests for ContextRetriever — RAG-style context injection for Kama."""
 
-import pytest
 
 
 class TestExtractGlazeNames:

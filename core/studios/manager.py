@@ -1,6 +1,7 @@
 """Studio management: groups, members, and lab queue."""
 
 import secrets
+from core.db import connect_db
 import sqlite3
 import logging
 from datetime import datetime, timedelta
@@ -25,7 +26,7 @@ class StudioManager:
         self.user_id = user_id
 
     def _get_connection(self) -> sqlite3.Connection:
-        conn = sqlite3.connect(self.db_path)
+        conn = connect_db(self.db_path)
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA foreign_keys = ON")
         return conn

@@ -5,9 +5,10 @@ Retrieves relevant glaze, chemistry, and combination data from the database
 and formats it as markdown for injection into the system prompt.
 """
 
+from core.db import connect_db
 import sqlite3
 import logging
-from typing import Dict, List, Set
+from typing import Dict, List
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +28,7 @@ class ContextRetriever:
 
     def _build_glaze_index(self) -> None:
         """Build a lowercase name -> row dict from the glazes table."""
-        conn = sqlite3.connect(self._db_path)
+        conn = connect_db(self._db_path)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute('SELECT name, family, color, chemistry, behavior, warning FROM glazes')
@@ -66,7 +67,7 @@ class ContextRetriever:
         if not words:
             return []
 
-        conn = sqlite3.connect(self._db_path)
+        conn = connect_db(self._db_path)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
 
@@ -103,7 +104,7 @@ class ContextRetriever:
         """Find combinations where base or top matches a mentioned glaze."""
         if not glaze_names:
             return []
-        conn = sqlite3.connect(self._db_path)
+        conn = connect_db(self._db_path)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         placeholders = ','.join(['?'] * len(glaze_names))
@@ -132,7 +133,7 @@ class ContextRetriever:
         if not words:
             return []
 
-        conn = sqlite3.connect(self._db_path)
+        conn = connect_db(self._db_path)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         seen = set()

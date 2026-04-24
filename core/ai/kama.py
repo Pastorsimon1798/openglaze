@@ -13,10 +13,8 @@ import threading
 from pathlib import Path
 from typing import Generator, Optional, List, Dict, Any
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
-from collections import defaultdict
 import requests
-from requests.exceptions import RequestException, Timeout, ConnectionError
+from requests.exceptions import Timeout, ConnectionError
 
 logger = logging.getLogger(__name__)
 
@@ -440,7 +438,7 @@ When predicting, always:
 
                 return response.json()
 
-            except (Timeout, ConnectionError) as e:
+            except (Timeout, ConnectionError):
                 if attempt < self.max_retries - 1:
                     time.sleep(2 ** attempt)  # Exponential backoff
                     continue

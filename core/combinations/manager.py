@@ -1,9 +1,9 @@
 """Combination management operations."""
 
-import sqlite3
 from typing import List, Optional, Dict
 from collections import defaultdict
 
+from core.db import connect_db
 from .models import Combination
 
 
@@ -28,9 +28,9 @@ class CombinationManager:
         self.db_path = db_path
         self.user_id = user_id
 
-    def _get_connection(self) -> sqlite3.Connection:
+    def _get_connection(self):
         """Get database connection."""
-        conn = sqlite3.connect(self.db_path)
+        conn = connect_db(self.db_path)
         conn.row_factory = sqlite3.Row
         return conn
 

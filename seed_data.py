@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Seed OpenGlaze demo database with Default Studio glazes and sample data."""
-import sqlite3, json, os, sys, yaml
+from core.db import connect_db, json, os, sys, yaml
 from datetime import datetime, timedelta
 
 DEMO_USER_ID = "demo-user-001"
@@ -23,7 +23,7 @@ PRESET_COMBINATIONS = [
 ]
 
 def get_db():
-    conn = sqlite3.connect('glaze.db')
+    conn = connect_db('glaze.db')
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -143,8 +143,6 @@ if __name__ == "__main__":
                 with open(community_path, 'r') as f:
                     community_glazes = yaml.safe_load(f).get('glazes', [])
                 glazes.extend(community_glazes)
-        print(f"Loading glazes from: {template_path}")
-        with open(template_path, 'r') as f: glazes = yaml.safe_load(f).get('glazes', [])
         count = seed_glazes(conn, glazes)
         seed_demo_stats(conn)
         seed_badges(conn)

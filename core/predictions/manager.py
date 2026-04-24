@@ -1,9 +1,6 @@
 """Prediction manager: create, resolve, leaderboard."""
-import json
 import logging
-from typing import Optional
 
-from .models import Prediction
 from .market import generate_ai_prediction
 
 logger = logging.getLogger(__name__)

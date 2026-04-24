@@ -1,8 +1,8 @@
 """Glaze management operations."""
 
+from core.db import connect_db
 import sqlite3
 from typing import List, Optional
-from pathlib import Path
 
 from .models import Glaze
 
@@ -29,7 +29,7 @@ class GlazeManager:
 
     def _get_connection(self) -> sqlite3.Connection:
         """Get database connection."""
-        conn = sqlite3.connect(self.db_path)
+        conn = connect_db(self.db_path)
         conn.row_factory = sqlite3.Row
         return conn
 

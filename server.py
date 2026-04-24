@@ -17,9 +17,6 @@ import json
 import sqlite3
 import logging
 import secrets
-import math
-import yaml
-from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
@@ -33,15 +30,18 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Keep a reference to in-memory DB connections so they don't get garbage-collected
+_memory_db_connections: dict = {}
+
 # Import configuration
-from config import detect_mode, load_config, ModeConfig, ConfigurationError
+from config import load_config, ConfigurationError
 
 # Import security
 from core.security import init_security, rate_limit, get_rate_limiter
 
 # Import auth (cloud mode)
 try:
-    from core.auth import AuthMiddleware, get_current_user, get_user_id, require_auth, require_tier
+    from core.auth import AuthMiddleware, get_current_user, get_user_id, require_auth
     AUTH_AVAILABLE = True
 except ImportError:
     AUTH_AVAILABLE = False
@@ -51,9 +51,9 @@ except ImportError:
 from core.glazes import GlazeManager, Glaze
 from core.combinations import CombinationManager, Combination
 from core.experiments import ExperimentManager, Experiment
-from core.ai import KamaAI, ask_kama_stream, get_kama
+from core.ai import get_kama
 from core.ai.context import ContextRetriever
-from core.upload_utils import allowed_file, save_uploaded_file, MAX_FILE_SIZE
+from core.upload_utils import save_uploaded_file
 
 try:
     from core.studios import StudioManager
@@ -1208,9 +1208,9 @@ def create_app(config: dict = None) -> Flask:
         """Find a demo glaze by name (case-insensitive)."""
         demos = _load_demo_glazes()
         name_lower = name.lower().strip()
-        for g in demos:
-            if g.get('name', '').lower().strip() == name_lower or g.get('id', '').lower().strip() == name_lower:
-                return g
+        for demo in demos:
+            if demo.get('name', '').lower().strip() == name_lower or demo.get('id', '').lower().strip() == name_lower:
+                return demo
         return None
 
     @app.route('/api/demo/glazes')
@@ -1609,7 +1609,8 @@ def create_app(config: dict = None) -> Flask:
 
 def init_db(db_path: str):
     """Initialize database with schema and seed data."""
-    conn = sqlite3.connect(db_path)
+    from core.db import connect_db
+    conn = connect_db(db_path)
     cursor = conn.cursor()
 
     schema_path = Path(__file__).parent / 'core' / 'schema.sql'
@@ -1629,10 +1630,13 @@ def init_db(db_path: str):
     except Exception as e:
         logger.debug(f"Lab claim cleanup skipped: {e}")
 
-    conn.close()
-
     # Seed database with glazes and combinations
-    seed_database(db_path)
+    seed_database(conn)
+    if db_path == ':memory:':
+        # Keep connection alive so the in-memory database persists
+        _memory_db_connections['main'] = conn
+    else:
+        conn.close()
 
 
 def _run_migrations(conn):
@@ -1690,15 +1694,13 @@ def _run_migrations(conn):
     logger.info("Database migrations completed")
 
 
-def seed_database(db_path: str):
+def seed_database(conn):
     """Seed database with studio glazes and combinations if empty."""
-    conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
     # Only seed if glazes table is empty
     cursor.execute('SELECT COUNT(*) FROM glazes')
     if cursor.fetchone()[0] > 0:
-        conn.close()
         return
 
     logger.info("Seeding database with studio glazes and combinations...")
@@ -1708,17 +1710,16 @@ def seed_database(db_path: str):
     template = get_studio_glazes()
     if not template:
         logger.warning("No template found — skipping seed")
-        conn.close()
         return
 
     # Insert glazes from YAML
-    for g in template.get('glazes', []):
+    for glaze in template.get('glazes', []):
         cursor.execute('''INSERT OR IGNORE INTO glazes
             (id, name, family, hex, chemistry, behavior, layering, warning, recipe, catalog_code, food_safe, notes)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-            (g.get('id'), g.get('name'), g.get('family'), g.get('hex'),
-             g.get('chemistry'), g.get('behavior'), g.get('layering'),
-             g.get('warning'), g.get('recipe'), g.get('catalog_code'), g.get('food_safe'), g.get('notes')))
+            (glaze.get('id'), glaze.get('name'), glaze.get('family'), glaze.get('hex'),
+             glaze.get('chemistry'), glaze.get('behavior'), glaze.get('layering'),
+             glaze.get('warning'), glaze.get('recipe'), glaze.get('catalog_code'), glaze.get('food_safe'), glaze.get('notes')))
 
     # Insert research-backed combinations
     for c in template.get('research_backed_combinations', []):
@@ -2348,13 +2349,13 @@ def seed_database(db_path: str):
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)''', rule)
 
     conn.commit()
-    conn.close()
     logger.info("Database seeded successfully")
 
 
 def get_db_connection(db_path: str) -> sqlite3.Connection:
     """Get database connection."""
-    conn = sqlite3.connect(db_path)
+    from core.db import connect_db
+    conn = connect_db(db_path)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -2550,7 +2551,7 @@ if __name__ == '__main__':
     port = getattr(mode, 'PORT', 8767)
 
     print("=" * 50)
-    print(f"OpenGlaze - Unified Glaze Management")
+    print("OpenGlaze - Unified Glaze Management")
     print(f"Mode: {mode.name if hasattr(mode, 'name') else 'personal'}")
     print(f"Running on http://{host}:{port}")
     print(f"Debug: {debug}")

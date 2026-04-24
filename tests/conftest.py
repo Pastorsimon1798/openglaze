@@ -1,7 +1,7 @@
 """Shared test fixtures for OpenGlaze tests."""
 
 import os
-import sqlite3
+from core.db import connect_db
 import tempfile
 from pathlib import Path
 import pytest
@@ -12,7 +12,7 @@ def test_db_path():
     """Create a temp SQLite DB with schema loaded and sample data seeded."""
     fd, path = tempfile.mkstemp(suffix='.db')
     os.close(fd)
-    conn = sqlite3.connect(path)
+    conn = connect_db(path)
     conn.executescript(_SCHEMA_SQL)
     conn.executescript(_SEED_SQL)
     conn.commit()

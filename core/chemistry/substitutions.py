@@ -6,10 +6,8 @@ Helps users replace unavailable materials with alternatives based on:
 3. Parser feedback when materials can't be resolved
 """
 
-import json
 import logging
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Dict, List, Optional
 
 from .materials import get_material, MATERIALS
