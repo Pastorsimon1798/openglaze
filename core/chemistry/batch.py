@@ -64,9 +64,10 @@ def calculate_batch(recipe: Union[Dict[str, float], str], batch_size_grams: floa
 class BatchAnalyzer:
     """Batch UMF and compatibility analysis across all glazes and combinations."""
 
-    def __init__(self, db_path: str, user_id: Optional[str] = None):
+    def __init__(self, db_path: str, user_id: Optional[str] = None, cone: Optional[int] = None):
         self.db_path = db_path
         self.user_id = user_id
+        self.cone = cone
         self.umf_analyzer = UMFAnalyzer()
         self.compat_analyzer = CompatibilityAnalyzer()
 
@@ -97,7 +98,7 @@ class BatchAnalyzer:
                     glazes[name] = {'success': False, 'error': 'No recipe available'}
                     continue
 
-                umf = calculate_umf(recipe)
+                umf = calculate_umf(recipe, cone=self.cone)
                 glazes[name] = umf.to_dict()
 
         except Exception as e:
@@ -140,6 +141,7 @@ class BatchAnalyzer:
                     top_recipe=top_recipe,
                     base_name=base_name or '',
                     top_name=top_name or '',
+                    cone=self.cone,
                 )
                 results[combo_id] = compat.to_dict()
 

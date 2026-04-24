@@ -526,7 +526,14 @@ def create_app(config: dict = None) -> Flask:
     @app.route('/api/chemistry/batch', methods=['POST'])
     @rate_limit(requests_per_minute=5)
     def batch_chemistry_analysis():
-        """Run batch UMF and compatibility analysis for all glazes and combinations."""
+        """Run batch UMF and compatibility analysis for all glazes and combinations.
+
+        Request body (optional):
+            cone: Target firing cone for all analyses (default: 10)
+        """
+        data = request.json or {}
+        cone = data.get('cone', 10)
+
         try:
             from core.chemistry import BatchAnalyzer
         except ImportError:
@@ -535,7 +542,8 @@ def create_app(config: dict = None) -> Flask:
         try:
             analyzer = BatchAnalyzer(
                 db_path=config.get('database', {}).get('path', 'glaze.db'),
-                user_id=get_current_user_id() if features['auth_enabled'] else None
+                user_id=get_current_user_id() if features['auth_enabled'] else None,
+                cone=int(cone) if cone else 10,
             )
             report = analyzer.generate_report()
             return jsonify(report)
@@ -561,6 +569,40 @@ def create_app(config: dict = None) -> Flask:
             return jsonify(result)
         except Exception as e:
             logger.error(f"Recipe scaling error: {e}")
+            return jsonify({"error": str(e)}), 500
+
+    @app.route('/api/chemistry/compare', methods=['POST'])
+    @rate_limit(requests_per_minute=60)
+    def compare_glaze_recipes():
+        """Compare two glaze recipes chemically.
+
+        Request body:
+            recipe_a: First recipe string
+            recipe_b: Second recipe string
+            name_a: Name for first recipe (optional)
+            name_b: Name for second recipe (optional)
+            cone: Target firing cone (optional, default 10)
+        """
+        data = request.json or {}
+        recipe_a = data.get('recipe_a', '')
+        recipe_b = data.get('recipe_b', '')
+        name_a = data.get('name_a', 'Recipe A')
+        name_b = data.get('name_b', 'Recipe B')
+        cone = data.get('cone', 10)
+
+        if not recipe_a or not recipe_b:
+            return jsonify({"error": "recipe_a and recipe_b are required"}), 400
+
+        try:
+            from core.chemistry import compare_recipes
+            result = compare_recipes(
+                recipe_a, recipe_b,
+                name_a=name_a, name_b=name_b,
+                cone=int(cone) if cone else 10,
+            )
+            return jsonify(result.to_dict())
+        except Exception as e:
+            logger.error(f"Recipe comparison error: {e}")
             return jsonify({"error": str(e)}), 500
 
     @app.route('/api/chemistry/substitutions', methods=['POST'])

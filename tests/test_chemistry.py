@@ -403,6 +403,51 @@ class TestSubstitutions:
         assert any('Carbonate' in s.substitute for s in suggestions)
 
 
+class TestRecipeComparison:
+    """Recipe comparison tests."""
+
+    def test_compare_recipes_finds_differences(self):
+        """Comparison should identify chemical differences between recipes."""
+        from core.chemistry.compare import compare_recipes
+        result = compare_recipes(
+            'Custer Feldspar 45, Silica 25, Whiting 18, EPK 12, Red Iron Oxide 1.5',
+            'Custer Feldspar 50, Silica 20, Whiting 15, EPK 12, Red Iron Oxide 8',
+            'Celadon', 'Tenmoku', cone=10
+        )
+        assert result.success is True
+        assert len(result.differences) > 0
+        # Should find Fe2O3 difference
+        fe_diffs = [d for d in result.differences if d.metric == 'Fe2O3']
+        assert len(fe_diffs) > 0
+        assert fe_diffs[0].delta > 0  # Tenmoku has more iron
+
+    def test_compare_recipes_interpretation_present(self):
+        """Each difference should include a human interpretation."""
+        from core.chemistry.compare import compare_recipes
+        result = compare_recipes(
+            'Custer Feldspar 45, Silica 25, Whiting 18, EPK 12',
+            'Custer Feldspar 45, Silica 25, Whiting 18, EPK 12',
+            'Same A', 'Same B', cone=10
+        )
+        assert result.success is True
+        # Identical recipes should have minimal differences
+        significant = [d for d in result.differences
+                       if d.category == 'oxide' and abs(d.delta or 0) > 0.01]
+        assert len(significant) == 0
+
+    def test_compare_recipes_surface_change(self):
+        """Comparison should detect surface prediction changes."""
+        from core.chemistry.compare import compare_recipes
+        result = compare_recipes(
+            'Custer Feldspar 45, Silica 25, Whiting 18, EPK 12',
+            'Nepheline Syenite 30, Silica 5, Whiting 15, EPK 40, Dolomite 10',
+            'Glossy', 'Matte', cone=10
+        )
+        assert result.success is True
+        surface_diffs = [d for d in result.differences if d.metric == 'surface_prediction']
+        assert len(surface_diffs) > 0
+
+
 class TestDefectPrediction:
     """Glaze defect prediction tests."""
 
