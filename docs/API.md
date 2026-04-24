@@ -217,61 +217,99 @@ Authorization: Bearer <token>
 ### Calculate UMF
 
 ```http
-POST /api/chemistry/umf
-Content-Type: application/json
+GET /api/glazes/<glaze_id>/umf
 Authorization: Bearer <token>
-
-{
-  "recipe": {
-    "Feldspar": 45,
-    "Silica": 30,
-    "Whiting": 15,
-    "Kaolin": 10
-  }
-}
 ```
 
 **Response:**
 
 ```json
 {
-  "umf": {
+  "success": true,
+  "recipe_parsed": true,
+  "umf_formula": {
     "SiO2": 3.2,
     "Al2O3": 0.45,
-    "CaO": 0.55
+    "CaO": 0.55,
+    "K2O": 0.3,
+    "Na2O": 0.15
   },
-  "analysis": {
-    "silica_alumina_ratio": 7.11,
-    "predicted_surface": "glossy",
-    "thermal_expansion": 6.2
-  }
+  "ratios": {
+    "silica_alumina": 7.11,
+    "flux_alumina": 1.22
+  },
+  "surface_prediction": "glossy",
+  "thermal_expansion": 6.2,
+  "limit_warnings": [],
+  "warnings": [],
+  "missing_materials": [],
+  "error": null,
+  "glaze_id": "celadon",
+  "glaze_name": "Celadon"
 }
 ```
+
+**Fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `success` | boolean | Whether calculation succeeded |
+| `recipe_parsed` | boolean | Whether the recipe was parsed without errors |
+| `umf_formula` | object | Unity Molecular Formula (fluxes sum to 1.0) |
+| `ratios` | object | Key ratios: `silica_alumina`, `flux_alumina` |
+| `surface_prediction` | string | Predicted surface: `matte`, `satin`, `glossy` |
+| `thermal_expansion` | float | CTE in ×10⁻⁶/°C (Appen molar method) |
+| `limit_warnings` | array | UMF values outside recommended ranges |
+| `warnings` | array | General warnings |
+| `missing_materials` | array | Materials that could not be resolved |
+| `error` | string | Error message if `success` is false |
 
 ### Check Compatibility
 
 ```http
-POST /api/chemistry/compatibility
-Content-Type: application/json
+GET /api/combinations/<combo_id>/compatibility
 Authorization: Bearer <token>
-
-{
-  "base_id": 1,
-  "top_id": 2
-}
 ```
 
 **Response:**
 
 ```json
 {
+  "success": true,
   "compatible": true,
-  "risk_level": "low",
-  "predicted_effect": "subtle breaking at edges",
+  "score": 0.85,
+  "risk_factors": [],
+  "warnings": ["Ensure both glazes are at the same maturity at target cone"],
+  "recommended_order": "base then top",
+  "thermal_expansion_risk": "low",
   "thermal_expansion_delta": 0.3,
-  "warnings": ["Ensure both glazes are at the same maturity at target cone"]
+  "cte_base": 6.2,
+  "cte_top": 6.5,
+  "fluidity_interaction": "similar",
+  "oxide_interactions": [],
+  "base_umf": {...},
+  "top_umf": {...}
 }
 ```
+
+**Fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `success` | boolean | Whether analysis succeeded |
+| `compatible` | boolean | Whether the combination is predicted compatible |
+| `score` | float | Compatibility score 0.0–1.0 (higher = better) |
+| `risk_factors` | array | Named risk factors (e.g., `thermal_expansion_mismatch`) |
+| `warnings` | array | Advisory warnings |
+| `recommended_order` | string | Suggested layering order |
+| `thermal_expansion_risk` | string | `low`, `medium`, `high`, or `unknown` |
+| `thermal_expansion_delta` | float | Absolute CTE difference in ×10⁻⁶/°C |
+| `cte_base` | float | Base glaze CTE in ×10⁻⁶/°C |
+| `cte_top` | float | Top glaze CTE in ×10⁻⁶/°C |
+| `fluidity_interaction` | string | `similar`, `different`, or `unknown` |
+| `oxide_interactions` | array | Specific oxide interaction warnings |
+| `base_umf` | object | Full UMF result for base glaze |
+| `top_umf` | object | Full UMF result for top glaze |
 
 ### Scale Recipe
 
@@ -280,16 +318,12 @@ POST /api/chemistry/scale
 Content-Type: application/json
 
 {
-  "recipe": {
-    "Feldspar": 45,
-    "Silica": 30,
-    "Whiting": 15,
-    "Kaolin": 10
-  },
-  "batch_size_grams": 5000,
-  "unit": "grams"
+  "recipe": "Feldspar 45, Silica 30, Whiting 15, Kaolin 10",
+  "batch_size_grams": 5000
 }
 ```
+
+Recipe can also be passed as an object with material names as keys and percentages as values.
 
 **Response:**
 
