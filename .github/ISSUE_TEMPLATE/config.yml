@@ -1,0 +1,13 @@
+blank_issues_enabled: false
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/Pastorsimon1798/openglaze/discussions
+    about: Ask questions, share ideas, or get help from the community
+
+  - name: Documentation
+    url: https://github.com/Pastorsimon1798/openglaze/tree/master/docs
+    about: Check the docs before opening an issue
+
+  - name: Security Vulnerability
+    url: https://github.com/Pastorsimon1798/openglaze/blob/master/SECURITY.md
+    about: Please report security issues privately following our security policy

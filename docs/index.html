@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenGlaze — Open Source Glaze Management for Ceramic Artists</title>
+    <meta name="description" content="OpenGlaze is a 100% open-source platform for ceramic artists and studios to manage glaze recipes, track firings, and collaborate on glaze development.">
+    <meta name="keywords" content="ceramics, glaze, pottery, open source, glaze management, UMF, recipe calculator">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="OpenGlaze — Open Source Glaze Management">
+    <meta property="og:description" content="Professional ceramic glaze management. 100% open source. Own your data.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://openglaze.com">
+    <meta property="og:image" content="https://openglaze.com/og-image.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OpenGlaze">
+    <meta name="twitter:description" content="Open source glaze management for ceramic artists">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --celadon-50: #f4f9f6;
+            --celadon-100: #e3f0ea;
+            --celadon-200: #c7e0d4;
+            --celadon-300: #9cc9b4;
+            --celadon-400: #6ead90;
+            --celadon-500: #5a9078;
+            --celadon-600: #467560;
+            --celadon-700: #3a5e4e;
+            --celadon-800: #314c40;
+            --celadon-900: #2a3f36;
+            
+            --tenmoku-50: #fdf7f0;
+            --tenmoku-100: #f9ead6;
+            --tenmoku-200: #f2d4ad;
+            --tenmoku-300: #e8b47d;
+            --tenmoku-400: #d49352;
+            --tenmoku-500: #c17a4a;
+            --tenmoku-600: #a55f3a;
+            --tenmoku-700: #844831;
+            --tenmoku-800: #6d3b2d;
+            --tenmoku-900: #5a3228;
+            
+            --clay-50: #faf8f5;
+            --clay-100: #f2ede6;
+            --clay-200: #e5dbd0;
+            --clay-300: #d4c4b2;
+            --clay-400: #c4ab91;
+            --clay-500: #b59678;
+            --clay-600: #a88465;
+            --clay-700: #8c6d54;
+            --clay-800: #735a48;
+            --clay-900: #5e4b3d;
+            
+            --text-primary: #1a1a1a;
+            --text-secondary: #5a5a5a;
+            --text-muted: #8a8a8a;
+            --bg-primary: #faf8f5;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f2ede6;
+            --border: #e5dbd0;
+            
+            --font-display: 'Fraunces', Georgia, serif;
+            --font-body: 'DM Sans', system-ui, sans-serif;
+            
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 32px;
+            
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.08);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        h1, h2, h3, h4 {
+            font-family: var(--font-display);
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        
+        a {
+            color: var(--celadon-600);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        a:hover {
+            color: var(--celadon-700);
+        }
+        
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(250, 248, 245, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--celadon-400), var(--celadon-600));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--celadon-500), var(--celadon-600));
+            color: white;
+            box-shadow: 0 2px 8px rgba(90, 144, 120, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(90, 144, 120, 0.4);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--clay-50);
+            color: var(--text-primary);
+        }
+        
+        .btn-ghost {
+            background: transparent;
+            color: var(--celadon-600);
+        }
+        
+        .btn-ghost:hover {
+            background: var(--celadon-50);
+        }
+        
+        .btn-sm {
+            padding: 6px 16px;
+            font-size: 0.85rem;
+        }
+        
+        /* Hero */
+        .hero {
+            padding: 140px 24px 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+        
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--celadon-100);
+            color: var(--celadon-700);
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+        
+        .hero-badge span {
+            width: 8px;
+            height: 8px;
+            background: var(--celadon-500);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+        }
+        
+        .hero h1 em {
+            color: var(--celadon-600);
+            font-style: italic;
+        }
+        
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            max-width: 480px;
+        }
+        
+        .hero-cta {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+        
+        .hero-stats {
+            display: flex;
+            gap: 32px;
+        }
+        
+        .hero-stat {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .hero-stat strong {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--text-primary);
+        }
+        
+        .hero-stat span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        
+        .hero-visual {
+            position: relative;
+        }
+        
+        .hero-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: 32px;
+            border: 1px solid var(--border);
+        }
+        
+        .hero-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .hero-card h3 {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+        
+        .glaze-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .glaze-row:last-child {
+            border-bottom: none;
+        }
+        
+        .glaze-swatch {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            flex-shrink: 0;
+        }
+        
+        .glaze-info {
+            flex: 1;
+        }
+        
+        .glaze-info strong {
+            display: block;
+            font-size: 0.9rem;
+        }
+        
+        .glaze-info span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .glaze-tag {
+            padding: 2px 8px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        .tag-reduction {
+            background: var(--tenmoku-100);
+            color: var(--tenmoku-700);
+        }
+        
+        .tag-oxidation {
+            background: var(--celadon-100);
+            color: var(--celadon-700);
+        }
+        
+        /* Features */
+        .features {
+            padding: 80px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 64px;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+        
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        
+        .feature-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        
+        .feature-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        /* Showcase */
+        .showcase {
+            padding: 80px 24px;
+            background: linear-gradient(180deg, var(--bg-primary) 0%, var(--clay-50) 100%);
+        }
+        
+        .showcase-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+        
+        .showcase-content h2 {
+            font-size: 2.25rem;
+            margin-bottom: 20px;
+        }
+        
+        .showcase-content p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+        
+        .showcase-list {
+            list-style: none;
+            margin: 24px 0;
+        }
+        
+        .showcase-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            font-size: 0.95rem;
+        }
+        
+        .showcase-list li::before {
+            content: "✓";
+            width: 24px;
+            height: 24px;
+            background: var(--celadon-100);
+            color: var(--celadon-600);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .showcase-visual {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+        }
+        
+        .umf-demo {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.8;
+        }
+        
+        .umf-demo .umf-label {
+            color: var(--text-muted);
+        }
+        
+        .umf-demo .umf-value {
+            color: var(--celadon-600);
+            font-weight: 600;
+        }
+        
+        /* Pricing */
+        .pricing {
+            padding: 80px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .pricing-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 48px;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+        
+        .pricing-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .pricing-card.featured {
+            border: 2px solid var(--celadon-400);
+            position: relative;
+        }
+        
+        .pricing-card.featured::before {
+            content: "Most Popular";
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--celadon-500), var(--celadon-600));
+            color: white;
+            padding: 4px 16px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .pricing-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        
+        .pricing-card .price {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .pricing-card .price span {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+        
+        .pricing-card .period {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            flex: 1;
+            margin-bottom: 24px;
+        }
+        
+        .pricing-features li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .pricing-features li::before {
+            content: "✓";
+            color: var(--celadon-500);
+            font-weight: 700;
+        }
+        
+        .pricing-card .btn {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .pricing-selfhost {
+            text-align: center;
+            margin-top: 48px;
+            padding: 32px;
+            background: var(--celadon-50);
+            border-radius: var(--radius-lg);
+            border: 1px dashed var(--celadon-300);
+        }
+        
+        .pricing-selfhost h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--celadon-800);
+        }
+        
+        .pricing-selfhost p {
+            color: var(--celadon-600);
+            font-size: 0.9rem;
+        }
+        
+        /* Open Source */
+        .opensource {
+            padding: 80px 24px;
+            background: var(--text-primary);
+            color: var(--clay-100);
+        }
+        
+        .opensource-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .opensource h2 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: var(--bg-primary);
+        }
+        
+        .opensource p {
+            color: var(--clay-300);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            font-size: 1.1rem;
+        }
+        
+        .opensource-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .opensource-stat {
+            padding: 24px;
+        }
+        
+        .opensource-stat strong {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: var(--celadon-400);
+            display: block;
+        }
+        
+        .opensource-stat span {
+            font-size: 0.85rem;
+            color: var(--clay-400);
+        }
+        
+        .opensource-cta {
+            margin-top: 40px;
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+        
+        .opensource .btn-primary {
+            background: var(--celadon-500);
+        }
+        
+        .opensource .btn-secondary {
+            background: transparent;
+            color: var(--clay-200);
+            border-color: var(--clay-700);
+        }
+        
+        .opensource .btn-secondary:hover {
+            background: var(--clay-800);
+            color: var(--bg-primary);
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 80px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        
+        .testimonial-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            border: 1px solid var(--border);
+        }
+        
+        .testimonial-card p {
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .testimonial-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--celadon-300), var(--tenmoku-300));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+            font-size: 0.85rem;
+        }
+        
+        .testimonial-author strong {
+            display: block;
+            font-size: 0.9rem;
+        }
+        
+        .testimonial-author span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 64px 24px 32px;
+            border-top: 1px solid var(--border);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+        
+        .footer-brand p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 12px;
+        }
+        
+        .footer-col h4 {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+        }
+        
+        .footer-col ul {
+            list-style: none;
+        }
+        
+        .footer-col li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-col a {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .footer-col a:hover {
+            color: var(--text-primary);
+        }
+        
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 32px;
+            border-top: 1px solid var(--border);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        
+        .footer-bottom a {
+            color: var(--text-muted);
+        }
+        
+        /* Mobile */
+        @media (max-width: 1024px) {
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 48px;
+                text-align: center;
+            }
+            
+            .hero p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            .hero-cta {
+                justify-content: center;
+            }
+            
+            .hero-stats {
+                justify-content: center;
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .showcase-inner {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .opensource-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero {
+                padding-top: 100px;
+            }
+            
+            .hero h1 {
+                font-size: 2.25rem;
+            }
+            
+            .features-grid,
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .opensource-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="#" class="logo">
+                <div class="logo-mark">◇</div>
+                OpenGlaze
+            </a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="https://github.com/Pastorsimon1798/openglaze">GitHub</a>
+                <a href="https://github.com/Pastorsimon1798/openglaze/discussions">Community</a>
+                <a href="https://github.com/Pastorsimon1798/openglaze/tree/master/docs">Docs</a>
+                <a href="https://github.com/Pastorsimon1798/openglaze" class="btn btn-sm btn-primary">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge"><span></span> 100% Open Source</div>
+            <h1>Glaze management, <em>reimagined</em>.</h1>
+            <p>OpenGlaze is the open-source platform ceramic artists and studios use to manage recipes, track firings, and collaborate on glaze development — without losing control of their data.</p>
+            <div class="hero-cta">
+                <a href="https://github.com/Pastorsimon1798/openglaze" class="btn btn-primary">Get Started Free</a>
+                <a href="https://github.com/Pastorsimon1798/openglaze/tree/master/docs/self-hosting.md" class="btn btn-secondary">Self-Host</a>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <strong>38</strong>
+                    <span>Tests passing</span>
+                </div>
+                <div class="hero-stat">
+                    <strong>MIT</strong>
+                    <span>Open license</span>
+                </div>
+                <div class="hero-stat">
+                    <strong>6</strong>
+                    <span>Experiment stages</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-card">
+                <div class="hero-card-header">
+                    <h3>Your Glaze Library</h3>
+                    <span style="font-size:0.8rem;color:var(--text-muted);">32 glazes</span>
+                </div>
+                <div class="glaze-row">
+                    <div class="glaze-swatch" style="background: linear-gradient(135deg, #8FBC8F, #6B8E6B);"></div>
+                    <div class="glaze-info">
+                        <strong>Celadon</strong>
+                        <span>Cone 10 · Reduction</span>
+                    </div>
+                    <span class="glaze-tag tag-reduction">Reduction</span>
+                </div>
+                <div class="glaze-row">
+                    <div class="glaze-swatch" style="background: linear-gradient(135deg, #2F1810, #1a0e0a);"></div>
+                    <div class="glaze-info">
+                        <strong>Tenmoku</strong>
+                        <span>Cone 10 · Reduction</span>
+                    </div>
+                    <span class="glaze-tag tag-reduction">Reduction</span>
+                </div>
+                <div class="glaze-row">
+                    <div class="glaze-swatch" style="background: linear-gradient(135deg, #4A90C8, #357AB8);"></div>
+                    <div class="glaze-info">
+                        <strong>Chun Blue</strong>
+                        <span>Cone 10 · Reduction</span>
+                    </div>
+                    <span class="glaze-tag tag-reduction">Reduction</span>
+                </div>
+                <div class="glaze-row">
+                    <div class="glaze-swatch" style="background: linear-gradient(135deg, #D4A574, #C49464);"></div>
+                    <div class="glaze-info">
+                        <strong>Shino</strong>
+                        <span>Cone 10 · Reduction</span>
+                    </div>
+                    <span class="glaze-tag tag-reduction">Reduction</span>
+                </div>
+                <div class="glaze-row">
+                    <div class="glaze-swatch" style="background: linear-gradient(135deg, #E8DCC8, #D4C8B4);"></div>
+                    <div class="glaze-info">
+                        <strong>White Satin</strong>
+                        <span>Cone 6 · Oxidation</span>
+                    </div>
+                    <span class="glaze-tag tag-oxidation">Oxidation</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>Everything you need to master glazes</h2>
+            <p>From recipe management to AI-powered predictions, OpenGlaze gives you the tools to document, analyze, and share your glaze work.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--celadon-100);">🎨</div>
+                <h3>Recipe Management</h3>
+                <p>Store unlimited glazes with full chemistry, recipes, and visual references. Import from Glazy, Insight, or spreadsheets.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--tenmoku-100);">🔬</div>
+                <h3>Chemistry Engine</h3>
+                <p>Automatic UMF calculation, compatibility analysis, thermal expansion matching, and batch scaling.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background: #e8e0f4;">🧠</div>
+                <h3>Kama AI Assistant</h3>
+                <p>Context-aware glaze consulting powered by local or cloud LLMs. Ask about recipes, predictions, and substitutions.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background: #f4e8e0;">🧪</div>
+                <h3>Experiment Pipeline</h3>
+                <p>6-stage workflow from ideation to documentation. Track every variable and build reproducible results.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background: #e0f0e8;">👥</div>
+                <h3>Studio Collaboration</h3>
+                <p>Share glaze libraries with your team. Role-based access, lab assignments, and shared firing logs.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background: #f0e8e0;">📸</div>
+                <h3>Photo Documentation</h3>
+                <p>Track results across firings with gallery views. Consistent documentation for reliable comparison.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Showcase -->
+    <section class="showcase">
+        <div class="showcase-inner">
+            <div class="showcase-content">
+                <h2>Understand your glazes at the molecular level</h2>
+                <p>The Unity Molecular Formula (UMF) engine analyzes your recipes and predicts surface qualities, helping you make informed adjustments before you fire.</p>
+                <ul class="showcase-list">
+                    <li>Automatic oxide analysis from batch recipes</li>
+                    <li>Silica-to-alumina ratio calculation</li>
+                    <li>Thermal expansion coefficient estimation</li>
+                    <li>Glaze compatibility risk assessment</li>
+                    <li>Batch scaling with cost estimation</li>
+                </ul>
+                <a href="https://github.com/Pastorsimon1798/openglaze/tree/master/docs/user-guide.md#the-chemistry-engine" class="btn btn-primary">Learn More</a>
+            </div>
+            <div class="showcase-visual">
+                <div class="umf-demo">
+                    <div><span class="umf-label">Recipe:</span> Celadon Base</div>
+                    <div style="margin: 12px 0; padding: 12px; background: var(--bg-primary); border-radius: var(--radius-sm);">
+                        <div class="umf-label">Feldspar ............ 45%</div>
+                        <div class="umf-label">Silica .............. 30%</div>
+                        <div class="umf-label">Whiting ............ 15%</div>
+                        <div class="umf-label">Kaolin ............. 10%</div>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <div><span class="umf-label">UMF Analysis:</span></div>
+                        <div style="margin-top: 8px; padding-left: 16px;">
+                            <div>SiO₂ / Al₂O₃ = <span class="umf-value">7.11</span></div>
+                            <div>CaO (flux) = <span class="umf-value">0.55</span></div>
+                            <div>Surface = <span class="umf-value">glossy</span></div>
+                            <div>CTE = <span class="umf-value">6.2 × 10⁻⁶/°C</span></div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px; padding: 12px; background: var(--celadon-50); border-radius: var(--radius-sm); border-left: 3px solid var(--celadon-400);">
+                        <span style="color: var(--celadon-700); font-size: 0.8rem;">💡 Predicted: High-gloss celadon with good durability. Compatible with cone 10 stoneware bodies.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <h2>Simple, transparent pricing</h2>
+            <p>Start free. Upgrade when you need more. Or self-host for unlimited use at no cost.</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Free</h3>
+                <div class="price">$0<span>/mo</span></div>
+                <div class="period">Forever free</div>
+                <ul class="pricing-features">
+                    <li>Unlimited glazes</li>
+                    <li>50 firings/month</li>
+                    <li>1 studio</li>
+                    <li>Basic AI (local)</li>
+                    <li>Community support</li>
+                </ul>
+                <a href="https://github.com/Pastorsimon1798/openglaze" class="btn btn-secondary">Get Started</a>
+            </div>
+            <div class="pricing-card featured">
+                <h3>Pro</h3>
+                <div class="price">$9<span>/mo</span></div>
+                <div class="period">$90/year (save $18)</div>
+                <ul class="pricing-features">
+                    <li>Everything in Free</li>
+                    <li>Unlimited firings</li>
+                    <li>Advanced analytics</li>
+                    <li>2 team members</li>
+                    <li>Cloud AI (Claude)</li>
+                    <li>Priority support</li>
+                </ul>
+                <a href="#" class="btn btn-primary">Start Free Trial</a>
+            </div>
+            <div class="pricing-card">
+                <h3>Studio</h3>
+                <div class="price">$29<span>/mo</span></div>
+                <div class="period">$290/year (save $58)</div>
+                <ul class="pricing-features">
+                    <li>Everything in Pro</li>
+                    <li>5 team members</li>
+                    <li>Custom branding</li>
+                    <li>API access</li>
+                    <li>Webhook integrations</li>
+                    <li>Shared libraries</li>
+                </ul>
+                <a href="#" class="btn btn-secondary">Start Free Trial</a>
+            </div>
+            <div class="pricing-card">
+                <h3>Education</h3>
+                <div class="price">$199<span>/yr</span></div>
+                <div class="period">Per institution</div>
+                <ul class="pricing-features">
+                    <li>Everything in Studio</li>
+                    <li>Unlimited users</li>
+                    <li>LMS integration</li>
+                    <li>Curriculum templates</li>
+                    <li>Progress tracking</li>
+                    <li>Dedicated support</li>
+                </ul>
+                <a href="#" class="btn btn-secondary">Contact Us</a>
+            </div>
+        </div>
+        <div class="pricing-selfhost">
+            <h3>🛠️ Self-Host for Free</h3>
+            <p>Run OpenGlaze on your own server with the MIT license. No limits, no fees, complete data ownership. <a href="https://github.com/Pastorsimon1798/openglaze/tree/master/docs/self-hosting.md">Self-hosting guide →</a></p>
+        </div>
+    </section>
+
+    <!-- Open Source -->
+    <section class="opensource">
+        <div class="opensource-inner">
+            <h2>Built in the open</h2>
+            <p>OpenGlaze is 100% open source. Every line of code is available on GitHub. Fork it, modify it, run it yourself — no restrictions.</p>
+            <div class="opensource-grid">
+                <div class="opensource-stat">
+                    <strong>MIT</strong>
+                    <span>License</span>
+                </div>
+                <div class="opensource-stat">
+                    <strong>38</strong>
+                    <span>Tests</span>
+                </div>
+                <div class="opensource-stat">
+                    <strong>100%</strong>
+                    <span>Open Source</span>
+                </div>
+                <div class="opensource-stat">
+                    <strong>0</strong>
+                    <span>Proprietary deps</span>
+                </div>
+            </div>
+            <div class="opensource-cta">
+                <a href="https://github.com/Pastorsimon1798/openglaze" class="btn btn-primary">View on GitHub</a>
+                <a href="https://github.com/Pastorsimon1798/openglaze/blob/master/CONTRIBUTING.md" class="btn btn-secondary">Contribute</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="section-header">
+            <h2>Loved by potters and studios</h2>
+            <p>From hobbyists to production studios, OpenGlaze helps ceramic artists organize their glaze work.</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p>"Finally, a glaze management tool that understands chemistry. The UMF calculator alone saved me hours of manual computation."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">SP</div>
+                    <div>
+                        <strong>Studio Potter</strong>
+                        <span>Cone 10 Reduction Studio</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"We self-host OpenGlaze for our 12-person studio. Having our entire glaze library, firing logs, and experiment notes in one place is invaluable."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">MC</div>
+                    <div>
+                        <strong>Municipal Ceramics</strong>
+                        <span>Community Studio</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p>"The experiment pipeline keeps our students organized. They can track their work from first idea to fired result, and we can review their progress."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">CA</div>
+                    <div>
+                        <strong>Clay Arts Program</strong>
+                        <span>University Ceramics Dept</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="#" class="logo">
+                    <div class="logo-mark">◇</div>
+                    OpenGlaze
+                </a>
+                <p>Open-source glaze management for ceramic artists and studios. Own your data. Build better glazes.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="https://github.com/Pastorsimon1798/openglaze/releases">Changelog</a></li>
+                    <li><a href="https://github.com/Pastorsimon1798/openglaze/blob/master/ROADMAP.md">Roadmap</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="https://github.com/Pastorsimon1798/openglaze/tree/master/docs">Documentation</a></li>
+                    <li><a href="https://github.com/Pastorsimon1798/openglaze/tree/master/docs/API.md">API Reference</a></li>
+                    <li><a href="https://github.com/Pastorsimon1798/openglaze/tree/master/docs/self-hosting.md">Self-Hosting</a></li>
+                    <li><a href="https://github.com/Pastorsimon1798/openglaze/tree/master/docs/user-guide.md">User Guide</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Community</h4>
+                <ul>
+                    <li><a href="https://github.com/Pastorsimon1798/openglaze">GitHub</a></li>
+                    <li><a href="https://github.com/Pastorsimon1798/openglaze/discussions">Discussions</a></li>
+                    <li><a href="https://github.com/Pastorsimon1798/openglaze/blob/master/CONTRIBUTING.md">Contribute</a></li>
+                    <li><a href="https://github.com/Pastorsimon1798/openglaze/blob/master/SECURITY.md">Security</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 OpenGlaze. Open source under MIT License.</span>
+            <div>
+                <a href="https://github.com/Pastorsimon1798/openglaze/blob/master/LICENSE">License</a> ·
+                <a href="https://github.com/Pastorsimon1798/openglaze/blob/master/CODE_OF_CONDUCT.md">Code of Conduct</a> ·
+                <a href="https://github.com/Pastorsimon1798/openglaze/blob/master/SECURITY.md">Security</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
