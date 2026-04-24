@@ -543,7 +543,7 @@ def create_app(config: dict = None) -> Flask:
             analyzer = BatchAnalyzer(
                 db_path=config.get('database', {}).get('path', 'glaze.db'),
                 user_id=get_current_user_id() if features['auth_enabled'] else None,
-                cone=int(cone) if cone else 10,
+                cone=int(cone) if cone is not None else 10,
             )
             report = analyzer.generate_report()
             return jsonify(report)
@@ -598,7 +598,7 @@ def create_app(config: dict = None) -> Flask:
             result = compare_recipes(
                 recipe_a, recipe_b,
                 name_a=name_a, name_b=name_b,
-                cone=int(cone) if cone else 10,
+                cone=int(cone) if cone is not None else 10,
             )
             return jsonify(result.to_dict())
         except Exception as e:
@@ -674,7 +674,7 @@ def create_app(config: dict = None) -> Flask:
             from core.chemistry import predict_defects
             result = predict_defects(
                 recipe,
-                cone=int(cone) if cone else 10,
+                cone=int(cone) if cone is not None else 10,
                 clay_body_cte=float(clay_body_cte) if clay_body_cte is not None else None
             )
             return jsonify(result.to_dict())
