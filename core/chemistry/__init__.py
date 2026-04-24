@@ -9,6 +9,7 @@ from .parser import RecipeParser, ParseResult, parse_recipe_string
 from .umf import UMFResult, UMFAnalyzer, calculate_umf
 from .compatibility import CompatibilityResult, CompatibilityAnalyzer
 from .batch import BatchAnalyzer
+from .defects import DefectAnalysis, DefectPredictor, predict_defects
 
 __all__ = [
     'Material',
@@ -23,4 +24,7 @@ __all__ = [
     'CompatibilityResult',
     'CompatibilityAnalyzer',
     'BatchAnalyzer',
+    'DefectAnalysis',
+    'DefectPredictor',
+    'predict_defects',
 ]

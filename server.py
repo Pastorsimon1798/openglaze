@@ -563,6 +563,36 @@ def create_app(config: dict = None) -> Flask:
             logger.error(f"Recipe scaling error: {e}")
             return jsonify({"error": str(e)}), 500
 
+    @app.route('/api/chemistry/defects', methods=['POST'])
+    @rate_limit(requests_per_minute=60)
+    def predict_glaze_defects():
+        """Predict potential defects for a glaze recipe.
+
+        Request body:
+            recipe: Recipe string or object
+            cone: Target firing cone (optional, default 10)
+            clay_body_cte: CTE of clay body in ×10⁻⁶/°C (optional)
+        """
+        data = request.json or {}
+        recipe = data.get('recipe', '')
+        cone = data.get('cone', 10)
+        clay_body_cte = data.get('clay_body_cte')
+
+        if not recipe:
+            return jsonify({"error": "recipe is required"}), 400
+
+        try:
+            from core.chemistry import predict_defects
+            result = predict_defects(
+                recipe,
+                cone=int(cone) if cone else 10,
+                clay_body_cte=float(clay_body_cte) if clay_body_cte is not None else None
+            )
+            return jsonify(result.to_dict())
+        except Exception as e:
+            logger.error(f"Defect prediction error: {e}")
+            return jsonify({"error": str(e)}), 500
+
     # ==========================================
     # EXPERIMENT API ROUTES
     # ==========================================
@@ -713,6 +743,9 @@ def create_app(config: dict = None) -> Flask:
                     images=images,
                 ):
                     yield f"data: {json.dumps(event)}\n\n"
+            except (ConnectionError, TimeoutError) as e:
+                logger.warning(f"AI stream backend unavailable: {e}")
+                yield f"data: {json.dumps({'type': 'error', 'ai_available': False, 'content': 'AI backend unavailable. Please ensure Ollama is running or configure ANTHROPIC_API_KEY.'})}\n\n"
             except Exception as e:
                 logger.error(f"AI stream error: {e}")
                 yield f"data: {json.dumps({'type': 'error', 'content': str(e)})}\n\n"
@@ -753,6 +786,14 @@ def create_app(config: dict = None) -> Flask:
             )
             return jsonify({"response": response})
 
+        except (ConnectionError, TimeoutError) as e:
+            logger.warning(f"AI backend unavailable: {e}")
+            return jsonify({
+                "ai_available": False,
+                "error": "AI backend unavailable",
+                "message": "The AI assistant is currently offline. Please ensure Ollama is running or configure a cloud AI provider (ANTHROPIC_API_KEY).",
+                "help": "For Ollama: run 'ollama serve' or check your OLLAMA_API endpoint. For cloud: set ANTHROPIC_API_KEY environment variable."
+            }), 503
         except Exception as e:
             logger.error(f"AI error: {e}")
             return jsonify({"error": str(e)}), 500

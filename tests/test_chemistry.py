@@ -354,6 +354,59 @@ class TestDemoGlazes:
         assert len(cones) >= 2
 
 
+class TestDefectPrediction:
+    """Glaze defect prediction tests."""
+
+    def test_predict_defects_high_alkali(self):
+        """High-alkali glaze should flag crazing risk."""
+        from core.chemistry.defects import predict_defects
+        result = predict_defects('Nepheline Syenite 60, Silica 20, EPK 20', cone=10)
+        assert result.success is True
+        assert result.overall_risk == 'high'
+        crazing = [d for d in result.defects if d.defect == 'crazing']
+        assert len(crazing) > 0
+        assert crazing[0].risk == 'high'
+
+    def test_predict_defects_running_risk(self):
+        """Low silica, high flux glaze should flag running risk."""
+        from core.chemistry.defects import predict_defects
+        result = predict_defects('Nepheline Syenite 30, Silica 5, Whiting 30, EPK 35', cone=10)
+        assert result.success is True
+        running = [d for d in result.defects if d.defect == 'running']
+        assert len(running) > 0
+
+    def test_predict_defects_with_clay_body(self):
+        """CTE comparison with clay body should work."""
+        from core.chemistry.defects import predict_defects
+        # High-expansion glaze on low-expansion body = crazing
+        result = predict_defects(
+            'Nepheline Syenite 60, Silica 20, EPK 20',
+            cone=10,
+            clay_body_cte=5.5
+        )
+        assert result.success is True
+        crazing = [d for d in result.defects if d.defect == 'crazing']
+        assert len(crazing) > 0
+        assert crazing[0].risk == 'high'
+
+    def test_predict_defects_safe_glaze_low_risk(self):
+        """Well-balanced glaze should have low or no defects."""
+        from core.chemistry.defects import predict_defects
+        result = predict_defects('Custer Feldspar 45, Silica 25, Whiting 18, EPK 12', cone=10)
+        assert result.success is True
+        # Should not have high-risk defects
+        high_risk = [d for d in result.defects if d.risk == 'high']
+        assert len(high_risk) == 0
+
+    def test_predict_defects_returns_mitigation(self):
+        """Every defect should include a mitigation strategy."""
+        from core.chemistry.defects import predict_defects
+        result = predict_defects('Nepheline Syenite 60, Silica 20, EPK 20', cone=10)
+        for d in result.defects:
+            assert len(d.mitigation) > 10  # Must have actual text
+            assert len(d.cause) > 10
+
+
 class TestBatchCalculator:
     """Recipe scaling tests."""
 
