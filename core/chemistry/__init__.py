@@ -11,6 +11,7 @@ from .compatibility import CompatibilityResult, CompatibilityAnalyzer
 from .batch import BatchAnalyzer
 from .defects import DefectAnalysis, DefectPredictor, predict_defects
 from .substitutions import SubstitutionResult, SubstitutionEngine, suggest_substitutions
+from .compare import RecipeComparison, RecipeComparator, compare_recipes
 
 __all__ = [
     'Material',
@@ -31,4 +32,7 @@ __all__ = [
     'SubstitutionResult',
     'SubstitutionEngine',
     'suggest_substitutions',
+    'RecipeComparison',
+    'RecipeComparator',
+    'compare_recipes',
 ]
