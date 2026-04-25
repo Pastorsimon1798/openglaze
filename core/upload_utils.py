@@ -6,13 +6,13 @@ File validation, saving, and path management.
 import os
 from werkzeug.utils import secure_filename
 
-ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'webp'}
+ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png", "webp"}
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
 
 
 def allowed_file(filename: str) -> bool:
     """Check if file has an allowed image extension."""
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def save_uploaded_file(file, upload_folder: str) -> str:
@@ -36,7 +36,9 @@ def save_uploaded_file(file, upload_folder: str) -> str:
         raise ValueError("Could not read file")
 
     if size > MAX_FILE_SIZE:
-        raise OverflowError(f"File too large. Maximum size is {MAX_FILE_SIZE // (1024 * 1024)}MB")
+        raise OverflowError(
+            f"File too large. Maximum size is {MAX_FILE_SIZE // (1024 * 1024)}MB"
+        )
 
     # Ensure upload folder exists
     os.makedirs(upload_folder, exist_ok=True)
@@ -44,6 +46,7 @@ def save_uploaded_file(file, upload_folder: str) -> str:
     filename = secure_filename(file.filename)
     # Avoid collisions by prepending timestamp
     import time
+
     name, ext = os.path.splitext(filename)
     filename = f"{name}-{int(time.time())}{ext}"
 

@@ -34,15 +34,15 @@ def create_session(display_name: str) -> dict:
     expires = time.time() + timedelta(days=TOKEN_LIFETIME_DAYS).total_seconds()
 
     _sessions[token] = {
-        'user_id': user_id,
-        'display_name': display_name,
-        'expires': expires,
+        "user_id": user_id,
+        "display_name": display_name,
+        "expires": expires,
     }
 
     return {
-        'user_id': user_id,
-        'display_name': display_name,
-        'token': token,
+        "user_id": user_id,
+        "display_name": display_name,
+        "token": token,
     }
 
 
@@ -56,19 +56,19 @@ def validate_session(token: str) -> Optional[dict]:
     session = _sessions.get(token)
     if not session:
         return None
-    if time.time() > session['expires']:
+    if time.time() > session["expires"]:
         del _sessions[token]
         return None
     return {
-        'user_id': session['user_id'],
-        'display_name': session['display_name'],
+        "user_id": session["user_id"],
+        "display_name": session["display_name"],
     }
 
 
 def cleanup_expired():
     """Remove expired sessions (call periodically)."""
     now = time.time()
-    expired = [t for t, s in _sessions.items() if now > s['expires']]
+    expired = [t for t, s in _sessions.items() if now > s["expires"]]
     for t in expired:
         del _sessions[t]
     if expired:

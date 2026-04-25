@@ -2,6 +2,7 @@
 
 from typing import List, Optional, Dict
 from collections import defaultdict
+import sqlite3
 
 from core.db import connect_db
 from .models import Combination
@@ -12,12 +13,26 @@ class CombinationManager:
 
     # Allowed column names for UPDATE statements
     ALLOWED_COLUMNS = {
-        'base', 'top', 'layers', 'type', 'source', 'result', 'chemistry',
-        'risk', 'effect', 'stage', 'prediction_grade', 'notes', 'is_surprise',
-        'surprise_rarity', 'discovered_by', 'status', 'result_rating'
+        "base",
+        "top",
+        "layers",
+        "type",
+        "source",
+        "result",
+        "chemistry",
+        "risk",
+        "effect",
+        "stage",
+        "prediction_grade",
+        "notes",
+        "is_surprise",
+        "surprise_rarity",
+        "discovered_by",
+        "status",
+        "result_rating",
     }
 
-    def __init__(self, db_path: str = 'glaze.db', user_id: Optional[str] = None):
+    def __init__(self, db_path: str = "glaze.db", user_id: Optional[str] = None):
         """
         Initialize CombinationManager.
 
@@ -41,11 +56,13 @@ class CombinationManager:
 
         if self.user_id:
             cursor.execute(
-                'SELECT * FROM combinations WHERE user_id = ? OR user_id IS NULL ORDER BY base, top',
-                (self.user_id,)
+                "SELECT * FROM combinations WHERE user_id = ? OR user_id IS NULL ORDER BY base, top",
+                (self.user_id,),
             )
         else:
-            cursor.execute('SELECT * FROM combinations WHERE user_id IS NULL ORDER BY base, top')
+            cursor.execute(
+                "SELECT * FROM combinations WHERE user_id IS NULL ORDER BY base, top"
+            )
 
         rows = cursor.fetchall()
         conn.close()
@@ -60,10 +77,12 @@ class CombinationManager:
         if self.user_id:
             cursor.execute(
                 "SELECT * FROM combinations WHERE type = 'research-backed' AND (user_id = ? OR user_id IS NULL)",
-                (self.user_id,)
+                (self.user_id,),
             )
         else:
-            cursor.execute("SELECT * FROM combinations WHERE type = 'research-backed' AND user_id IS NULL")
+            cursor.execute(
+                "SELECT * FROM combinations WHERE type = 'research-backed' AND user_id IS NULL"
+            )
 
         rows = cursor.fetchall()
         conn.close()
@@ -78,10 +97,12 @@ class CombinationManager:
         if self.user_id:
             cursor.execute(
                 "SELECT * FROM combinations WHERE type = 'user-prediction' AND (user_id = ? OR user_id IS NULL)",
-                (self.user_id,)
+                (self.user_id,),
             )
         else:
-            cursor.execute("SELECT * FROM combinations WHERE type = 'user-prediction' AND user_id IS NULL")
+            cursor.execute(
+                "SELECT * FROM combinations WHERE type = 'user-prediction' AND user_id IS NULL"
+            )
 
         rows = cursor.fetchall()
         conn.close()
@@ -96,10 +117,12 @@ class CombinationManager:
         if self.user_id:
             cursor.execute(
                 "SELECT * FROM combinations WHERE prediction_grade = 'unknown' AND (user_id = ? OR user_id IS NULL)",
-                (self.user_id,)
+                (self.user_id,),
             )
         else:
-            cursor.execute("SELECT * FROM combinations WHERE prediction_grade = 'unknown' AND user_id IS NULL")
+            cursor.execute(
+                "SELECT * FROM combinations WHERE prediction_grade = 'unknown' AND user_id IS NULL"
+            )
 
         rows = cursor.fetchall()
         conn.close()
@@ -130,11 +153,14 @@ class CombinationManager:
 
         if self.user_id:
             cursor.execute(
-                'SELECT * FROM combinations WHERE id = ? AND (user_id = ? OR user_id IS NULL)',
-                (combo_id, self.user_id)
+                "SELECT * FROM combinations WHERE id = ? AND (user_id = ? OR user_id IS NULL)",
+                (combo_id, self.user_id),
             )
         else:
-            cursor.execute('SELECT * FROM combinations WHERE id = ? AND user_id IS NULL', (combo_id,))
+            cursor.execute(
+                "SELECT * FROM combinations WHERE id = ? AND user_id IS NULL",
+                (combo_id,),
+            )
 
         row = cursor.fetchone()
         conn.close()
@@ -146,16 +172,27 @@ class CombinationManager:
         conn = self._get_connection()
         cursor = conn.cursor()
 
-        cursor.execute('''
+        cursor.execute(
+            """
             INSERT INTO combinations (base, top, layers, type, source, result, chemistry, risk, effect, stage, prediction_grade, notes, user_id)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (
-            combination.base, combination.top, combination.layers,
-            combination.type, combination.source,
-            combination.result, combination.chemistry, combination.risk,
-            combination.effect, combination.stage, combination.prediction_grade,
-            combination.notes, self.user_id
-        ))
+        """,
+            (
+                combination.base,
+                combination.top,
+                combination.layers,
+                combination.type,
+                combination.source,
+                combination.result,
+                combination.chemistry,
+                combination.risk,
+                combination.effect,
+                combination.stage,
+                combination.prediction_grade,
+                combination.notes,
+                self.user_id,
+            ),
+        )
 
         last_id = cursor.lastrowid
         conn.commit()
@@ -171,11 +208,11 @@ class CombinationManager:
         set_clauses = []
         values = []
         for key, value in updates.items():
-            if key not in ('id', 'user_id'):
+            if key not in ("id", "user_id"):
                 # Validate column name to prevent SQL injection
                 if key not in self.ALLOWED_COLUMNS:
                     raise ValueError(f"Invalid column name: {key}")
-                set_clauses.append(f'{key} = ?')
+                set_clauses.append(f"{key} = ?")
                 values.append(value)
 
         if not set_clauses:
@@ -202,9 +239,14 @@ class CombinationManager:
         cursor = conn.cursor()
 
         if self.user_id:
-            cursor.execute('DELETE FROM combinations WHERE id = ? AND user_id = ?', (combo_id, self.user_id))
+            cursor.execute(
+                "DELETE FROM combinations WHERE id = ? AND user_id = ?",
+                (combo_id, self.user_id),
+            )
         else:
-            cursor.execute('DELETE FROM combinations WHERE id = ? AND user_id IS NULL', (combo_id,))
+            cursor.execute(
+                "DELETE FROM combinations WHERE id = ? AND user_id IS NULL", (combo_id,)
+            )
 
         affected = cursor.rowcount
         conn.commit()
@@ -214,11 +256,27 @@ class CombinationManager:
 
     def promote_to_confirmed(self, combo_id: int, result: str) -> bool:
         """Promote a combo to confirmed after firing and result matched prediction."""
-        return self.update(combo_id, {'type': 'confirmed', 'prediction_grade': 'confirmed', 'stage': 'documented', 'result': result})
+        return self.update(
+            combo_id,
+            {
+                "type": "confirmed",
+                "prediction_grade": "confirmed",
+                "stage": "documented",
+                "result": result,
+            },
+        )
 
     def mark_as_surprise(self, combo_id: int, result: str) -> bool:
         """Mark a combo as surprise after firing and result differed from prediction."""
-        return self.update(combo_id, {'type': 'surprise', 'prediction_grade': 'surprise', 'stage': 'documented', 'result': result})
+        return self.update(
+            combo_id,
+            {
+                "type": "surprise",
+                "prediction_grade": "surprise",
+                "stage": "documented",
+                "result": result,
+            },
+        )
 
     # Backward compatibility
     def promote_to_proven(self, combo_id: int, result: str) -> bool:
@@ -230,7 +288,7 @@ class CombinationManager:
         top_lower = top.lower()
         base_lower = base.lower()
 
-        if 'shino' in top_lower and 'shino' not in base_lower:
+        if "shino" in top_lower and "shino" not in base_lower:
             return "WARNING: Shino over non-Shino glazes often CRAWLS"
 
         return None

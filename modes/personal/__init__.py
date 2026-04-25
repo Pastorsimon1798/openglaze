@@ -3,4 +3,4 @@
 from config.loader import PersonalMode
 
 # Re-export for convenience
-__all__ = ['PersonalMode']
+__all__ = ["PersonalMode"]

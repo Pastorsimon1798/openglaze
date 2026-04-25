@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class RateLimitEntry:
     """Rate limit tracking entry."""
+
     count: int = 0
     window_start: float = 0.0
     blocked_until: float = 0.0
@@ -39,7 +40,7 @@ class InMemoryRateLimiter:
         requests_per_minute: int = 60,
         requests_per_hour: int = 1000,
         block_duration_minutes: int = 5,
-        cleanup_interval: int = 300
+        cleanup_interval: int = 300,
     ):
         self.requests_per_minute = requests_per_minute
         self.requests_per_hour = requests_per_hour
@@ -62,7 +63,8 @@ class InMemoryRateLimiter:
             with self._lock:
                 now = time.time()
                 old_keys = [
-                    k for k, v in self._entries.items()
+                    k
+                    for k, v in self._entries.items()
                     if now - v.window_start > 7200  # 2 hours
                 ]
                 for key in old_keys:
@@ -72,9 +74,7 @@ class InMemoryRateLimiter:
                 self._last_cleanup = now
 
     def check_rate_limit(
-        self,
-        identifier: str,
-        endpoint: str = None
+        self, identifier: str, endpoint: str = None
     ) -> Tuple[bool, Dict[str, any]]:
         """
         Check if request should be rate limited.
@@ -97,9 +97,9 @@ class InMemoryRateLimiter:
             # Check if currently blocked
             if entry.blocked_until > now:
                 return False, {
-                    'remaining': 0,
-                    'reset_at': entry.blocked_until,
-                    'retry_after': int(entry.blocked_until - now)
+                    "remaining": 0,
+                    "reset_at": entry.blocked_until,
+                    "retry_after": int(entry.blocked_until - now),
                 }
 
             # Reset window if expired
@@ -112,9 +112,9 @@ class InMemoryRateLimiter:
                 # Block for remaining time
                 entry.blocked_until = now + self.block_duration
                 return False, {
-                    'remaining': 0,
-                    'reset_at': entry.blocked_until,
-                    'retry_after': self.block_duration
+                    "remaining": 0,
+                    "reset_at": entry.blocked_until,
+                    "retry_after": self.block_duration,
                 }
 
             # Increment and allow
@@ -123,20 +123,19 @@ class InMemoryRateLimiter:
             reset_at = entry.window_start + 60
 
             return True, {
-                'remaining': remaining,
-                'reset_at': reset_at,
-                'retry_after': 0
+                "remaining": remaining,
+                "reset_at": reset_at,
+                "retry_after": 0,
             }
 
     def get_stats(self) -> Dict:
         """Get rate limiter statistics."""
         with self._lock:
             return {
-                'total_tracked': len(self._entries),
-                'currently_blocked': sum(
-                    1 for e in self._entries.values()
-                    if e.blocked_until > time.time()
-                )
+                "total_tracked": len(self._entries),
+                "currently_blocked": sum(
+                    1 for e in self._entries.values() if e.blocked_until > time.time()
+                ),
             }
 
 
@@ -145,23 +144,20 @@ def get_client_identifier() -> str:
     from flask import request
 
     # Try X-Forwarded-For header (reverse proxy)
-    forwarded = request.headers.get('X-Forwarded-For')
+    forwarded = request.headers.get("X-Forwarded-For")
     if forwarded:
-        return forwarded.split(',')[0].strip()
+        return forwarded.split(",")[0].strip()
 
     # Try X-Real-IP header
-    real_ip = request.headers.get('X-Real-IP')
+    real_ip = request.headers.get("X-Real-IP")
     if real_ip:
         return real_ip
 
     # Fall back to remote address
-    return request.remote_addr or 'unknown'
+    return request.remote_addr or "unknown"
 
 
-def rate_limit(
-    requests_per_minute: int = None,
-    key_func: callable = None
-):
+def rate_limit(requests_per_minute: int = None, key_func: callable = None):
     """
     Flask decorator for rate limiting.
 
@@ -177,8 +173,8 @@ def rate_limit(
         @wraps(f)
         def decorated_function(*args, **kwargs):
             # Get rate limiter from app config
-            limiter = getattr(g, 'rate_limiter', None) or getattr(
-                request.app.extensions.get('rate_limiter'), 'limiter', None
+            limiter = getattr(g, "rate_limiter", None) or getattr(
+                request.app.extensions.get("rate_limiter"), "limiter", None
             )
 
             if limiter is None:
@@ -192,30 +188,33 @@ def rate_limit(
             allowed, info = limiter.check_rate_limit(identifier)
 
             if not allowed:
-                response = jsonify({
-                    'error': 'Rate limit exceeded',
-                    'message': f"Too many requests. Try again in {info['retry_after']} seconds.",
-                    'retry_after': info['retry_after'],
-                    'code': 'RATE_LIMITED'
-                })
+                response = jsonify(
+                    {
+                        "error": "Rate limit exceeded",
+                        "message": f"Too many requests. Try again in {info['retry_after']} seconds.",
+                        "retry_after": info["retry_after"],
+                        "code": "RATE_LIMITED",
+                    }
+                )
                 response.status_code = 429
-                response.headers['Retry-After'] = str(info['retry_after'])
+                response.headers["Retry-After"] = str(info["retry_after"])
                 return response
 
             from flask import Response as FlaskResponse
+
             response = f(*args, **kwargs)
             # Handle tuple returns like (response, status_code)
             if isinstance(response, tuple):
                 resp_obj = response[0]
                 if not isinstance(resp_obj, FlaskResponse):
                     resp_obj = jsonify(resp_obj)
-                if len(response) > 1 and hasattr(resp_obj, 'status_code'):
+                if len(response) > 1 and hasattr(resp_obj, "status_code"):
                     resp_obj.status_code = response[1]
                 response = resp_obj
             elif not isinstance(response, FlaskResponse):
                 response = jsonify(response)
-            response.headers['X-RateLimit-Remaining'] = str(info['remaining'])
-            response.headers['X-RateLimit-Reset'] = str(int(info['reset_at']))
+            response.headers["X-RateLimit-Remaining"] = str(info["remaining"])
+            response.headers["X-RateLimit-Reset"] = str(int(info["reset_at"]))
             return response
 
         return decorated_function
@@ -260,24 +259,24 @@ class SecurityHeaders:
             "base-uri 'self'; "
             "form-action 'self';"
         )
-        response.headers['Content-Security-Policy'] = csp
+        response.headers["Content-Security-Policy"] = csp
 
         # Prevent clickjacking
-        response.headers['X-Frame-Options'] = 'DENY'
+        response.headers["X-Frame-Options"] = "DENY"
 
         # Prevent MIME type sniffing
-        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers["X-Content-Type-Options"] = "nosniff"
 
         # XSS protection (legacy browsers)
-        response.headers['X-XSS-Protection'] = '1; mode=block'
+        response.headers["X-XSS-Protection"] = "1; mode=block"
 
         # Referrer policy
-        response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
 
         # Permissions policy
-        response.headers['Permissions-Policy'] = (
-            'accelerometer=(), camera=(), geolocation=(), gyroscope=(), '
-            'magnetometer=(), microphone=(), payment=(), usb=()'
+        response.headers["Permissions-Policy"] = (
+            "accelerometer=(), camera=(), geolocation=(), gyroscope=(), "
+            "magnetometer=(), microphone=(), payment=(), usb=()"
         )
 
         return response
@@ -297,7 +296,7 @@ class HTTPSRedirect:
     def init_app(self, app):
         """Initialize with Flask app."""
         # Only enable in production
-        if os.environ.get('HTTPS_ENFORCE', 'false').lower() == 'true':
+        if os.environ.get("HTTPS_ENFORCE", "false").lower() == "true":
             app.before_request(self._redirect_to_https)
             app.after_request(self._add_hsts_header)
 
@@ -306,13 +305,13 @@ class HTTPSRedirect:
         from flask import request, redirect
 
         if not request.is_secure:
-            url = request.url.replace('http://', 'https://', 1)
+            url = request.url.replace("http://", "https://", 1)
             return redirect(url, code=301)
 
     def _add_hsts_header(self, response):
         """Add HSTS header."""
-        response.headers['Strict-Transport-Security'] = (
-            f'max-age={self.hsts_max_age}; includeSubDomains; preload'
+        response.headers["Strict-Transport-Security"] = (
+            f"max-age={self.hsts_max_age}; includeSubDomains; preload"
         )
         return response
 
@@ -325,7 +324,7 @@ def get_rate_limiter() -> InMemoryRateLimiter:
     """Get or create rate limiter."""
     global _rate_limiter
     if _rate_limiter is None:
-        rpm = int(os.environ.get('RATELIMIT_PER_MINUTE', '60'))
+        rpm = int(os.environ.get("RATELIMIT_PER_MINUTE", "60"))
         _rate_limiter = InMemoryRateLimiter(requests_per_minute=rpm)
     return _rate_limiter
 
@@ -342,7 +341,7 @@ def init_security(app) -> None:
 
     # Rate limiter
     limiter = get_rate_limiter()
-    app.extensions['rate_limiter'] = {'limiter': limiter}
+    app.extensions["rate_limiter"] = {"limiter": limiter}
 
     @app.before_request
     def set_rate_limiter():

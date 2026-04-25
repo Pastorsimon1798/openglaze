@@ -38,11 +38,9 @@ jobs:
 
       - name: Check formatting with Black
         run: black --check --diff .
-        continue-on-error: true  # Existing codebase is not yet fully Black-formatted.
 
       - name: Lint with Ruff
         run: ruff check .
-        continue-on-error: true  # Existing codebase has pre-existing lint debt.
 
       - name: Run tests with pytest
         run: pytest tests/ -v --cov=. --cov-report=xml --cov-report=term

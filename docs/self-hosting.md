@@ -40,10 +40,34 @@ SECRET_KEY=<32+ random bytes, e.g. openssl rand -hex 32>
 
 ## Reverse proxy
 
-The repo includes a minimal `nginx.conf` for the compose `prod` profile. For TLS, place certificates under `./certs` or terminate TLS with Caddy/Traefik/Cloudflare in front of the app.
+The default compose app publishes port `8768`. You can put any trusted reverse proxy in front of it, or use the bundled nginx profiles.
+
+HTTP-only nginx, useful behind a separate TLS terminator:
 
 ```bash
-docker compose --profile prod up -d
+OPENGLAZE_HTTP_PORT=8080 docker compose --profile prod up -d
+curl http://localhost:8080/health
+```
+
+Bundled TLS nginx expects PEM files at `./certs/fullchain.pem` and `./certs/privkey.pem`:
+
+```bash
+mkdir -p certs
+# Copy your CA-issued certificate/key into certs/, then:
+OPENGLAZE_HTTP_PORT=80 OPENGLAZE_HTTPS_PORT=443 docker compose --profile tls up -d
+curl https://openglaze.yourdomain.com/health
+```
+
+For local TLS smoke tests only, you can generate a temporary self-signed certificate:
+
+```bash
+mkdir -p certs
+openssl req -x509 -nodes -newkey rsa:2048 \
+  -keyout certs/privkey.pem \
+  -out certs/fullchain.pem \
+  -subj '/CN=localhost' -days 1
+OPENGLAZE_HTTP_PORT=18080 OPENGLAZE_HTTPS_PORT=18443 docker compose --profile tls up -d
+curl -k https://localhost:18443/health
 ```
 
 For Caddy, a minimal external proxy is:

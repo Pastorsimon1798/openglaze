@@ -10,7 +10,7 @@ import pytest
 @pytest.fixture
 def test_db_path():
     """Create a temp SQLite DB with schema loaded and sample data seeded."""
-    fd, path = tempfile.mkstemp(suffix='.db')
+    fd, path = tempfile.mkstemp(suffix=".db")
     os.close(fd)
     conn = connect_db(path)
     conn.executescript(_SCHEMA_SQL)
@@ -24,23 +24,23 @@ def test_db_path():
 @pytest.fixture
 def sample_glazes(test_db_path):
     """Return the 3 seeded glaze names."""
-    return ['Chun Blue', 'Iron Red', 'Shino']
+    return ["Chun Blue", "Iron Red", "Shino"]
 
 
 @pytest.fixture
 def sample_chemistry_rules(test_db_path):
     """Return the 2 seeded chemistry rule titles."""
-    return ['Shino layering risk', 'Iron oxide color prediction']
+    return ["Shino layering risk", "Iron oxide color prediction"]
 
 
 @pytest.fixture
 def sample_combinations(test_db_path):
     """Return the 1 seeded combination description."""
-    return [('Tenmoku', 'Chun Blue', 'proven')]
+    return [("Tenmoku", "Chun Blue", "proven")]
 
 
 # Load canonical schema from the actual schema.sql so tests never drift out of sync
-_schema_path = Path(__file__).parent.parent / 'core' / 'schema.sql'
+_schema_path = Path(__file__).parent.parent / "core" / "schema.sql"
 if _schema_path.exists():
     _SCHEMA_SQL = _schema_path.read_text()
 else:
