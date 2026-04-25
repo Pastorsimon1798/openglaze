@@ -1,6 +1,6 @@
 # Ceramics Foundation Workspace
 
-Domain knowledge for ceramics vision pipeline, caption generation, and AI Glaze Lab. Cone 10 reduction at Clay on First (Long Beach).
+Domain knowledge for ceramics vision pipeline, caption generation, and AI Glaze Lab. Cone 10 reduction at Default Studio (Long Beach).
 
 ---
 
@@ -67,7 +67,7 @@ ceramics-foundation/
 
 **Firing:** Cone 10 reduction (gas kiln)
 **Bisque:** Electric cone 06
-**Studio:** Clay on First, Long Beach CA
+**Studio:** Default Studio, Long Beach CA
 **Inventory:** 32 glazes (Laguna/Aardvark/community)
 
 **Critical:** All color descriptions assume reduction atmosphere (muted vs bright oxidation).

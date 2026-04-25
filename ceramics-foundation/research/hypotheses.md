@@ -24,15 +24,15 @@ Ongoing questions with confidence levels. Updated as new findings corroborate or
 
 ## Material Science
 
-### H-004: Laguna vs Artvark cone 5 dry glazes at Clay on First
-- **Hypothesis:** Clay on First class studio uses bucket-mixed dry glazes, likely Laguna Clay or Artvark products from Southern California suppliers
+### H-004: Laguna vs Artvark cone 5 dry glazes at Default Studio
+- **Hypothesis:** Default Studio class studio uses bucket-mixed dry glazes, likely Laguna Clay or Artvark products from Southern California suppliers
 - **Confidence:** Low — unconfirmed, needs studio visit or supplier research
 - **Date:** 2026-03-17
 - **Sources:** Studio observation, regional supplier analysis
 
 ## Business
 
-### H-005: Clay on First class glaze catalog
+### H-005: Default Studio class glaze catalog
 - **Hypothesis:** The class studio has 10-20 bucket-mixed glazes (fewer than the 32 member studio glazes) covering basics: clear, white, blue, green, brown, black
 - **Confidence:** Low — needs confirmation
 - **Date:** 2026-03-17

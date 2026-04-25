@@ -39,7 +39,7 @@ This workspace has no `stages/` - it's reference material. Pipelines load releva
 
 ## Studio Context
 
-Cone 10 reduction, Clay on First (Long Beach). All color descriptions assume reduction atmosphere. Glaze effects specific to reduction: carbon trapping, copper flashing, luster development.
+Cone 10 reduction, Default Studio (Long Beach). All color descriptions assume reduction atmosphere. Glaze effects specific to reduction: carbon trapping, copper flashing, luster development.
 
 ## File Dependencies
 

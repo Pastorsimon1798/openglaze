@@ -2,7 +2,7 @@
   "model": "google/gemini-3-flash-preview",
   "timestamp": "2026-03-19T12:00:00Z",
   "image_url": "https://maas-log-prod.cn-wlcb.ufileos.com/anthropic/4d827f3d-c650-4cde-8a69-e216e91b1c9a/b1c379704184a7e5dcf7e7b5340ebc24.jpg",
-  "analysis_summary": "Complete analysis of all 33 ceramic test tiles fired in Cone 10 reduction at Clay on First studio.",
+  "analysis_summary": "Complete analysis of all 33 ceramic test tiles fired in Cone 10 reduction at Default Studio studio.",
   "tiles_analyzed": 33,
   "firing_context": {
     "temperature": "Cone 10 (1249-1305°C)",

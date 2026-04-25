@@ -15,7 +15,7 @@ DEMO_MODE = os.environ.get('DEMO_MODE', 'false').lower() == 'true'
 
 DEMO_USER = {
     'user_id': 'demo-user-001',
-    'email': 'demo@clayonfirst.com',
+    'email': 'demo@openglaze.local',
     'tier': 'studio',
 }
 

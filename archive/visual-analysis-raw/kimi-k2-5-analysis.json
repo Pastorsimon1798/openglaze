@@ -7,7 +7,7 @@
   "firing_context": {
     "temperature": "Cone 10",
     "atmosphere": "Reduction",
-    "studio": "Clay on First, Long Beach"
+    "studio": "Default Studio, Long Beach"
   },
   "color_analysis_strengths": [
     "Detailed color descriptions with Munsell-like precision",

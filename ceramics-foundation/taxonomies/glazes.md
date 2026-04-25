@@ -619,7 +619,7 @@ Studio glaze names are famous/widely-known glaze names from pottery community, s
 **Analysis Date:** 2026-03-19
 **Source:** Multi-model AI vision analysis (Kimi K2.5 + Gemini 3 Flash)
 **Method:** Systematic ceramic glaze reverse-engineering framework
-**Test Tile Photo:** 33 tiles from Clay on First studio
+**Test Tile Photo:** 33 tiles from Default Studio studio
 
 ### Visual Characteristics by Glaze Family
 
@@ -758,7 +758,7 @@ Studio glaze names are famous/widely-known glaze names from pottery community, s
 - Multi-model AI vision analysis: Kimi K2.5 + Gemini 3 Flash
 - Systematic ceramic glaze reverse-engineering framework applied
 - All 33 glazes documented with visual characteristics
-- Test tile photo: Clay on First studio, Cone 10 reduction
+- Test tile photo: Default Studio studio, Cone 10 reduction
 - Raw model responses archived in glaze-experiments workspace
 
 **Documentation Status:** Complete with visual reference data

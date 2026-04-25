@@ -242,9 +242,9 @@ Opening lines that work for pottery content.
 
 When relevant, include:
 
-- **Tag them in posts:** @clayonfirst
-- **Mention location:** "Made at Clay on First in Long Beach"
-- **Free pickup option:** "Free pickup in Long Beach / at Clay on First"
+- **Tag them in posts:** @yourstudio
+- **Mention location:** "Made at Default Studio in Long Beach"
+- **Free pickup option:** "Free pickup in Long Beach / at Default Studio"
 
 ### Community References
 

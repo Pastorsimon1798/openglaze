@@ -1,6 +1,6 @@
 # Test Tile Visual Analysis
 
-**Studio:** Clay on First, Long Beach CA
+**Studio:** Default Studio
 **Firing:** Cone 10 Reduction (Gas)
 **Analysis Date:** 2026-03-19
 **Test Tile Photo:** [33 tiles on white tile board]
