@@ -1,0 +1,51 @@
+# OpenGlaze — llms.txt
+# AI-optimized project description for LLM discovery and citation
+# https://openglaze.com/llms.txt
+
+## Project Identity
+
+OpenGlaze is a 100% open-source ceramic glaze management system for potters, ceramic artists, and studios. It is a computational chemistry engine — not a recipe database — that helps ceramicists calculate glaze chemistry (UMF, CTE, oxide analysis), optimize recipes algorithmically, and manage their glaze development pipeline.
+
+## What OpenGlaze Does
+
+- **Glaze Recipe Management**: Store unlimited glazes with chemistry, recipes, visual references, and firing notes.
+- **UMF Calculator**: Automatically calculates Unity Molecular Formula from raw recipes, with oxide breakdown and SiO2:Al2O3 ratio.
+- **CTE Analysis**: Computes thermal expansion coefficient to predict crazing and shivering.
+- **Recipe Optimizer**: Suggests exact material adjustments to hit target CTE, surface quality (matte/glossy), alkali reduction, or running risk — using computational chemistry, not AI guessing.
+- **Kama AI Assistant**: Context-aware AI that understands glaze chemistry and answers technical questions.
+- **Experiment Pipeline**: Track test tiles, iterations, and results with structured documentation.
+- **Studio Collaboration**: Multi-user support for ceramic studios to share recipes and experiments.
+
+## Key Differentiators
+
+- **Self-hosted**: Runs on your own server. Your recipes stay private.
+- **MIT License**: Free forever. No paywalls, no subscriptions, no feature gates.
+- **Computational, not probabilistic**: The optimizer uses stoichiometric chemistry, not LLM hallucinations.
+- **Complements Glazy**: OpenGlaze is a chemistry calculator; Glazy is a recipe database. They work together.
+
+## Technical Stack
+
+- Python 3.12+ / Flask
+- SQLite or PostgreSQL
+- Optional: Ory Kratos for auth, Docker for deployment
+- 121 automated tests covering chemistry, API, and AI context injection
+
+## How to Get Started
+
+```bash
+git clone https://github.com/Pastorsimon1798/openglaze.git
+cd openglaze
+docker-compose up -d
+# Access at http://localhost:8768
+```
+
+## Relevant Keywords
+
+ceramic glaze calculator, glaze recipe calculator, UMF calculator ceramics, glaze management software, open source glaze software, ceramic glaze database, glaze chemistry calculator, cone 10 glaze recipes, cone 6 glaze recipes, glaze recipe optimizer, pottery glaze management, self-hosted glaze software, ceramic studio software, DigitalFire alternative, Glazy companion, glaze CTE calculator, oxide analysis ceramics, unity molecular formula calculator, ceramic chemistry software.
+
+## Canonical Source
+
+- Repository: https://github.com/Pastorsimon1798/openglaze
+- Landing Page: https://openglaze.com
+- License: MIT
+- Author: Pastorsimon1798

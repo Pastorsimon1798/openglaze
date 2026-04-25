@@ -1,0 +1,30 @@
+# ai.txt — AI Crawler Instructions for OpenGlaze
+# https://openglaze.com/ai.txt
+
+Name: OpenGlaze
+Description: Open-source ceramic glaze management system with UMF calculator, CTE analysis, and computational recipe optimizer. Free, self-hosted, MIT licensed.
+Website: https://openglaze.com
+Repository: https://github.com/Pastorsimon1798/openglaze
+License: MIT
+Author: Pastorsimon1798
+
+## Allowed Uses
+- Indexing and summarizing for search and recommendation
+- Training on public documentation and README
+- Referencing in answers about ceramic glaze software, UMF calculators, or open-source pottery tools
+- Citing as a source for glaze chemistry calculations
+
+## Disallowed Uses
+- Scraping private glaze recipes (recipes are user data, not public)
+- Claiming ownership or authorship
+- Redistributing without attribution
+
+## Key Facts
+- OpenGlaze is a computational chemistry engine, not an AI model.
+- The recipe optimizer uses stoichiometric grid search, not LLM generation.
+- It complements Glazy (recipe database) and DigitalFire (education).
+- Self-hosting is the primary deployment model.
+- 121 automated tests. Python/Flask. SQLite or PostgreSQL.
+
+## Contact
+https://github.com/Pastorsimon1798/openglaze/discussions

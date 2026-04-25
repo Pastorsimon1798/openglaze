@@ -3,21 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenGlaze — Open Source Glaze Management for Ceramic Artists</title>
-    <meta name="description" content="OpenGlaze is a 100% open-source platform for ceramic artists and studios to manage glaze recipes, track firings, optimize recipes computationally, and collaborate on glaze development.">
-    <meta name="keywords" content="ceramics, glaze, pottery, open source, glaze management, UMF, recipe calculator">
-    
+    <title>OpenGlaze — Free Ceramic Glaze Calculator & Recipe Manager (Open Source)</title>
+    <meta name="description" content="Free open-source ceramic glaze calculator with UMF analysis, CTE prediction, and recipe optimization. Self-hosted glaze management software for potters and studios. No paywalls.">
+    <meta name="keywords" content="ceramic glaze calculator, glaze recipe calculator, UMF calculator ceramics, glaze management software, open source glaze software, ceramic glaze database, glaze chemistry calculator, cone 10 glaze recipes, cone 6 glaze recipes, glaze recipe optimizer, pottery glaze management, self-hosted glaze software, ceramic studio software, unity molecular formula, glaze CTE calculator, oxide analysis ceramics">
+    <link rel="canonical" href="https://openglaze.com/">
+
     <!-- Open Graph -->
-    <meta property="og:title" content="OpenGlaze — Open Source Glaze Management">
-    <meta property="og:description" content="Professional ceramic glaze management with recipe optimization. 100% open source. Own your data.">
+    <meta property="og:title" content="OpenGlaze — Free Ceramic Glaze Calculator & Recipe Manager">
+    <meta property="og:description" content="Free open-source ceramic glaze calculator with UMF analysis, CTE prediction, and recipe optimization. Self-hosted. No paywalls.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://openglaze.com">
     <meta property="og:image" content="https://openglaze.com/og-image.png">
-    
+    <meta property="og:site_name" content="OpenGlaze">
+
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="OpenGlaze">
-    <meta name="twitter:description" content="Open source glaze management for ceramic artists">
+    <meta name="twitter:title" content="OpenGlaze — Free Ceramic Glaze Calculator">
+    <meta name="twitter:description" content="Open-source glaze management with UMF calculator, CTE analysis, and recipe optimizer. Self-hosted. Free forever.">
+    <meta name="twitter:image" content="https://openglaze.com/og-image.png">
+
+    <!-- Schema Markup: SoftwareApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "OpenGlaze",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Open-source ceramic glaze management system with UMF calculator, CTE analysis, and computational recipe optimizer. Self-hosted. Free forever under MIT license.",
+      "url": "https://openglaze.com",
+      "sameAs": [
+        "https://github.com/Pastorsimon1798/openglaze"
+      ],
+      "featureList": [
+        "Unity Molecular Formula (UMF) calculator",
+        "Thermal expansion coefficient (CTE) analysis",
+        "Computational recipe optimizer",
+        "Glaze recipe database management",
+        "AI-powered glaze consulting (Kama)",
+        "Experiment pipeline tracking",
+        "Studio collaboration tools",
+        "Self-hosted deployment"
+      ],
+      "softwareRequirements": "Python 3.12+, SQLite or PostgreSQL, Docker (optional)",
+      "license": "https://github.com/Pastorsimon1798/openglaze/blob/master/LICENSE",
+      "programmingLanguage": "Python",
+      "author": {
+        "@type": "Person",
+        "name": "Pastorsimon1798"
+      }
+    }
+    </script>
+
+    <!-- Schema Markup: FAQPage -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is OpenGlaze?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "OpenGlaze is a 100% open-source ceramic glaze management system for potters and ceramic studios. It includes a UMF calculator, CTE analysis engine, computational recipe optimizer, and AI-powered glaze consulting — all self-hosted and free under the MIT license."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is OpenGlaze free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. OpenGlaze is completely free, open-source software under the MIT license. There are no paywalls, no subscriptions, and no feature gates. You can self-host it on your own server and keep full control of your glaze recipes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a UMF calculator for ceramics?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "UMF stands for Unity Molecular Formula. A UMF calculator converts raw glaze recipes (percentages of materials like feldspar, silica, and kaolin) into a normalized molecular formula. This reveals the SiO₂:Al₂O₃ ratio, flux composition, and predicted surface qualities — essential for understanding and adjusting glazes. OpenGlaze calculates UMF automatically from any batch recipe."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the glaze recipe optimizer work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The OpenGlaze recipe optimizer uses computational chemistry — not AI guessing — to suggest exact material adjustments. You set a target (e.g., specific CTE, matte surface, reduced running risk) and the engine grid-searches stoichiometric adjustments, ranks them by predicted outcome, and returns the top suggestions with before/after chemistry."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is OpenGlaze a replacement for Glazy or DigitalFire?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No — OpenGlaze complements them. Glazy is a recipe database and community. DigitalFire provides deep ceramic chemistry education. OpenGlaze is a computational chemistry engine and glaze management tool. Many users export recipes from Glazy into OpenGlaze for UMF analysis and optimization."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I self-host OpenGlaze?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Absolutely. Self-hosting is the primary deployment model. Run it locally with SQLite for personal use, or deploy with Docker and PostgreSQL for studio collaboration. Your recipes never leave your infrastructure."
+          }
+        }
+      ]
+    }
+    </script>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -725,6 +824,40 @@
                 text-align: center;
             }
         }
+        /* FAQ Section */
+        .faq {
+            padding: 80px 24px;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border);
+        }
+        .faq-inner {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .faq h2 {
+            text-align: center;
+            font-size: var(--text-3xl);
+            margin-bottom: 48px;
+            color: var(--text-primary);
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 24px 0;
+        }
+        .faq-item h3 {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+        .faq-item p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        .faq-item a {
+            color: var(--celadon-600);
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -737,6 +870,7 @@
             </a>
             <div class="nav-links">
                 <a href="#features">Features</a>
+                <a href="#faq">FAQ</a>
                 <a href="https://github.com/Pastorsimon1798/openglaze">GitHub</a>
                 <a href="https://github.com/Pastorsimon1798/openglaze/discussions">Community</a>
                 <a href="https://github.com/Pastorsimon1798/openglaze/tree/master/docs">Docs</a>
@@ -974,6 +1108,43 @@
             <p style="margin-top: 24px; font-size: 0.9rem; color: var(--clay-400);">
                 OpenGlaze is free and open source. If it saves you a test tile, consider supporting its development — <a href="https://ko-fi.com/yourname" style="color: var(--celadon-400);">Ko-fi</a>, <a href="https://patreon.com/yourname" style="color: var(--celadon-400);">Patreon</a>, or <a href="https://github.com/sponsors/yourname" style="color: var(--celadon-400);">GitHub Sponsors</a>.
             </p>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+        <div class="faq-inner">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <h3>What is OpenGlaze?</h3>
+                <p>OpenGlaze is a <strong>100% open-source ceramic glaze management system</strong> for potters and ceramic studios. It includes a <a href="#features">UMF calculator</a>, CTE analysis engine, <a href="https://github.com/Pastorsimon1798/openglaze/tree/master/docs/user-guide.md#recipe-optimizer">computational recipe optimizer</a>, and AI-powered glaze consulting — all self-hosted and free under the MIT license.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Is OpenGlaze really free?</h3>
+                <p>Yes. OpenGlaze is completely free, open-source software under the MIT license. There are no paywalls, no subscriptions, and no feature gates. You can <a href="https://github.com/Pastorsimon1798/openglaze/tree/master/docs/self-hosting.md">self-host it</a> on your own server and keep full control of your glaze recipes. <a href="https://github.com/Pastorsimon1798/openglaze/blob/master/docs/why-free-why-open-why-self-hosted.md">Read why we chose this model</a>.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>What is a UMF calculator for ceramics?</h3>
+                <p>UMF stands for <strong>Unity Molecular Formula</strong>. A UMF calculator converts raw glaze recipes (percentages of materials like feldspar, silica, and kaolin) into a normalized molecular formula. This reveals the SiO₂:Al₂O₃ ratio, flux composition, and predicted surface qualities — essential for understanding and adjusting glazes. OpenGlaze calculates UMF automatically from any batch recipe.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>How does the glaze recipe optimizer work?</h3>
+                <p>The OpenGlaze recipe optimizer uses <strong>computational chemistry</strong> — not AI guessing — to suggest exact material adjustments. You set a target (e.g., specific CTE, matte surface, reduced running risk) and the engine grid-searches stoichiometric adjustments, ranks them by predicted outcome, and returns the top suggestions with before/after chemistry.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Is OpenGlaze a replacement for Glazy or DigitalFire?</h3>
+                <p>No — OpenGlaze <strong>complements</strong> them. <a href="https://glazy.org">Glazy</a> is a recipe database and community. <a href="https://digitalfire.com">DigitalFire</a> provides deep ceramic chemistry education. OpenGlaze is a computational chemistry engine and glaze management tool. Many users export recipes from Glazy into OpenGlaze for UMF analysis and optimization.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Can I self-host OpenGlaze?</h3>
+                <p>Absolutely. Self-hosting is the primary deployment model. Run it locally with SQLite for personal use, or deploy with <a href="https://github.com/Pastorsimon1798/openglaze/tree/master/docs/self-hosting.md">Docker and PostgreSQL</a> for studio collaboration. Your recipes never leave your infrastructure.</p>
+            </div>
         </div>
     </section>
 

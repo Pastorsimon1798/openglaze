@@ -1,11 +1,11 @@
 # OpenGlaze
 
 <p align="center">
-  <img src="frontend/favicon.svg" alt="OpenGlaze Logo" width="120">
+  <img src="frontend/favicon.svg" alt="OpenGlaze — open source ceramic glaze calculator and recipe manager" width="120">
 </p>
 
 <p align="center">
-  <strong>Professional ceramic glaze management system. 100% open source.</strong>
+  <strong>Free ceramic glaze calculator, recipe manager, and UMF analyzer.<br>100% open source. Self-hosted. No paywalls.</strong>
 </p>
 
 <p align="center">
@@ -41,15 +41,40 @@
 
 ## Overview
 
-OpenGlaze is a complete, open-source platform for ceramic artists and studios to manage glaze recipes, track firings, document experiments, and collaborate on glaze development. Built by potters, for potters.
+OpenGlaze is a **free, open-source ceramic glaze management system** for potters, ceramic artists, and studios. It combines a **UMF calculator**, **CTE analysis engine**, **computational recipe optimizer**, and **AI-powered glaze consulting** — all in one self-hosted application.
+
+Built by potters, for potters. Your glaze recipes stay on your infrastructure. No subscriptions. No feature gates. MIT licensed.
 
 **Why OpenGlaze?**
 
-- 🏠 **Own your data** — Self-host on your own infrastructure
-- 🔓 **Truly open** — MIT licensed, no proprietary lock-in
-- 🧠 **AI-powered** — Kama assistant understands glaze chemistry
-- 🎨 **Studio-ready** — Multi-user collaboration out of the box
-- ☕ **Free forever** — No paywalls, no subscriptions, no feature gates
+- 🏠 **Own your data** — Self-host on your own server. Recipes never leave your studio.
+- 🔓 **Truly open** — MIT licensed, no proprietary lock-in, full source code available
+- 🧮 **Computational chemistry** — UMF calculator, CTE prediction, and recipe optimizer using stoichiometric analysis — not guesswork
+- 🧠 **AI-powered** — Kama assistant understands glaze chemistry and answers technical questions
+- 🎨 **Studio-ready** — Multi-user collaboration, role-based access, shared glaze libraries
+- ☕ **Free forever** — No paywalls, no subscriptions, no feature gates. Voluntary support only.
+
+## What is OpenGlaze?
+
+OpenGlaze is a **ceramic glaze calculator and recipe management tool** designed for anyone working with glazes:
+
+- **Hobby potters** who want to understand their glazes at the molecular level
+- **Studio ceramicists** managing dozens of recipes and test firings
+- **Educators** teaching glaze chemistry with transparent, reproducible tools
+- **Production potters** optimizing recipes for consistency and cost
+
+At its core, OpenGlaze automates the chemistry that ceramicists have historically done by hand or with spreadsheets: calculating Unity Molecular Formula (UMF), estimating thermal expansion coefficient (CTE), and suggesting material adjustments to achieve target properties.
+
+### How It Compares
+
+| Tool | What It Does | How OpenGlaze Fits |
+|------|-------------|-------------------|
+| **Glazy** | Recipe database & community | Export from Glazy → analyze & optimize in OpenGlaze |
+| **DigitalFire** | Ceramic chemistry education & reference | Deep educational content; OpenGlaze is the practical calculator |
+| **INSIGHT** | Desktop glaze calculation software | Similar chemistry engine; OpenGlaze is web-based, open-source, and self-hosted |
+| **HyperGlaze** | Recipe database | Import recipes into OpenGlaze for UMF analysis |
+
+OpenGlaze is not a replacement for these tools — it complements them. Many users maintain their recipe libraries in Glazy and use OpenGlaze for computational analysis and optimization.
 
 ## Quick Start
 
@@ -93,20 +118,20 @@ Open http://localhost:8767 in your browser.
 ### 🎨 Glaze Management
 - Store unlimited glazes with chemistry, recipes, and visual references
 - Track family relationships and base types
-- UMF calculation with automatic oxide analysis
-- Recipe scaling and batch calculator
-- Food safety and cone range annotations
+- **UMF calculator** with automatic oxide analysis and SiO₂:Al₂O₃ ratio
+- Recipe scaling and batch calculator with cost estimation
+- Food safety and cone range annotations (cone 06 through 10)
 
 </td>
 <td width="50%">
 
 ### 🔬 Chemistry Engine
-- UMF (Unity Molecular Formula) calculation
-- Glaze compatibility analysis
-- Thermal expansion coefficient matching
-- **Recipe optimizer** — suggests exact tweaks to hit target CTE, surface, or durability
+- **UMF calculator** — Unity Molecular Formula from any batch recipe
+- **CTE analysis** — Thermal expansion coefficient prediction for crazing/shivering risk
+- Glaze compatibility analysis and material substitution suggestions
+- **Recipe optimizer** — Computational suggestions to hit target CTE, surface (matte/glossy), or durability
 - Batch reporting with cost estimation
-- Oxide analysis and substitution suggestions
+- Oxide analysis with automatic role classification (flux, stabilizer, glass former)
 
 </td>
 </tr>
@@ -158,7 +183,7 @@ Open http://localhost:8767 in your browser.
 
 ### More Features
 
-- 🧮 **Recipe Optimizer** — Compute exact material adjustments to hit target properties without physical testing
+- 🧮 **Recipe Optimizer** — Computational glaze recipe optimizer suggesting exact material adjustments to hit target CTE, surface, or durability without physical testing
 - 📸 **Photo Documentation** — Gallery view across multiple firings
 - 🔥 **Firing Logs** — Atmosphere, cone, and schedule tracking
 - 🧮 **Layering Tracker** — Document and predict base/top combinations
