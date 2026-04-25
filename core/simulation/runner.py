@@ -218,16 +218,14 @@ def _load_chemistry_rules(db_path: str) -> str:
     try:
         conn = connect_db(db_path)
         cursor = conn.cursor()
-        cursor.execute(
-            """
+        cursor.execute("""
             SELECT category, title, description, confidence
             FROM chemistry_rules
             WHERE category IN ('color_prediction', 'layering_principle', 'common_issue', 'umf_interpretation')
             AND confidence = 'high'
             ORDER BY category
             LIMIT 30
-        """
-        )
+        """)
         rules = cursor.fetchall()
         conn.close()
 

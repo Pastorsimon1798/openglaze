@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Seed OpenGlaze demo database with Default Studio glazes and sample data."""
+
 import json
 import os
 import sqlite3

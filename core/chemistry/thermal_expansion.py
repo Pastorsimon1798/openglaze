@@ -14,7 +14,6 @@ from typing import Dict, Optional
 
 from .materials import THERMAL_EXPANSION_COEFFICIENTS
 
-
 # Typical clay body CTE ranges for compatibility checking
 _CLAY_BODY_CTE_RANGES = {
     "porcelain": (4.0, 5.5),
