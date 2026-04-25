@@ -252,7 +252,55 @@ But critically: **the core value is free.** The Patreon is framed as "help us pa
 
 ---
 
-## 9. What "Free and Self-Hosted" Actually Means in Practice
+## 9. Voluntary Support Is Not Monetization
+
+### The Critical Distinction
+
+There is a world of difference between **monetization** (paywalls, tiers, SaaS) and **voluntary support** (Patreon, Ko-fi, GitHub Sponsors, "buy me a coffee").
+
+| Monetization | Voluntary Support |
+|-------------|-------------------|
+| "Pay $8/month or you can't use the optimizer" | "The optimizer is free. If it saved you a test tile, here's my Ko-fi" |
+| Feature gates, auth systems, billing infrastructure | A link in the README and on the landing page |
+| "Pro" vs "Free" tiers | One tier: everything is free, support is appreciated |
+| SaaS hosting required | Self-hosted forever, creator gets coffee money |
+| Legal complexity (ToS, Privacy Policy, tax) | Personal donation, minimal compliance |
+
+**Glazy does exactly this.** The entire platform is free. Derek Au has a Patreon. Patrons get a flame badge and minor perks (dark mode, blends). But the core value — recipes, calculator, community — is unconditionally free. The Patreon is framed as "help us pay for servers," not "pay us for software."
+
+**This is the model OpenGlaze should follow.**
+
+### What Voluntary Support Looks Like
+
+**README.md:**
+> OpenGlaze is free and open source under the MIT license. If this tool saved you materials, time, or a failed kiln load, consider [buying me a coffee](https://ko-fi.com/yourname) or [supporting on Patreon](https://patreon.com/yourname). No pressure — the tool is yours either way.
+
+**Landing page:**
+> OpenGlaze is free, open source, and self-hosted. Built by a potter, for potters. [☕ Buy me a coffee]
+
+**GitHub Sponsors:**
+> Sponsor this project to help cover development time and keep the optimizer improving.
+
+### Why This Works
+
+1. **Zero friction** — A user never encounters a paywall, signup gate, or "upgrade" button
+2. **Zero engineering cost** — No auth, no billing, no feature flags. Just a link.
+3. **Culturally appropriate** — "Buy me a coffee" is the language of craft and gratitude, not commerce
+4. **Proven in this exact community** — Glazy's Patreon sustains server costs and part-time development
+5. **Honest** — The creator gets support if users feel grateful, not because users are forced
+
+### What Voluntary Support Does NOT Mean
+
+- ❌ Gating features behind donations
+- ❌ "Donate to unlock" or "supporter-only" versions
+- ❌ Nag screens, countdowns, or guilt trips
+- ❌ Creating a sense of obligation
+
+The link exists. Users see it. Some click it. Most don't. Everyone gets the full tool regardless.
+
+---
+
+## 10. What "Free and Self-Hosted" Actually Means in Practice
 
 ### The Calculator
 
@@ -282,48 +330,55 @@ But critically: **the core value is free.** The Patreon is framed as "help us pa
 - Contributions welcome under MIT license
 - No CLA required — if you contribute, your code stays MIT forever
 
+### The Creator
+
+- Builds the tool because they use it and care about it
+- Accepts voluntary support via Patreon / Ko-fi / GitHub Sponsors
+- Frames support as gratitude, not payment
+- Keeps building because the work is meaningful, not because revenue targets demand it
+
 ---
 
 ## 10. The Counterarguments (And Why They're Wrong)
 
 ### "But we could make money!"
 
-**Reality:** You could make $20,000–$40,000/year in a best-case scenario. That's before taxes, server costs, payment processing, and the opportunity cost of your time. For the same effort, you could build features that attract 10x more users, which creates more value for the community and more reputation for the project.
+**Reality:** You *can* make money — through voluntary support. Patreon, Ko-fi, GitHub Sponsors. The difference is: users pay because they *want to*, not because they *have to*. Glazy's Derek Au makes enough from Patreon to cover server costs and justify development time. He doesn't have a business. He has a community that appreciates him.
 
 ### "But we need to sustain development!"
 
-**Reality:** The most sustainable open source projects are the ones that don't need money to survive. If the codebase is clean, well-documented, and solves a real problem, other potters will contribute. If it dies because only one person can maintain it, that was a bus-factor problem, not a funding problem.
+**Reality:** The most sustainable open source projects combine two things: (1) code that's easy for others to contribute to, and (2) a creator who feels valued. Voluntary support provides the second. When users send $5 and say "this saved me a kiln load," that's fuel to keep building. It doesn't require billing infrastructure — just a link and gratitude.
 
 ### "But what about server costs?"
 
-**Reality:** There are no server costs if there is no server. Self-hosted means users run it themselves. The GitHub Pages landing page is free. The only potential cost is if you want to host a demo instance, which is optional and can be funded by GitHub Sponsors or Patreon for infrastructure only.
+**Reality:** There are no server costs if there is no server. Self-hosted means users run it themselves. The GitHub Pages landing page is free. If you want to host a demo instance, Patreon/GitHub Sponsors can cover it. The support is for *you*, not for infrastructure you don't have.
 
 ### "But other open source projects monetize!"
 
-**Reality:** Other open source projects are infrastructure (databases, frameworks, dev tools) used by businesses with budgets. OpenGlaze is a creative tool for individual artists. The comparison is invalid.
+**Reality:** Other open source projects monetize because they're infrastructure used by businesses with budgets. OpenGlaze is a creative tool for individual artists. But that doesn't mean the creator shouldn't accept voluntary support. It means the support should be voluntary, not transactional.
 
 ### "But we spent time building the optimizer — shouldn't we be paid?"
 
-**Reality:** You built the optimizer because you needed it, or because you wanted to, or because it was an interesting problem. The time is already spent. Monetizing it now doesn't retroactively pay you — it just limits who can benefit from it.
+**Reality:** You should be *supported*. There's a difference. Being paid implies a transaction: I give you money, you give me access. Being supported implies gratitude: I give you money because what you built helped me. The optimizer is already built. Put it out there. If it helps people, some of them will want to say thank you with coffee money.
 
 ---
 
 ## 11. Summary: The Five Pillars
 
 ### 1. Cultural Alignment
-The ceramics community shares knowledge freely. A paywall is culturally alien and would be rejected.
+The ceramics community shares knowledge freely. A paywall is culturally alien and would be rejected. Voluntary support ("buy me a coffee") aligns with the culture of gratitude.
 
 ### 2. Market Reality
-The addressable market is 10,000–30,000 users globally. Monetization would generate $20,000–$40,000/year at best — not worth the infrastructure, legal, and community cost.
+The addressable market is 10,000–30,000 users globally. Monetization (tiers, SaaS) would generate $20,000–$40,000/year at best — not worth the infrastructure cost. Voluntary support costs nothing to implement and lets the community decide your value.
 
 ### 3. Scientific Precedent
-Chemistry and materials science tools are expected to be free. OpenGlaze is a scientific calculator, not a SaaS product.
+Chemistry and materials science tools are expected to be free. OpenGlaze is a scientific calculator, not a SaaS product. The creator can still accept voluntary support — scientists do this via grants, potters via Patreon.
 
 ### 4. Fork Risk
-In a niche community, the fork wins. If potters feel exploited, they will fork the project, and the fork will have the community's trust.
+In a niche community, the fork wins if users feel exploited. A paywall triggers forks. A "buy me a coffee" link does not.
 
 ### 5. Opportunity Cost
-Every week spent on billing, auth, and payments is a week not spent on features that actually help potters. The best use of limited engineering time is the tool itself.
+Building billing infrastructure takes 8–12 weeks. A Ko-fi link takes 5 minutes. Every hour not spent on payments is an hour spent on the optimizer, the UI, or the material database.
 
 ---
 
@@ -336,8 +391,9 @@ Success for OpenGlaze is not MRR. It is:
 - **A studio in Jingdezhen forks it** to add Chinese material databases
 - **Glazy links to OpenGlaze** as a recommended tool for recipe analysis
 - **The ceramics community says** "OpenGlaze is the tool potters built for potters"
+- **A potter sends $5 on Ko-fi** with a note: "Saved me 12 test tiles. Thank you."
 
-**That is the goal. Not revenue. Impact.**
+**That is the goal. Impact first. Support follows.**
 
 ---
 
