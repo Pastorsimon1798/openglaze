@@ -521,124 +521,6 @@
             font-weight: 600;
         }
         
-        /* Pricing */
-        .pricing {
-            padding: 80px 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .pricing-toggle {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin-bottom: 48px;
-        }
-        
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
-        }
-        
-        .pricing-card {
-            background: var(--bg-secondary);
-            border-radius: var(--radius-lg);
-            padding: 32px;
-            border: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .pricing-card.featured {
-            border: 2px solid var(--celadon-400);
-            position: relative;
-        }
-        
-        .pricing-card.featured::before {
-            content: "Most Popular";
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--celadon-500), var(--celadon-600));
-            color: white;
-            padding: 4px 16px;
-            border-radius: 100px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        
-        .pricing-card h3 {
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-        }
-        
-        .pricing-card .price {
-            font-family: var(--font-display);
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-        
-        .pricing-card .price span {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            font-weight: 400;
-        }
-        
-        .pricing-card .period {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 24px;
-        }
-        
-        .pricing-features {
-            list-style: none;
-            flex: 1;
-            margin-bottom: 24px;
-        }
-        
-        .pricing-features li {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 6px 0;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-        
-        .pricing-features li::before {
-            content: "✓";
-            color: var(--celadon-500);
-            font-weight: 700;
-        }
-        
-        .pricing-card .btn {
-            width: 100%;
-            justify-content: center;
-        }
-        
-        .pricing-selfhost {
-            text-align: center;
-            margin-top: 48px;
-            padding: 32px;
-            background: var(--celadon-50);
-            border-radius: var(--radius-lg);
-            border: 1px dashed var(--celadon-300);
-        }
-        
-        .pricing-selfhost h3 {
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-            color: var(--celadon-800);
-        }
-        
-        .pricing-selfhost p {
-            color: var(--celadon-600);
-            font-size: 0.9rem;
-        }
-        
         /* Open Source */
         .opensource {
             padding: 80px 24px;
@@ -709,62 +591,6 @@
         .opensource .btn-secondary:hover {
             background: var(--clay-800);
             color: var(--bg-primary);
-        }
-        
-        /* Testimonials */
-        .testimonials {
-            padding: 80px 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-        }
-        
-        .testimonial-card {
-            background: var(--bg-secondary);
-            border-radius: var(--radius-lg);
-            padding: 32px;
-            border: 1px solid var(--border);
-        }
-        
-        .testimonial-card p {
-            font-style: italic;
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-            line-height: 1.7;
-        }
-        
-        .testimonial-author {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .testimonial-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--celadon-300), var(--tenmoku-300));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            color: white;
-            font-size: 0.85rem;
-        }
-        
-        .testimonial-author strong {
-            display: block;
-            font-size: 0.9rem;
-        }
-        
-        .testimonial-author span {
-            font-size: 0.8rem;
-            color: var(--text-muted);
         }
         
         /* Footer */
@@ -858,14 +684,6 @@
                 grid-template-columns: 1fr;
             }
             
-            .pricing-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .testimonials-grid {
-                grid-template-columns: 1fr;
-            }
-            
             .opensource-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -888,8 +706,7 @@
                 font-size: 2.25rem;
             }
             
-            .features-grid,
-            .pricing-grid {
+            .features-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -920,7 +737,6 @@
             </a>
             <div class="nav-links">
                 <a href="#features">Features</a>
-                <a href="#pricing">Pricing</a>
                 <a href="https://github.com/Pastorsimon1798/openglaze">GitHub</a>
                 <a href="https://github.com/Pastorsimon1798/openglaze/discussions">Community</a>
                 <a href="https://github.com/Pastorsimon1798/openglaze/tree/master/docs">Docs</a>
@@ -1128,75 +944,6 @@
         </div>
     </section>
 
-    <!-- Pricing -->
-    <section class="pricing" id="pricing">
-        <div class="section-header">
-            <h2>Simple, transparent pricing</h2>
-            <p>Start free. Upgrade when you need more. Or self-host for unlimited use at no cost.</p>
-        </div>
-        <div class="pricing-grid">
-            <div class="pricing-card">
-                <h3>Free</h3>
-                <div class="price">$0<span>/mo</span></div>
-                <div class="period">Forever free</div>
-                <ul class="pricing-features">
-                    <li>Unlimited glazes</li>
-                    <li>50 firings/month</li>
-                    <li>1 studio</li>
-                    <li>Basic AI (local)</li>
-                    <li>Community support</li>
-                </ul>
-                <a href="https://github.com/Pastorsimon1798/openglaze" class="btn btn-secondary">Get Started</a>
-            </div>
-            <div class="pricing-card featured">
-                <h3>Pro</h3>
-                <div class="price">$9<span>/mo</span></div>
-                <div class="period">$90/year (save $18)</div>
-                <ul class="pricing-features">
-                    <li>Everything in Free</li>
-                    <li>Unlimited firings</li>
-                    <li>Advanced analytics</li>
-                    <li>2 team members</li>
-                    <li>Cloud AI (Claude)</li>
-                    <li>Priority support</li>
-                </ul>
-                <a href="#" class="btn btn-primary">Start Free Trial</a>
-            </div>
-            <div class="pricing-card">
-                <h3>Studio</h3>
-                <div class="price">$29<span>/mo</span></div>
-                <div class="period">$290/year (save $58)</div>
-                <ul class="pricing-features">
-                    <li>Everything in Pro</li>
-                    <li>5 team members</li>
-                    <li>Custom branding</li>
-                    <li>API access</li>
-                    <li>Webhook integrations</li>
-                    <li>Shared libraries</li>
-                </ul>
-                <a href="#" class="btn btn-secondary">Start Free Trial</a>
-            </div>
-            <div class="pricing-card">
-                <h3>Education</h3>
-                <div class="price">$199<span>/yr</span></div>
-                <div class="period">Per institution</div>
-                <ul class="pricing-features">
-                    <li>Everything in Studio</li>
-                    <li>Unlimited users</li>
-                    <li>LMS integration</li>
-                    <li>Curriculum templates</li>
-                    <li>Progress tracking</li>
-                    <li>Dedicated support</li>
-                </ul>
-                <a href="#" class="btn btn-secondary">Contact Us</a>
-            </div>
-        </div>
-        <div class="pricing-selfhost">
-            <h3>🛠️ Self-Host for Free</h3>
-            <p>Run OpenGlaze on your own server with the MIT license. No limits, no fees, complete data ownership. <a href="https://github.com/Pastorsimon1798/openglaze/tree/master/docs/self-hosting.md">Self-hosting guide →</a></p>
-        </div>
-    </section>
-
     <!-- Open Source -->
     <section class="opensource">
         <div class="opensource-inner">
@@ -1227,46 +974,6 @@
         </div>
     </section>
 
-    <!-- Testimonials -->
-    <section class="testimonials">
-        <div class="section-header">
-            <h2>Loved by potters and studios</h2>
-            <p>From hobbyists to production studios, OpenGlaze helps ceramic artists organize their glaze work.</p>
-        </div>
-        <div class="testimonials-grid">
-            <div class="testimonial-card">
-                <p>"Finally, a glaze management tool that understands chemistry. The UMF calculator alone saved me hours of manual computation."</p>
-                <div class="testimonial-author">
-                    <div class="testimonial-avatar">SP</div>
-                    <div>
-                        <strong>Studio Potter</strong>
-                        <span>Cone 10 Reduction Studio</span>
-                    </div>
-                </div>
-            </div>
-            <div class="testimonial-card">
-                <p>"We self-host OpenGlaze for our 12-person studio. Having our entire glaze library, firing logs, and experiment notes in one place is invaluable."</p>
-                <div class="testimonial-author">
-                    <div class="testimonial-avatar">MC</div>
-                    <div>
-                        <strong>Municipal Ceramics</strong>
-                        <span>Community Studio</span>
-                    </div>
-                </div>
-            </div>
-            <div class="testimonial-card">
-                <p>"The experiment pipeline keeps our students organized. They can track their work from first idea to fired result, and we can review their progress."</p>
-                <div class="testimonial-author">
-                    <div class="testimonial-avatar">CA</div>
-                    <div>
-                        <strong>Clay Arts Program</strong>
-                        <span>University Ceramics Dept</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-grid">
@@ -1281,7 +988,6 @@
                 <h4>Product</h4>
                 <ul>
                     <li><a href="#features">Features</a></li>
-                    <li><a href="#pricing">Pricing</a></li>
                     <li><a href="https://github.com/Pastorsimon1798/openglaze/releases">Changelog</a></li>
                     <li><a href="https://github.com/Pastorsimon1798/openglaze/blob/master/ROADMAP.md">Roadmap</a></li>
                 </ul>
