@@ -1,197 +1,93 @@
 # Installation Guide
 
-Complete guide to setting up OpenGlaze.
+OpenGlaze currently has one supported launch path: **single-user self-hosting with SQLite**. PostgreSQL/Ory services remain in the compose file under an experimental profile, but the application data layer is SQLite-backed today.
 
-## Table of Contents
+## Docker installation
 
-1. [Prerequisites](#prerequisites)
-2. [Docker Installation](#docker-installation)
-3. [Manual Installation](#manual-installation)
-4. [Configuration](#configuration)
-5. [Post-Installation](#post-installation)
-6. [Troubleshooting](#troubleshooting)
+Requirements:
 
-## Prerequisites
-
-### Docker Installation
-
-- Docker 20.10+
-- Docker Compose 2.0+
-- 2GB RAM minimum
-- 10GB disk space
-
-### Manual Installation
-
-- Python 3.10+
-- PostgreSQL 14+ (or SQLite for development)
-
-## Docker Installation
-
-### Quick Start
+- Docker 24+ with Compose v2
+- 1 GB RAM minimum
+- 10 GB disk
 
 ```bash
-# Clone repository
-git clone https://github.com/openglaze/openglaze.git
+git clone https://github.com/Pastorsimon1798/openglaze.git
 cd openglaze
-
-# Run setup script
-./scripts/setup.sh
-
-# Or manually:
 cp .env.example .env
-docker-compose up -d
+
+# Important before public use: set SECRET_KEY in .env
+# openssl rand -hex 32
+
+docker compose up -d
+curl http://localhost:8768/health
 ```
 
-### Service URLs
+Open <http://localhost:8768>.
 
-| Service | URL | Purpose |
-|---------|-----|---------|
-| OpenGlaze | http://localhost:8768 | Main application |
-| Kratos Public | http://localhost:4433 | Authentication |
-| Kratos Admin | http://localhost:4434 | User management |
-| Mailhog | http://localhost:8025 | Email testing (dev) |
+### Persistent data
 
-### Production Checklist
+The default compose stack stores data in Docker volumes:
 
-- [ ] Change all default passwords in `.env`
-- [ ] Set `FLASK_ENV=production`
-- [ ] Configure proper email SMTP
-- [ ] Set up SSL/TLS (use nginx profile)
-- [ ] Set up backups
+- `openglaze_data` mounted at `/data` for SQLite (`/data/glaze.db`)
+- `openglaze_uploads` mounted at `/app/frontend/uploads` for uploaded images
 
-## Manual Installation
-
-### 1. Install Dependencies
+Back up with:
 
 ```bash
-# Create virtual environment
+docker compose exec openglaze sh -lc 'DATABASE_PATH=/data/glaze.db UPLOAD_DIR=/app/frontend/uploads scripts/backup.sh'
+```
+
+Or stop the stack and back up the named volumes with your normal Docker volume backup tooling.
+
+## Manual local installation
+
+Requirements:
+
+- Python 3.11+
+
+```bash
+git clone https://github.com/Pastorsimon1798/openglaze.git
+cd openglaze
 python -m venv venv
-source venv/bin/activate  # or `venv\Scripts\activate` on Windows
-
-# Install Python dependencies
+source venv/bin/activate
 pip install -r requirements.txt
-```
 
-### 2. Database Setup
-
-**SQLite (Development):**
-```bash
-# Database will be created automatically
+export OPENGLAZE_MODE=personal
+export DATABASE_PATH=glaze.db
+export SECRET_KEY=$(openssl rand -hex 32)
 python server.py
 ```
 
-**PostgreSQL (Production):**
-```bash
-# Create database
-createdb openglaze
-
-# Set DATABASE_URL
-export DATABASE_URL=postgres://user:password@localhost:5432/openglaze
-
-# Initialize schema
-python -c "import server; server.init_db()"
-```
-
-### 3. Kratos Setup
-
-```bash
-# Install Kratos (macOS)
-brew install ory/tap/kratos
-
-# Or download binary
-curl https://github.com/ory/kratos/releases/download/v1.0.0/kratos_1.0.0_linux_amd64.tar.gz | tar -xz
-
-# Run migrations
-kratos migrate -c kratos/config.yml sql -e --yes
-
-# Start Kratos
-kratos serve -c kratos/config.yml
-```
-
-### 4. Start Application
-
-```bash
-# Development
-python server.py
-
-# Production
-gunicorn -w 4 -b 0.0.0.0:8768 server:app
-```
+Open <http://localhost:8767> unless you set `FLASK_PORT`.
 
 ## Configuration
 
-### Environment Variables
+| Variable | Default | Purpose |
+|---|---|---|
+| `OPENGLAZE_MODE` | `personal` | Supported launch mode today |
+| `DATABASE_PATH` | `glaze.db` locally, `/data/glaze.db` in Docker | SQLite database file |
+| `FLASK_HOST` | `127.0.0.1` locally, `0.0.0.0` in Docker | Bind host |
+| `FLASK_PORT` | `8767` locally, `8768` in Docker | Bind port |
+| `BASE_URL` | `http://localhost:8768` in Docker | Public URL for links/docs |
+| `SECRET_KEY` | generated per process if omitted | Set this for persistent sessions |
+| `RATELIMIT_PER_MINUTE` | `60` | In-memory request rate limit |
 
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `BASE_URL` | Yes | http://localhost:8768 | Public URL of your instance |
-| `DATABASE_URL` | Yes | sqlite:///openglaze.db | Database connection string |
-| `KRATOS_PUBLIC_URL` | Yes | http://localhost:4433 | Kratos public API |
-| `KRATOS_ADMIN_URL` | Yes | http://localhost:4434 | Kratos admin API |
-| `KRATOS_HOOK_KEY` | Yes | - | Secret for Kratos webhooks |
+## Experimental cloud profile
 
-## Post-Installation
-
-### Create Admin User
-
-```bash
-# Via Kratos CLI
-kratos identity create -c kratos/config.yml \
-  --schema-id default \
-  --trait email:admin@example.com \
-  --trait tier:studio
-```
-
-### Apply Template
+The compose file includes `postgres`, `kratos`, and `mailhog` under the `cloud` profile for future work:
 
 ```bash
-curl -X POST http://localhost:8768/api/templates/cone10-reduction-community/apply \
-  -H "Cookie: ory_kratos_session=YOUR_SESSION"
+docker compose --profile cloud up -d
 ```
 
-### Set Up Backups
-
-```bash
-# Add to crontab
-0 2 * * * /path/to/openglaze/scripts/backup.sh
-```
+This is **not** the supported launch path yet because application managers still use SQLite connections.
 
 ## Troubleshooting
 
-### Database Connection Errors
-
 ```bash
-# Check PostgreSQL is running
-docker-compose ps postgres
-
-# Check logs
-docker-compose logs postgres
-
-# Test connection
-docker-compose exec postgres psql -U openglaze -d openglaze
+docker compose ps
+docker compose logs openglaze
+curl -i http://localhost:8768/health
 ```
 
-### Kratos Issues
-
-```bash
-# Check Kratos logs
-docker-compose logs kratos
-
-# Verify configuration
-docker-compose exec kratos cat /etc/config/kratos/config.yml
-
-# Reset Kratos database (WARNING: deletes all users)
-docker-compose exec kratos kratos migrate -c /etc/config/kratos/config.yml sql -e --yes
-```
-
-### Email Not Sending
-
-1. For development, use Mailhog profile:
-   ```bash
-   docker-compose --profile dev up -d
-   ```
-2. For production, configure SMTP in `kratos/config.yml`
-
----
-
-Need help? [Open an issue](https://github.com/openglaze/openglaze/issues) or join our [Discord](https://discord.gg/openglaze).
+If Docker starts but data does not persist, verify that the `openglaze_data` volume exists and that `DATABASE_PATH=/data/glaze.db` is present in the app environment.

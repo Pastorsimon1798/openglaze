@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class ParseResult:
     """Result of parsing a recipe string."""
+
     success: bool
     materials: Optional[Dict[str, float]] = None  # canonical_name -> amount
     errors: List[str] = field(default_factory=list)
@@ -29,15 +30,15 @@ class RecipeParser:
 
     # Patterns that indicate commercial/proprietary glaze codes
     COMMERCIAL_PATTERNS = [
-        r'laguna\s+lg[-\s]?\d+',
-        r'aardvark\s+\w+[-\s]?\d+',
-        r'glazy\s*#\d+',
-        r'coyote\s+\w+',
-        r'clay\s+planet',
-        r'^tc[-\s]?\d+$',
-        r'^ctg[-\s]?\d+$',
-        r'^lg[-\s]?\d+$',
-        r'^mbg\d+$',
+        r"laguna\s+lg[-\s]?\d+",
+        r"aardvark\s+\w+[-\s]?\d+",
+        r"glazy\s*#\d+",
+        r"coyote\s+\w+",
+        r"clay\s+planet",
+        r"^tc[-\s]?\d+$",
+        r"^ctg[-\s]?\d+$",
+        r"^lg[-\s]?\d+$",
+        r"^mbg\d+$",
     ]
 
     def parse(self, recipe_string: str) -> ParseResult:
@@ -52,7 +53,7 @@ class RecipeParser:
         if not recipe_string or not recipe_string.strip():
             return ParseResult(
                 success=False,
-                errors=['Empty recipe string'],
+                errors=["Empty recipe string"],
             )
 
         recipe_string = recipe_string.strip()
@@ -61,11 +62,11 @@ class RecipeParser:
         if self._is_commercial_code(recipe_string):
             return ParseResult(
                 success=False,
-                errors=[f'Commercial/proprietary code detected: {recipe_string}'],
+                errors=[f"Commercial/proprietary code detected: {recipe_string}"],
             )
 
         # Split by comma, semicolon, or newline
-        parts = re.split(r'[,\n;]', recipe_string)
+        parts = re.split(r"[,\n;]", recipe_string)
 
         materials = {}
         errors = []
@@ -77,13 +78,13 @@ class RecipeParser:
                 continue
 
             # Skip description-only text (no number)
-            if not re.search(r'\d', part):
+            if not re.search(r"\d", part):
                 # Could be a recipe name like "Malcom Davis Shino - widely shared community recipe"
                 # These aren't parseable as recipes
                 continue
 
             # Extract material name and amount
-            match = re.match(r'^(.+?)\s+([\d.]+)\s*%?\s*$', part)
+            match = re.match(r"^(.+?)\s+([\d.]+)\s*%?\s*$", part)
             if not match:
                 errors.append(f'Could not parse: "{part}"')
                 continue
@@ -92,7 +93,7 @@ class RecipeParser:
             amount = float(match.group(2))
 
             if amount <= 0:
-                errors.append(f'Invalid amount for {material_name}: {amount}')
+                errors.append(f"Invalid amount for {material_name}: {amount}")
                 continue
 
             # Look up material in database
@@ -103,7 +104,9 @@ class RecipeParser:
 
             canonical = self._canonical_name(material_name)
             if canonical in materials:
-                logger.debug(f'Duplicate material {canonical} in recipe, summing amounts')
+                logger.debug(
+                    f"Duplicate material {canonical} in recipe, summing amounts"
+                )
                 materials[canonical] += amount
             else:
                 materials[canonical] = amount
@@ -115,7 +118,7 @@ class RecipeParser:
         if not materials:
             return ParseResult(
                 success=False,
-                errors=['No parseable materials found in recipe'],
+                errors=["No parseable materials found in recipe"],
             )
 
         # Normalize percentages to sum to 100
@@ -144,13 +147,41 @@ class RecipeParser:
         # that don't contain typical recipe words
         recipe_words = recipe_lower.split()
         if len(recipe_words) <= 3 and len(recipe_lower) < 20:
-            typical_words = {'feldspar', 'silica', 'whiting', 'kaolin', 'clay',
-                           'oxide', 'carbonate', 'borate', 'frit', 'dolomite',
-                           'talc', 'zinc', 'epk', 'ball', 'nepheline', 'flint',
-                           'rutile', 'cobalt', 'copper', 'iron', 'manganese',
-                           'chrome', 'tin', 'zirconium', 'titanium', 'bentonite',
-                           'wollastonite', 'lithium', 'strontium', 'bone', 'ash',
-                           'borax', 'soda'}
+            typical_words = {
+                "feldspar",
+                "silica",
+                "whiting",
+                "kaolin",
+                "clay",
+                "oxide",
+                "carbonate",
+                "borate",
+                "frit",
+                "dolomite",
+                "talc",
+                "zinc",
+                "epk",
+                "ball",
+                "nepheline",
+                "flint",
+                "rutile",
+                "cobalt",
+                "copper",
+                "iron",
+                "manganese",
+                "chrome",
+                "tin",
+                "zirconium",
+                "titanium",
+                "bentonite",
+                "wollastonite",
+                "lithium",
+                "strontium",
+                "bone",
+                "ash",
+                "borax",
+                "soda",
+            }
             if not any(word in typical_words for word in recipe_words):
                 return True
 
@@ -171,7 +202,7 @@ class RecipeParser:
         # Try progressively shorter names (remove last word each time)
         words = name.strip().split()
         for i in range(len(words) - 1, 0, -1):
-            shorter = ' '.join(words[:i])
+            shorter = " ".join(words[:i])
             material = get_material(shorter)
             if material is not None:
                 return material
@@ -194,7 +225,7 @@ class RecipeParser:
         # Try progressively shorter names (same logic as _lookup_material)
         words = name.strip().split()
         for i in range(len(words) - 1, 0, -1):
-            shorter = ' '.join(words[:i])
+            shorter = " ".join(words[:i])
             material = get_material(shorter)
             if material:
                 normalized = shorter.lower()

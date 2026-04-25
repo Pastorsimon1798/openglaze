@@ -80,18 +80,21 @@ OpenGlaze is not a replacement for these tools — it complements them. Many use
 
 ### Docker (Recommended, 2 minutes)
 
+The default Docker path is a single-user, self-hosted SQLite install with persistent Docker volumes. It does not require PostgreSQL or Ory Kratos.
+
 ```bash
 # Clone the repository
 git clone https://github.com/Pastorsimon1798/openglaze.git
 cd openglaze
 
-# Copy environment file
+# Copy environment file and set a real SECRET_KEY before public use
 cp .env.example .env
 
-# Start the full stack
-docker-compose up -d
+# Start OpenGlaze
+docker compose up -d
 
 # Access at http://localhost:8768
+curl http://localhost:8768/health
 ```
 
 ### Manual Installation
@@ -161,11 +164,11 @@ Open http://localhost:8767 in your browser.
 <td width="50%">
 
 ### 👥 Studio Collaboration
-- Multi-member studio groups
-- Role-based access control
-- Shared glaze libraries
+- Studio groups and invite-code joining
 - Lab assignment tracking
-- Comment threads on experiments
+- Shared experiment views
+- Simple local-token identity for lightweight collaboration
+- Role-based authorization and comment threads are roadmap items
 
 </td>
 <td width="50%">
@@ -187,11 +190,11 @@ Open http://localhost:8767 in your browser.
 - 📸 **Photo Documentation** — Gallery view across multiple firings
 - 🔥 **Firing Logs** — Atmosphere, cone, and schedule tracking
 - 🧮 **Layering Tracker** — Document and predict base/top combinations
-- 💾 **Import/Export** — Glazy CSV, Digitalfire INSIGHT, YAML
-- 📊 **Analytics** — Visualize glaze development over time
+- 💾 **Import/Export** — JSON/CSV export in the legacy dashboard; Glazy/INSIGHT import is a roadmap integration
+- 📊 **Progress views** — Track experiments and prediction activity where auth is enabled
 - 📱 **PWA** — Install as an app on mobile/desktop
 - ⌨️ **Command Palette** — Quick navigation with ⌘K
-- 🔐 **Auth** — Ory Kratos integration or simple local auth
+- 🔐 **Auth** — simple local auth for studio features; Ory/Kratos support is experimental
 
 ## Tech Stack
 
@@ -199,10 +202,10 @@ Open http://localhost:8767 in your browser.
 |-----------|------------|---------|
 | Backend | Flask 3.x (Python) | MIT |
 | Frontend | Vanilla JS SPA | MIT |
-| Database | SQLite / PostgreSQL | Public Domain / PostgreSQL |
-| Auth | Ory Kratos / JWT | Apache 2.0 |
+| Database | SQLite | Public Domain |
+| Auth | Simple local tokens; Ory hooks experimental | Apache 2.0 |
 | AI | Ollama (local) / Anthropic Claude (cloud) | — |
-| Import/Export | Glazy, INSIGHT, YAML | MIT |
+| Import/Export | JSON/CSV export in legacy dashboard; broader Glazy/INSIGHT import is roadmap | MIT |
 | Chemistry | Custom UMF Engine | MIT |
 | Container | Docker + Compose | — |
 

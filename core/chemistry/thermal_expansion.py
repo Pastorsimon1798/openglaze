@@ -14,15 +14,14 @@ from typing import Dict, Optional
 
 from .materials import THERMAL_EXPANSION_COEFFICIENTS
 
-
 # Typical clay body CTE ranges for compatibility checking
 _CLAY_BODY_CTE_RANGES = {
-    'porcelain': (4.0, 5.5),
-    'porcelainous_stoneware': (5.0, 6.0),
-    'stoneware': (5.5, 6.5),
-    'sculptural_stoneware': (5.5, 7.0),
-    'earthenware': (7.0, 8.5),
-    'terra_cotta': (7.5, 9.0),
+    "porcelain": (4.0, 5.5),
+    "porcelainous_stoneware": (5.0, 6.0),
+    "stoneware": (5.5, 6.5),
+    "sculptural_stoneware": (5.5, 7.0),
+    "earthenware": (7.0, 8.5),
+    "terra_cotta": (7.5, 9.0),
 }
 
 
@@ -67,22 +66,22 @@ def cte_compatibility(cte_a: float, cte_b: float) -> tuple:
     abs_mismatch = abs(mismatch)
 
     if abs_mismatch < 0.5:
-        risk = 'low'
-        desc = f'Excellent thermal expansion match ({mismatch:+.2f} ×10⁻⁶/°C)'
+        risk = "low"
+        desc = f"Excellent thermal expansion match ({mismatch:+.2f} ×10⁻⁶/°C)"
     elif abs_mismatch < 1.5:
-        risk = 'medium'
-        desc = f'Moderate thermal expansion mismatch ({mismatch:+.2f} ×10⁻⁶/°C) — test on tiles'
+        risk = "medium"
+        desc = f"Moderate thermal expansion mismatch ({mismatch:+.2f} ×10⁻⁶/°C) — test on tiles"
     else:
-        risk = 'high'
+        risk = "high"
         if mismatch > 0:
-            desc = f'High mismatch ({mismatch:+.2f} ×10⁻⁶/°C) — top glaze expands more than base. Crazing risk if base is stiffer.'
+            desc = f"High mismatch ({mismatch:+.2f} ×10⁻⁶/°C) — top glaze expands more than base. Crazing risk if base is stiffer."
         else:
-            desc = f'High mismatch ({mismatch:+.2f} ×10⁻⁶/°C) — base glaze expands more than top. Shivering risk if top is stiffer.'
+            desc = f"High mismatch ({mismatch:+.2f} ×10⁻⁶/°C) — base glaze expands more than top. Shivering risk if top is stiffer."
 
     return risk, mismatch, desc
 
 
-def clay_body_compatibility(cte: float, clay_type: str = 'stoneware') -> dict:
+def clay_body_compatibility(cte: float, clay_type: str = "stoneware") -> dict:
     """Compare glaze CTE to typical clay body CTE range.
 
     Args:
@@ -97,24 +96,24 @@ def clay_body_compatibility(cte: float, clay_type: str = 'stoneware') -> dict:
 
     if cte < range_low:
         delta = range_low - cte
-        fit = 'tight'
-        risk = f'Glaze CTE ({cte}) is lower than typical {clay_type} body ({range_low}-{range_high}). Shivering possible if glaze is under tension.'
+        fit = "tight"
+        risk = f"Glaze CTE ({cte}) is lower than typical {clay_type} body ({range_low}-{range_high}). Shivering possible if glaze is under tension."
     elif cte > range_high:
         delta = cte - range_high
-        fit = 'loose'
-        risk = f'Glaze CTE ({cte}) is higher than typical {clay_type} body ({range_low}-{range_high}). Crazing likely.'
+        fit = "loose"
+        risk = f"Glaze CTE ({cte}) is higher than typical {clay_type} body ({range_low}-{range_high}). Crazing likely."
     else:
         delta = abs(cte - range_mid)
-        fit = 'good'
-        risk = f'Glaze CTE ({cte}) falls within typical {clay_type} body range ({range_low}-{range_high}). Good fit expected.'
+        fit = "good"
+        risk = f"Glaze CTE ({cte}) falls within typical {clay_type} body range ({range_low}-{range_high}). Good fit expected."
 
     return {
-        'clay_type': clay_type,
-        'clay_cte_range': [range_low, range_high],
-        'glaze_cte': cte,
-        'fit': fit,
-        'delta_from_range': round(delta, 2),
-        'assessment': risk,
+        "clay_type": clay_type,
+        "clay_cte_range": [range_low, range_high],
+        "glaze_cte": cte,
+        "fit": fit,
+        "delta_from_range": round(delta, 2),
+        "assessment": risk,
     }
 
 

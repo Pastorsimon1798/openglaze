@@ -15,22 +15,26 @@ logger = logging.getLogger(__name__)
 
 class KratosError(Exception):
     """Base exception for Kratos errors."""
+
     pass
 
 
 class AuthenticationError(KratosError):
     """Authentication failed."""
+
     pass
 
 
 class SessionExpiredError(KratosError):
     """Session has expired."""
+
     pass
 
 
 @dataclass
 class KratosSession:
     """Represents a Kratos user session."""
+
     session_id: str
     user_id: str
     email: str
@@ -40,17 +44,17 @@ class KratosSession:
     traits: Dict[str, Any]
 
     @classmethod
-    def from_api_response(cls, data: Dict) -> 'KratosSession':
+    def from_api_response(cls, data: Dict) -> "KratosSession":
         """Create session from Kratos API response."""
-        identity = data.get('identity', {})
+        identity = data.get("identity", {})
         return cls(
-            session_id=data.get('id', ''),
-            user_id=identity.get('id', ''),
-            email=identity.get('traits', {}).get('email', ''),
-            active=data.get('active', False),
-            expires_at=data.get('expires_at'),
-            authenticated_at=data.get('authenticated_at'),
-            traits=identity.get('traits', {})
+            session_id=data.get("id", ""),
+            user_id=identity.get("id", ""),
+            email=identity.get("traits", {}).get("email", ""),
+            active=data.get("active", False),
+            expires_at=data.get("expires_at"),
+            authenticated_at=data.get("authenticated_at"),
+            traits=identity.get("traits", {}),
         )
 
 
@@ -68,21 +72,19 @@ class KratosClient:
         self,
         public_endpoint: Optional[str] = None,
         admin_endpoint: Optional[str] = None,
-        timeout: int = 10
+        timeout: int = 10,
     ):
         self.public_endpoint = public_endpoint or os.environ.get(
-            'ORY_KRATOS_ENDPOINT',
-            'http://localhost:4433'
+            "ORY_KRATOS_ENDPOINT", "http://localhost:4433"
         )
         self.admin_endpoint = admin_endpoint or os.environ.get(
-            'ORY_KRATOS_ADMIN_ENDPOINT',
-            'http://localhost:4434'
+            "ORY_KRATOS_ADMIN_ENDPOINT", "http://localhost:4434"
         )
         self.timeout = timeout
 
         # Remove trailing slashes
-        self.public_endpoint = self.public_endpoint.rstrip('/')
-        self.admin_endpoint = self.admin_endpoint.rstrip('/')
+        self.public_endpoint = self.public_endpoint.rstrip("/")
+        self.admin_endpoint = self.admin_endpoint.rstrip("/")
 
     def validate_session(self, session_token: str) -> KratosSession:
         """
@@ -106,9 +108,9 @@ class KratosClient:
                 f"{self.public_endpoint}/sessions/whoami",
                 headers={
                     "Authorization": f"Bearer {session_token}",
-                    "Accept": "application/json"
+                    "Accept": "application/json",
                 },
-                timeout=self.timeout
+                timeout=self.timeout,
             )
 
             if response.status_code == 401:
@@ -120,7 +122,7 @@ class KratosClient:
 
             data = response.json()
 
-            if not data.get('active', False):
+            if not data.get("active", False):
                 raise SessionExpiredError("Session is not active")
 
             return KratosSession.from_api_response(data)
@@ -148,7 +150,7 @@ class KratosClient:
             response = requests.get(
                 f"{self.admin_endpoint}/identities/{identity_id}",
                 headers=headers,
-                timeout=self.timeout
+                timeout=self.timeout,
             )
 
             if response.status_code == 404:
@@ -161,7 +163,6 @@ class KratosClient:
         except RequestException as e:
             logger.error(f"Failed to get identity from Kratos: {e}")
             raise KratosError(f"Kratos connection error: {e}")
-
 
     def revoke_session(self, session_token: str) -> bool:
         """
@@ -178,9 +179,9 @@ class KratosClient:
                 f"{self.public_endpoint}/sessions",
                 headers={
                     "Authorization": f"Bearer {session_token}",
-                    "Accept": "application/json"
+                    "Accept": "application/json",
                 },
-                timeout=self.timeout
+                timeout=self.timeout,
             )
 
             return response.status_code in (200, 204, 404)

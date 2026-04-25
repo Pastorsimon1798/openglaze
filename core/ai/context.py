@@ -31,16 +31,18 @@ class ContextRetriever:
         conn = connect_db(self._db_path)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
-        cursor.execute('SELECT name, family, color, chemistry, behavior, warning FROM glazes')
+        cursor.execute(
+            "SELECT name, family, color, chemistry, behavior, warning FROM glazes"
+        )
         for row in cursor.fetchall():
-            key = row['name'].lower().strip()
+            key = row["name"].lower().strip()
             self._glaze_index[key] = {
-                'name': row['name'],
-                'family': row['family'],
-                'color': row['color'],
-                'chemistry': row['chemistry'],
-                'behavior': row['behavior'],
-                'warning': row['warning'],
+                "name": row["name"],
+                "family": row["family"],
+                "color": row["color"],
+                "chemistry": row["chemistry"],
+                "behavior": row["behavior"],
+                "warning": row["warning"],
             }
         conn.close()
 
@@ -58,12 +60,43 @@ class ContextRetriever:
         # Extract meaningful words (skip common stop words)
         # NOTE: 'can', 'will', 'may' kept OUT of stop_words so ceramic queries
         # like "will this crawl" or "can I layer" still extract useful terms
-        stop_words = {'what', 'is', 'the', 'a', 'an', 'how', 'why', 'does', 'do',
-                      'when', 'where', 'which', 'would', 'should',
-                      'could', 'tell', 'me', 'about', 'if', 'my', 'to', 'and',
-                      'or', 'of', 'in', 'for', 'with', 'on', 'that', 'this'}
-        words = [w.strip('?,.!;:') for w in question.lower().split()
-                 if len(w.strip('?,.!;:')) > 2 and w.strip('?,.!;:') not in stop_words]
+        stop_words = {
+            "what",
+            "is",
+            "the",
+            "a",
+            "an",
+            "how",
+            "why",
+            "does",
+            "do",
+            "when",
+            "where",
+            "which",
+            "would",
+            "should",
+            "could",
+            "tell",
+            "me",
+            "about",
+            "if",
+            "my",
+            "to",
+            "and",
+            "or",
+            "of",
+            "in",
+            "for",
+            "with",
+            "on",
+            "that",
+            "this",
+        }
+        words = [
+            w.strip("?,.!;:")
+            for w in question.lower().split()
+            if len(w.strip("?,.!;:")) > 2 and w.strip("?,.!;:") not in stop_words
+        ]
         if not words:
             return []
 
@@ -75,23 +108,28 @@ class ContextRetriever:
         seen = set()
         rows = []
         for word in words[:5]:  # limit to first 5 words to avoid explosion
-            like = f'%{word}%'
-            cursor.execute('''
+            like = f"%{word}%"
+            cursor.execute(
+                """
                 SELECT category, title, description
                 FROM chemistry_rules
                 WHERE title LIKE ? OR description LIKE ?
                    OR conditions LIKE ? OR outcomes LIKE ? OR caveats LIKE ?
                 ORDER BY category, id
-            ''', (like, like, like, like, like))
+            """,
+                (like, like, like, like, like),
+            )
             for r in cursor.fetchall():
-                key = r['title']
+                key = r["title"]
                 if key not in seen:
                     seen.add(key)
-                    rows.append({
-                        'category': r['category'],
-                        'title': r['title'],
-                        'description': r['description'],
-                    })
+                    rows.append(
+                        {
+                            "category": r["category"],
+                            "title": r["title"],
+                            "description": r["description"],
+                        }
+                    )
                 if len(rows) >= 5:
                     break
             if len(rows) >= 5:
@@ -107,29 +145,71 @@ class ContextRetriever:
         conn = connect_db(self._db_path)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
-        placeholders = ','.join(['?'] * len(glaze_names))
-        cursor.execute(f'''
+        placeholders = ",".join(["?"] * len(glaze_names))
+        cursor.execute(
+            f"""
             SELECT base, top, type, result, risk, effect
             FROM combinations
             WHERE lower(base) IN ({placeholders})
                OR lower(top) IN ({placeholders})
             LIMIT 10
-        ''', glaze_names + glaze_names)
-        rows = [{'base': r['base'], 'top': r['top'], 'type': r['type'],
-                 'result': r['result'], 'risk': r['risk'], 'effect': r['effect']}
-                for r in cursor.fetchall()]
+        """,
+            glaze_names + glaze_names,
+        )
+        rows = [
+            {
+                "base": r["base"],
+                "top": r["top"],
+                "type": r["type"],
+                "result": r["result"],
+                "risk": r["risk"],
+                "effect": r["effect"],
+            }
+            for r in cursor.fetchall()
+        ]
         conn.close()
         return rows
 
     def _search_combinations_by_question(self, question: str) -> List[dict]:
         """Find combinations by keyword search on base/top/result columns."""
         # NOTE: 'can', 'will', 'may' kept OUT of stop_words for ceramic queries
-        stop_words = {'what', 'is', 'the', 'a', 'an', 'how', 'why', 'does', 'do',
-                      'when', 'where', 'which', 'would', 'should',
-                      'could', 'tell', 'me', 'about', 'if', 'my', 'to', 'and',
-                      'or', 'of', 'in', 'for', 'with', 'on', 'that', 'this'}
-        words = [w.strip('?,.!;:') for w in question.lower().split()
-                 if len(w.strip('?,.!;:')) > 2 and w.strip('?,.!;:') not in stop_words]
+        stop_words = {
+            "what",
+            "is",
+            "the",
+            "a",
+            "an",
+            "how",
+            "why",
+            "does",
+            "do",
+            "when",
+            "where",
+            "which",
+            "would",
+            "should",
+            "could",
+            "tell",
+            "me",
+            "about",
+            "if",
+            "my",
+            "to",
+            "and",
+            "or",
+            "of",
+            "in",
+            "for",
+            "with",
+            "on",
+            "that",
+            "this",
+        }
+        words = [
+            w.strip("?,.!;:")
+            for w in question.lower().split()
+            if len(w.strip("?,.!;:")) > 2 and w.strip("?,.!;:") not in stop_words
+        ]
         if not words:
             return []
 
@@ -139,22 +219,31 @@ class ContextRetriever:
         seen = set()
         rows = []
         for word in words[:5]:
-            like = f'%{word}%'
-            cursor.execute('''
+            like = f"%{word}%"
+            cursor.execute(
+                """
                 SELECT base, top, type, result, risk, effect
                 FROM combinations
                 WHERE lower(base) LIKE ? OR lower(top) LIKE ?
                    OR result LIKE ?
                 LIMIT 10
-            ''', (like, like, like))
+            """,
+                (like, like, like),
+            )
             for r in cursor.fetchall():
-                key = (r['base'], r['top'])
+                key = (r["base"], r["top"])
                 if key not in seen:
                     seen.add(key)
-                    rows.append({
-                        'base': r['base'], 'top': r['top'], 'type': r['type'],
-                        'result': r['result'], 'risk': r['risk'], 'effect': r['effect'],
-                    })
+                    rows.append(
+                        {
+                            "base": r["base"],
+                            "top": r["top"],
+                            "type": r["type"],
+                            "result": r["result"],
+                            "risk": r["risk"],
+                            "effect": r["effect"],
+                        }
+                    )
                 if len(rows) >= 10:
                     break
             if len(rows) >= 10:
@@ -168,18 +257,18 @@ class ContextRetriever:
         for name in glaze_names:
             g = self._glaze_index[name]
             lines.append(f"### {g['name']}")
-            if g['family']:
+            if g["family"]:
                 lines.append(f"Family: {g['family']}")
-            if g['color']:
+            if g["color"]:
                 lines.append(f"Color: {g['color']}")
-            if g['chemistry']:
+            if g["chemistry"]:
                 lines.append(f"Chemistry: {g['chemistry']}")
-            if g['behavior']:
+            if g["behavior"]:
                 lines.append(f"Behavior: {g['behavior']}")
-            if g['warning']:
+            if g["warning"]:
                 lines.append(f"WARNING: {g['warning']}")
             lines.append("")
-        return '\n'.join(lines)
+        return "\n".join(lines)
 
     def _format_rules(self, rules: List[dict]) -> str:
         """Format chemistry rules as markdown."""
@@ -187,18 +276,18 @@ class ContextRetriever:
         for r in rules:
             lines.append(f"- **{r['title']}** ({r['category']}): {r['description']}")
         lines.append("")
-        return '\n'.join(lines)
+        return "\n".join(lines)
 
     def _format_combinations(self, combos: List[dict]) -> str:
         """Format combinations as markdown."""
         lines = ["## Known Combinations\n"]
         for c in combos:
-            risk = f" (risk: {c['risk']})" if c.get('risk') else ""
+            risk = f" (risk: {c['risk']})" if c.get("risk") else ""
             lines.append(f"- **{c['top']} OVER {c['base']}** [{c['type']}]{risk}")
-            if c.get('result'):
+            if c.get("result"):
                 lines.append(f"  Result: {c['result']}")
         lines.append("")
-        return '\n'.join(lines)
+        return "\n".join(lines)
 
     def retrieve(self, question: str) -> str:
         """
@@ -221,7 +310,7 @@ class ContextRetriever:
         if combos:
             sections.append(self._format_combinations(combos))
 
-        result = '\n'.join(sections)
+        result = "\n".join(sections)
 
         # Safety limit
         if len(result) > 4000:

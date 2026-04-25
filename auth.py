@@ -1,13 +1,14 @@
 """
 Ory Kratos Authentication Integration
 """
+
 import os
 import requests
 from functools import wraps
 from flask import request, jsonify
 
-ORY_KRATOS_PUBLIC = os.environ.get('KRATOS_PUBLIC_URL', 'http://localhost:4433')
-ORY_KRATOS_ADMIN = os.environ.get('KRATOS_ADMIN_URL', 'http://localhost:4434')
+ORY_KRATOS_PUBLIC = os.environ.get("KRATOS_PUBLIC_URL", "http://localhost:4433")
+ORY_KRATOS_ADMIN = os.environ.get("KRATOS_ADMIN_URL", "http://localhost:4434")
 
 
 def get_current_user(req):
@@ -19,7 +20,7 @@ def get_current_user(req):
     Returns:
         dict: User identity or None if not authenticated
     """
-    session_cookie = req.cookies.get('ory_kratos_session')
+    session_cookie = req.cookies.get("ory_kratos_session")
 
     if not session_cookie:
         return None
@@ -29,14 +30,14 @@ def get_current_user(req):
         resp = requests.get(
             f"{ORY_KRATOS_PUBLIC}/sessions/whoami",
             cookies={"ory_kratos_session": session_cookie},
-            timeout=5
+            timeout=5,
         )
 
         if resp.status_code != 200:
             return None
 
         session_data = resp.json()
-        return session_data.get('identity')
+        return session_data.get("identity")
 
     except requests.RequestException:
         return None
@@ -52,10 +53,7 @@ def get_user_by_id(user_id):
         dict: User identity or None if not found
     """
     try:
-        resp = requests.get(
-            f"{ORY_KRATOS_ADMIN}/admin/identities/{user_id}",
-            timeout=5
-        )
+        resp = requests.get(f"{ORY_KRATOS_ADMIN}/admin/identities/{user_id}", timeout=5)
 
         if resp.status_code != 200:
             return None
@@ -83,17 +81,17 @@ def update_user_traits(user_id, traits):
             return None
 
         # Merge traits
-        current_traits = identity.get('traits', {})
+        current_traits = identity.get("traits", {})
         current_traits.update(traits)
 
         # Update via admin API
         resp = requests.put(
             f"{ORY_KRATOS_ADMIN}/admin/identities/{user_id}",
             json={
-                'schema_id': identity.get('schema_id', 'default'),
-                'traits': current_traits
+                "schema_id": identity.get("schema_id", "default"),
+                "traits": current_traits,
             },
-            timeout=5
+            timeout=5,
         )
 
         if resp.status_code != 200:
@@ -110,19 +108,16 @@ def require_auth(f):
 
     Adds request.user with the current user identity.
     """
+
     @wraps(f)
     def decorated(*args, **kwargs):
         user = get_current_user(request)
         if not user:
-            return jsonify({
-                "error": "Unauthorized",
-                "login_url": "/auth/login"
-            }), 401
+            return jsonify({"error": "Unauthorized", "login_url": "/auth/login"}), 401
         request.user = user
         return f(*args, **kwargs)
+
     return decorated
-
-
 
 
 def create_identity(email, password=None, traits=None):
@@ -139,18 +134,13 @@ def create_identity(email, password=None, traits=None):
     if traits is None:
         traits = {}
 
-    traits['email'] = email
+    traits["email"] = email
 
-    identity_data = {
-        'schema_id': 'default',
-        'traits': traits
-    }
+    identity_data = {"schema_id": "default", "traits": traits}
 
     try:
         resp = requests.post(
-            f"{ORY_KRATOS_ADMIN}/admin/identities",
-            json=identity_data,
-            timeout=5
+            f"{ORY_KRATOS_ADMIN}/admin/identities", json=identity_data, timeout=5
         )
 
         if resp.status_code != 201:
@@ -173,8 +163,7 @@ def delete_identity(user_id):
     """
     try:
         resp = requests.delete(
-            f"{ORY_KRATOS_ADMIN}/admin/identities/{user_id}",
-            timeout=5
+            f"{ORY_KRATOS_ADMIN}/admin/identities/{user_id}", timeout=5
         )
 
         return resp.status_code == 204

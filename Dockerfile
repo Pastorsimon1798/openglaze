@@ -1,5 +1,5 @@
 # OpenGlaze Dockerfile
-# Multi-stage build for optimized image size
+# Single-user self-host image. Uses writable SQLite storage by default.
 
 # =============================================================================
 # BUILDER STAGE
@@ -8,17 +8,14 @@ FROM python:3.11-slim as builder
 
 WORKDIR /app
 
-# Install build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Create virtual environment
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -U pip && \
     pip install --no-cache-dir -r requirements.txt
@@ -30,33 +27,32 @@ FROM python:3.11-slim as production
 
 WORKDIR /app
 
-# Install runtime dependencies only
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpq5 \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy virtual environment from builder
 COPY --from=builder /opt/venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+ENV PATH="/opt/venv/bin:$PATH" \
+    OPENGLAZE_MODE=personal \
+    FLASK_HOST=0.0.0.0 \
+    FLASK_PORT=8768 \
+    DATABASE_PATH=/data/glaze.db \
+    PYTHONUNBUFFERED=1
 
-# Create non-root user
-RUN useradd --create-home --shell /bin/bash openglaze
+RUN useradd --create-home --shell /bin/bash openglaze && \
+    mkdir -p /data /app/frontend/uploads && \
+    chown -R openglaze:openglaze /data /app
 
-# Copy application code
 COPY --chown=openglaze:openglaze . .
 
-# Switch to non-root user
 USER openglaze
 
-# Expose port
 EXPOSE 8768
+VOLUME ["/data", "/app/frontend/uploads"]
 
-# Health check
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
     CMD curl -f http://localhost:8768/health || exit 1
 
-# Run application
 CMD ["python", "server.py"]
 
 # =============================================================================
@@ -64,16 +60,11 @@ CMD ["python", "server.py"]
 # =============================================================================
 FROM production as development
 
-# Switch back to root for dev tools
 USER root
-
-# Install development dependencies
-RUN pip install --no-cache-dir \
-    watchfiles \
-    debugpy
-
-# Switch back to openglaze user
+RUN pip install --no-cache-dir watchfiles debugpy
 USER openglaze
 
-# Run with auto-reload
 CMD ["watchfiles", "python server.py"]
+
+# Default target for `docker build .`
+FROM production as final

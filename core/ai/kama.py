@@ -21,17 +21,20 @@ logger = logging.getLogger(__name__)
 
 class AIServiceError(Exception):
     """AI service is unavailable."""
+
     pass
 
 
 class RateLimitError(Exception):
     """Rate limit exceeded."""
+
     pass
 
 
 @dataclass
 class ConversationTurn:
     """A single turn in the conversation."""
+
     role: str
     content: str
     timestamp: float = field(default_factory=time.time)
@@ -40,6 +43,7 @@ class ConversationTurn:
 @dataclass
 class ConversationMemory:
     """Conversation memory for a single user/session."""
+
     session_id: str
     turns: List[ConversationTurn] = field(default_factory=list)
     created_at: float = field(default_factory=time.time)
@@ -92,7 +96,9 @@ class ConversationStore:
             # Anonymous (no persistence)
             return "anonymous"
 
-    def get(self, session_id: Optional[str] = None, user_id: Optional[str] = None) -> ConversationMemory:
+    def get(
+        self, session_id: Optional[str] = None, user_id: Optional[str] = None
+    ) -> ConversationMemory:
         """Get or create conversation for session/user."""
         key = self._session_key(session_id, user_id)
 
@@ -108,7 +114,9 @@ class ConversationStore:
 
             return self._conversations[key]
 
-    def clear(self, session_id: Optional[str] = None, user_id: Optional[str] = None) -> None:
+    def clear(
+        self, session_id: Optional[str] = None, user_id: Optional[str] = None
+    ) -> None:
         """Clear conversation for session/user."""
         key = self._session_key(session_id, user_id)
 
@@ -125,7 +133,8 @@ class ConversationStore:
         """Remove expired conversations."""
         with self._lock:
             expired_keys = [
-                k for k, v in self._conversations.items()
+                k
+                for k, v in self._conversations.items()
                 if v.is_expired(self.max_age_hours)
             ]
             for key in expired_keys:
@@ -215,9 +224,9 @@ When predicting, always:
         self,
         endpoint: str = None,
         model: str = None,
-        provider: str = 'ollama',
+        provider: str = "ollama",
         timeout: int = 90,
-        max_retries: int = 3
+        max_retries: int = 3,
     ):
         """
         Initialize Kama AI.
@@ -231,10 +240,9 @@ When predicting, always:
         """
         self.provider = provider
         self.endpoint = endpoint or os.environ.get(
-            'OLLAMA_API',
-            'http://localhost:11434/api/chat'
+            "OLLAMA_API", "http://localhost:11434/api/chat"
         )
-        self.model = model or os.environ.get('OLLAMA_MODEL', 'kimi-k2.5:cloud')
+        self.model = model or os.environ.get("OLLAMA_MODEL", "kimi-k2.5:cloud")
         self.timeout = timeout
         self.max_retries = max_retries
         self.conversation_store = _conversation_store
@@ -243,17 +251,19 @@ When predicting, always:
         self.SYSTEM_PROMPT = self._load_system_prompt()
 
         # API key for cloud mode
-        if provider == 'anthropic':
-            self.api_key = os.environ.get('ANTHROPIC_API_KEY')
+        if provider == "anthropic":
+            self.api_key = os.environ.get("ANTHROPIC_API_KEY")
             if not self.api_key:
                 logger.warning("ANTHROPIC_API_KEY not set - cloud AI will not work")
 
     def _load_system_prompt(self) -> str:
         """Load system prompt from config file, fallback to default."""
-        prompt_path = Path(__file__).parent.parent.parent / 'config' / 'kama-system-prompt.txt'
+        prompt_path = (
+            Path(__file__).parent.parent.parent / "config" / "kama-system-prompt.txt"
+        )
         try:
             if prompt_path.exists():
-                with open(prompt_path, 'r') as f:
+                with open(prompt_path, "r") as f:
                     prompt = f.read().strip()
                     if prompt:
                         logger.info(f"Loaded system prompt from {prompt_path}")
@@ -264,9 +274,7 @@ When predicting, always:
         return self._DEFAULT_SYSTEM_PROMPT
 
     def _get_conversation(
-        self,
-        session_id: Optional[str] = None,
-        user_id: Optional[str] = None
+        self, session_id: Optional[str] = None, user_id: Optional[str] = None
     ) -> ConversationMemory:
         """Get conversation memory for current session."""
         return self.conversation_store.get(session_id, user_id)
@@ -276,7 +284,7 @@ When predicting, always:
         question: str,
         conversation: ConversationMemory,
         images: Optional[List[str]] = None,
-        context: Optional[str] = None
+        context: Optional[str] = None,
     ) -> List[Dict[str, str]]:
         """Build messages list with system prompt and history."""
         system_content = self.SYSTEM_PROMPT
@@ -301,7 +309,7 @@ When predicting, always:
         context: dict = None,
         session_id: Optional[str] = None,
         user_id: Optional[str] = None,
-        images: Optional[List[str]] = None
+        images: Optional[List[str]] = None,
     ) -> str:
         """
         Ask Kama a question (non-streaming).
@@ -321,7 +329,7 @@ When predicting, always:
 
         try:
             response = self._make_request(messages, stream=False)
-            response_text = response.get('message', {}).get('content', 'No response')
+            response_text = response.get("message", {}).get("content", "No response")
 
             # Save to conversation
             conversation.add_turn("user", question)
@@ -343,7 +351,7 @@ When predicting, always:
         context: dict = None,
         session_id: Optional[str] = None,
         user_id: Optional[str] = None,
-        images: Optional[List[str]] = None
+        images: Optional[List[str]] = None,
     ) -> Generator[str, None, None]:
         """
         Ask Kama a question with streaming response.
@@ -394,7 +402,9 @@ When predicting, always:
         """
         conversation = self._get_conversation(session_id, user_id)
         context = context_retriever.retrieve(question)
-        messages = self._build_messages(question, conversation, images=images, context=context)
+        messages = self._build_messages(
+            question, conversation, images=images, context=context
+        )
         full_response = ""
 
         for chunk in self._stream_request(messages):
@@ -407,9 +417,9 @@ When predicting, always:
 
     def _make_request(self, messages: List[Dict], stream: bool = False) -> Dict:
         """Make request to AI provider."""
-        if self.provider == 'ollama':
+        if self.provider == "ollama":
             return self._ollama_request(messages, stream)
-        elif self.provider == 'anthropic':
+        elif self.provider == "anthropic":
             return self._anthropic_request(messages, stream)
         else:
             raise ValueError(f"Unknown provider: {self.provider}")
@@ -425,9 +435,7 @@ When predicting, always:
         for attempt in range(self.max_retries):
             try:
                 response = requests.post(
-                    self.endpoint,
-                    json=payload,
-                    timeout=self.timeout
+                    self.endpoint, json=payload, timeout=self.timeout
                 )
 
                 if response.status_code == 429:
@@ -440,15 +448,15 @@ When predicting, always:
 
             except (Timeout, ConnectionError):
                 if attempt < self.max_retries - 1:
-                    time.sleep(2 ** attempt)  # Exponential backoff
+                    time.sleep(2**attempt)  # Exponential backoff
                     continue
                 raise
 
     def _stream_request(self, messages: List[Dict]) -> Generator[str, None, None]:
         """Stream request to AI provider."""
-        if self.provider == 'ollama':
+        if self.provider == "ollama":
             yield from self._ollama_stream(messages)
-        elif self.provider == 'anthropic':
+        elif self.provider == "anthropic":
             yield from self._anthropic_stream(messages)
 
     def _ollama_stream(self, messages: List[Dict]) -> Generator[str, None, None]:
@@ -456,21 +464,17 @@ When predicting, always:
         try:
             response = requests.post(
                 self.endpoint,
-                json={
-                    "model": self.model,
-                    "messages": messages,
-                    "stream": True
-                },
+                json={"model": self.model, "messages": messages, "stream": True},
                 stream=True,
-                timeout=self.timeout
+                timeout=self.timeout,
             )
 
             for line in response.iter_lines():
                 if line.strip():
                     try:
                         data = json.loads(line)
-                        if 'message' in data:
-                            content = data['message'].get('content', '')
+                        if "message" in data:
+                            content = data["message"].get("content", "")
                             if content:
                                 yield content
                     except json.JSONDecodeError:
@@ -486,13 +490,13 @@ When predicting, always:
             raise AIServiceError("ANTHROPIC_API_KEY not configured")
 
         # Convert messages format for Anthropic
-        system = messages[0]['content']
+        system = messages[0]["content"]
         anthropic_messages = messages[1:]
 
         headers = {
             "x-api-key": self.api_key,
             "anthropic-version": "2023-06-01",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         }
 
         response = requests.post(
@@ -502,9 +506,9 @@ When predicting, always:
                 "model": self.model,
                 "max_tokens": 4096,
                 "system": system,
-                "messages": anthropic_messages
+                "messages": anthropic_messages,
             },
-            timeout=self.timeout
+            timeout=self.timeout,
         )
 
         if response.status_code != 200:
@@ -522,8 +526,11 @@ When predicting, always:
         question = f"Analyze the combination: {top} OVER {base}. What result can I expect? What are the risks?"
 
         # Add Shino warning if applicable
-        if 'shino' in top.lower() and 'shino' not in base.lower():
-            return f"⚠️ WARNING: Shino over non-Shino glazes often CRAWLS. {top} applied over {base} may pull away from the surface.\n\n" + self.ask(question)
+        if "shino" in top.lower() and "shino" not in base.lower():
+            return (
+                f"⚠️ WARNING: Shino over non-Shino glazes often CRAWLS. {top} applied over {base} may pull away from the surface.\n\n"
+                + self.ask(question)
+            )
 
         return self.ask(question)
 
@@ -534,9 +541,7 @@ When predicting, always:
         return self.ask(question)
 
     def clear_conversation(
-        self,
-        session_id: Optional[str] = None,
-        user_id: Optional[str] = None
+        self, session_id: Optional[str] = None, user_id: Optional[str] = None
     ) -> None:
         """Clear conversation for a session/user."""
         self.conversation_store.clear(session_id, user_id)
@@ -550,7 +555,7 @@ def get_kama() -> KamaAI:
     """Get or create default Kama instance."""
     global _default_kama
     if _default_kama is None:
-        provider = os.environ.get('AI_PROVIDER', 'ollama')
+        provider = os.environ.get("AI_PROVIDER", "ollama")
         _default_kama = KamaAI(provider=provider)
     return _default_kama
 
@@ -561,7 +566,7 @@ def ask_kama(
     clear: bool = False,
     session_id: Optional[str] = None,
     user_id: Optional[str] = None,
-    images: Optional[List[str]] = None
+    images: Optional[List[str]] = None,
 ) -> str:
     """
     Ask Kama a question (convenience function).
@@ -589,7 +594,7 @@ def ask_kama_stream(
     clear: bool = False,
     session_id: Optional[str] = None,
     user_id: Optional[str] = None,
-    images: Optional[List[str]] = None
+    images: Optional[List[str]] = None,
 ) -> Generator[str, None, None]:
     """
     Ask Kama with streaming (convenience function).
