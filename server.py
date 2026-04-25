@@ -2503,22 +2503,16 @@ app = _AppProxy()
 # Convenience for direct execution / development
 if __name__ == '__main__':
     config = load_config()
-    app = create_app(config)
-    app.run(host=config.get('server', {}).get('host', '127.0.0.1'),
-            port=config.get('server', {}).get('port', 8767),
-            debug=config.get('server', {}).get('debug', False))
-
-
-if __name__ == '__main__':
     mode = config.get('mode')
 
-    # Never use debug in production
-    debug = getattr(mode, 'DEBUG', False)
+    debug = config.get('server', {}).get('debug', False)
     if os.environ.get('FLASK_DEBUG', '').lower() not in ('true', '1'):
         debug = False
 
-    host = getattr(mode, 'HOST', '127.0.0.1')
-    port = getattr(mode, 'PORT', 8767)
+    host = config.get('server', {}).get('host', getattr(mode, 'HOST', '127.0.0.1'))
+    port = int(config.get('server', {}).get('port', getattr(mode, 'PORT', 8767)))
+
+    flask_app = create_app(config)
 
     print("=" * 50)
     print("OpenGlaze - Unified Glaze Management")
@@ -2527,4 +2521,4 @@ if __name__ == '__main__':
     print(f"Debug: {debug}")
     print("=" * 50)
 
-    app.run(host=host, port=port, debug=debug)
+    flask_app.run(host=host, port=port, debug=debug)

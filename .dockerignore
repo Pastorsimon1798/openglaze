@@ -1,0 +1,15 @@
+.git
+.github
+.omx
+.worktrees
+venv
+__pycache__
+.pytest_cache
+.ruff_cache
+*.pyc
+*.pyo
+*.db
+backups
+frontend/uploads/*
+!frontend/uploads/.gitkeep
+.DS_Store
