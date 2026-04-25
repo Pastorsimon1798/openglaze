@@ -605,6 +605,54 @@ def create_app(config: dict = None) -> Flask:
             logger.error(f"Recipe comparison error: {e}")
             return jsonify({"error": str(e)}), 500
 
+    @app.route('/api/chemistry/optimize', methods=['POST'])
+    @rate_limit(requests_per_minute=60)
+    def optimize_glaze_recipe():
+        """Optimize a glaze recipe to hit target properties.
+
+        Request body:
+            recipe: Recipe string (e.g. "Custer Feldspar 45, Silica 25, Whiting 18, EPK 12")
+            target: One of 'target_cte', 'reduce_cte', 'increase_cte',
+                    'more_matte', 'more_glossy', 'reduce_alkali', 'reduce_running'
+            target_value: Required for 'target_cte' (e.g. 6.5), optional hint for others
+            max_suggestions: Number of suggestions to return (default 5)
+        """
+        data = request.json or {}
+        recipe = data.get('recipe', '')
+        target = data.get('target', '')
+        target_value = data.get('target_value')
+        max_suggestions = data.get('max_suggestions', 5)
+
+        if not recipe:
+            return jsonify({"error": "recipe is required"}), 400
+        if not target:
+            return jsonify({"error": "target is required"}), 400
+
+        valid_targets = {
+            'target_cte', 'reduce_cte', 'increase_cte',
+            'more_matte', 'more_glossy', 'reduce_alkali', 'reduce_running',
+        }
+        if target not in valid_targets:
+            return jsonify({
+                "error": f"Invalid target. Must be one of: {', '.join(sorted(valid_targets))}"
+            }), 400
+
+        if target == 'target_cte' and target_value is None:
+            return jsonify({"error": "target_value is required for target_cte"}), 400
+
+        try:
+            from core.chemistry import optimize_recipe
+            result = optimize_recipe(
+                recipe,
+                target,
+                target_value=float(target_value) if target_value is not None else None,
+                max_suggestions=int(max_suggestions),
+            )
+            return jsonify(result.to_dict())
+        except Exception as e:
+            logger.error(f"Recipe optimization error: {e}")
+            return jsonify({"error": str(e)}), 500
+
     @app.route('/api/chemistry/substitutions', methods=['POST'])
     @rate_limit(requests_per_minute=60)
     def get_substitutions():

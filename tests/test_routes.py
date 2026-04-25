@@ -69,3 +69,93 @@ class TestAskStreamRoute:
             assert len(events) >= 1
             parsed = json.loads(events[0])
             assert parsed['type'] == 'content'
+
+
+class TestOptimizeRoute:
+    """Test /api/chemistry/optimize route."""
+
+    @pytest.fixture
+    def app(self, test_db_path):
+        with patch.dict('os.environ', {
+            'DATABASE_PATH': test_db_path,
+            'AI_PROVIDER': 'ollama',
+            'OLLAMA_API': 'http://localhost:11434/api/chat',
+            'OLLAMA_MODEL': 'test-model',
+        }):
+            from server import create_app
+            app = create_app({
+                'mode': 'personal',
+                'database': {'path': test_db_path},
+            })
+        return app
+
+    def test_optimize_missing_recipe(self, app):
+        client = app.test_client()
+        resp = client.post('/api/chemistry/optimize',
+                           data=json.dumps({'target': 'reduce_cte'}),
+                           content_type='application/json')
+        assert resp.status_code == 400
+        data = json.loads(resp.data)
+        assert 'recipe is required' in data['error']
+
+    def test_optimize_missing_target(self, app):
+        client = app.test_client()
+        resp = client.post('/api/chemistry/optimize',
+                           data=json.dumps({'recipe': 'Silica 50, Feldspar 50'}),
+                           content_type='application/json')
+        assert resp.status_code == 400
+        data = json.loads(resp.data)
+        assert 'target is required' in data['error']
+
+    def test_optimize_invalid_target(self, app):
+        client = app.test_client()
+        resp = client.post('/api/chemistry/optimize',
+                           data=json.dumps({
+                               'recipe': 'Custer Feldspar 45, Silica 25, Whiting 18, EPK 12',
+                               'target': 'invalid_target',
+                           }),
+                           content_type='application/json')
+        assert resp.status_code == 400
+        data = json.loads(resp.data)
+        assert 'Invalid target' in data['error']
+
+    def test_optimize_target_cte_requires_value(self, app):
+        client = app.test_client()
+        resp = client.post('/api/chemistry/optimize',
+                           data=json.dumps({
+                               'recipe': 'Custer Feldspar 45, Silica 25, Whiting 18, EPK 12',
+                               'target': 'target_cte',
+                           }),
+                           content_type='application/json')
+        assert resp.status_code == 400
+        data = json.loads(resp.data)
+        assert 'target_value is required' in data['error']
+
+    def test_optimize_reduce_cte_success(self, app):
+        client = app.test_client()
+        resp = client.post('/api/chemistry/optimize',
+                           data=json.dumps({
+                               'recipe': 'Custer Feldspar 45, Silica 25, Whiting 18, EPK 12',
+                               'target': 'reduce_cte',
+                           }),
+                           content_type='application/json')
+        assert resp.status_code == 200
+        data = json.loads(resp.data)
+        assert data['success'] is True
+        assert len(data['suggestions']) > 0
+        assert data['original_surface'] == 'glossy'
+
+    def test_optimize_more_matte_success(self, app):
+        client = app.test_client()
+        resp = client.post('/api/chemistry/optimize',
+                           data=json.dumps({
+                               'recipe': 'Custer Feldspar 45, Silica 25, Whiting 18, EPK 12',
+                               'target': 'more_matte',
+                           }),
+                           content_type='application/json')
+        assert resp.status_code == 200
+        data = json.loads(resp.data)
+        assert data['success'] is True
+        assert len(data['suggestions']) > 0
+        surfaces = [s['predicted_surface'] for s in data['suggestions']]
+        assert 'matte' in surfaces or 'satin' in surfaces

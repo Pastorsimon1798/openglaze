@@ -12,6 +12,7 @@ from .batch import BatchAnalyzer
 from .defects import DefectAnalysis, DefectRisk, DefectPredictor, assess_defect_risk, predict_defects
 from .substitutions import SubstitutionResult, SubstitutionEngine, suggest_substitutions
 from .compare import RecipeComparison, RecipeComparator, compare_recipes
+from .optimizer import RecipeOptimizer, OptimizationResult, RecipeSuggestion, optimize_recipe
 
 __all__ = [
     'Material',
