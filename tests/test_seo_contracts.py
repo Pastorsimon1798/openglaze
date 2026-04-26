@@ -126,11 +126,14 @@ def test_ai_files_are_truthful_and_answer_engine_ready():
 def test_repository_growth_metadata_exists():
     citation = ROOT / "CITATION.cff"
     dependabot = ROOT / ".github/dependabot.yml"
-    social = DOCS / "social-preview.svg"
+    social_svg = DOCS / "social-preview.svg"
+    social_png = DOCS / "social-preview.png"
 
     assert citation.exists()
     assert "title: OpenGlaze" in citation.read_text()
     assert dependabot.exists()
     assert "pip" in dependabot.read_text()
-    assert social.exists()
-    assert re.search(r"<svg[^>]+viewBox=\"0 0 1280 640\"", social.read_text())
+    assert social_svg.exists()
+    assert re.search(r"<svg[^>]+viewBox=\"0 0 1280 640\"", social_svg.read_text())
+    assert social_png.exists()
+    assert social_png.stat().st_size < 1_000_000
