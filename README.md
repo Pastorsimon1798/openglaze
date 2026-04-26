@@ -119,7 +119,7 @@ python seed_data.py
 python server.py
 ```
 
-Open http://localhost:8767 in your browser.
+Open http://localhost:8768 in your browser.
 
 ## Features
 

@@ -89,3 +89,19 @@ def test_api_docs_match_current_public_routes():
     ]
     for path in current_paths:
         assert path in api
+
+
+def test_runtime_ports_and_cors_defaults_match_documented_docker_port():
+    server = (ROOT / "server.py").read_text()
+    readme = (ROOT / "README.md").read_text()
+
+    assert "http://localhost:8768" in readme
+    assert "Open http://localhost:8768" in readme
+    assert "localhost:8767" not in server
+    assert "FLASK_PORT" in server
+    assert "configured_port" in server
+
+
+def test_experimental_cloud_env_names_postgres_host():
+    env = (ROOT / ".env.example").read_text()
+    assert "POSTGRES_HOST=postgres" in env

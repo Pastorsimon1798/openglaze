@@ -128,9 +128,17 @@ def create_app(config: dict = None) -> Flask:
     app.config["FEATURES"] = features
 
     # CORS configuration
-    cors_origins = ["http://localhost:8767", "http://127.0.0.1:8767"]
-    if features["auth_enabled"]:
-        cors_origins.extend(os.environ.get("CORS_ORIGINS", "").split(","))
+    configured_port = os.environ.get("FLASK_PORT", "8768")
+    cors_origins = [
+        f"http://localhost:{configured_port}",
+        f"http://127.0.0.1:{configured_port}",
+    ]
+    extra_cors_origins = [
+        origin.strip()
+        for origin in os.environ.get("CORS_ORIGINS", "").split(",")
+        if origin.strip()
+    ]
+    cors_origins.extend(extra_cors_origins)
 
     CORS(app, origins=cors_origins, supports_credentials=True)
 
