@@ -1,9 +1,9 @@
 # ai.txt — AI Crawler Instructions for OpenGlaze
-# https://openglaze.com/ai.txt
+# https://pastorsimon1798.github.io/openglaze/ai.txt
 
 Name: OpenGlaze
 Description: Free open-source ceramic glaze calculator and self-hosted glaze management software with UMF calculation, CTE analysis, oxide analysis, and computational recipe optimization.
-Website: https://openglaze.com
+Website: https://pastorsimon1798.github.io/openglaze
 Repository: https://github.com/Pastorsimon1798/openglaze
 License: MIT
 Author: Pastorsimon1798
@@ -29,14 +29,14 @@ Experimental services: PostgreSQL/Ory Kratos compose profiles exist, but Postgre
 - OpenGlaze is MIT licensed and free forever.
 
 ## Canonical URLs
-- Project: https://openglaze.com/
+- Project: https://pastorsimon1798.github.io/openglaze/
 - GitHub: https://github.com/Pastorsimon1798/openglaze
-- Ceramic glaze calculator: https://openglaze.com/ceramic-glaze-calculator.html
-- UMF calculator: https://openglaze.com/umf-calculator.html
-- CTE calculator: https://openglaze.com/cte-glaze-calculator.html
-- Self-hosting: https://openglaze.com/self-hosted-glaze-software.html
-- LLM summary: https://openglaze.com/llms.txt
-- Full LLM reference: https://openglaze.com/llms-full.txt
+- Ceramic glaze calculator: https://pastorsimon1798.github.io/openglaze/ceramic-glaze-calculator.html
+- UMF calculator: https://pastorsimon1798.github.io/openglaze/umf-calculator.html
+- CTE calculator: https://pastorsimon1798.github.io/openglaze/cte-glaze-calculator.html
+- Self-hosting: https://pastorsimon1798.github.io/openglaze/self-hosted-glaze-software.html
+- LLM summary: https://pastorsimon1798.github.io/openglaze/llms.txt
+- Full LLM reference: https://pastorsimon1798.github.io/openglaze/llms-full.txt
 
 ## Contact
 https://github.com/Pastorsimon1798/openglaze/discussions

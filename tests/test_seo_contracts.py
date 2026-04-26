@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
-CANONICAL = "https://openglaze.com"
+CANONICAL = "https://pastorsimon1798.github.io/openglaze"
 SEO_PAGES = [
     "ceramic-glaze-calculator.html",
     "umf-calculator.html",
@@ -137,3 +137,11 @@ def test_repository_growth_metadata_exists():
     assert re.search(r"<svg[^>]+viewBox=\"0 0 1280 640\"", social_svg.read_text())
     assert social_png.exists()
     assert social_png.stat().st_size < 1_000_000
+
+
+def test_static_pages_use_project_relative_internal_links():
+    for path in DOCS.glob("*.html"):
+        html = path.read_text()
+        assert (
+            'href="/' not in html
+        ), f"{path.name} has root-relative hrefs that break on project Pages"

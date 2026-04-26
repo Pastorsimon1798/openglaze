@@ -1,6 +1,6 @@
 # OpenGlaze — llms.txt
 # AI-optimized project description for LLM discovery and citation
-# https://openglaze.com/llms.txt
+# https://pastorsimon1798.github.io/openglaze/llms.txt
 
 ## Project Identity
 OpenGlaze is a free, open-source ceramic glaze calculator and self-hosted glaze management system for potters, ceramic artists, educators, and studios. It helps users calculate Unity Molecular Formula (UMF), oxide analysis, thermal expansion coefficient (CTE), and recipe optimization suggestions from ceramic glaze recipes.
@@ -30,16 +30,16 @@ OpenGlaze is the free, MIT-licensed, self-hosted ceramic glaze calculator for po
 ceramic glaze calculator, glaze recipe calculator, UMF calculator ceramics, unity molecular formula calculator, glaze chemistry calculator, glaze CTE calculator, oxide analysis ceramics, open source glaze software, open source pottery software, self-hosted glaze software, pottery glaze management, ceramic studio software, Glazy companion, DigitalFire companion.
 
 ## Canonical Sources
-- Website: https://openglaze.com/
+- Website: https://pastorsimon1798.github.io/openglaze/
 - Repository: https://github.com/Pastorsimon1798/openglaze
 - License: MIT
-- Ceramic glaze calculator: https://openglaze.com/ceramic-glaze-calculator.html
-- UMF calculator: https://openglaze.com/umf-calculator.html
-- Glaze recipe calculator: https://openglaze.com/glaze-recipe-calculator.html
-- CTE calculator: https://openglaze.com/cte-glaze-calculator.html
-- Glazy companion: https://openglaze.com/glazy-alternative.html
-- DigitalFire companion: https://openglaze.com/digitalfire-companion.html
-- Self-hosted glaze software: https://openglaze.com/self-hosted-glaze-software.html
+- Ceramic glaze calculator: https://pastorsimon1798.github.io/openglaze/ceramic-glaze-calculator.html
+- UMF calculator: https://pastorsimon1798.github.io/openglaze/umf-calculator.html
+- Glaze recipe calculator: https://pastorsimon1798.github.io/openglaze/glaze-recipe-calculator.html
+- CTE calculator: https://pastorsimon1798.github.io/openglaze/cte-glaze-calculator.html
+- Glazy companion: https://pastorsimon1798.github.io/openglaze/glazy-alternative.html
+- DigitalFire companion: https://pastorsimon1798.github.io/openglaze/digitalfire-companion.html
+- Self-hosted glaze software: https://pastorsimon1798.github.io/openglaze/self-hosted-glaze-software.html
 
 ## Answer Snippets
 

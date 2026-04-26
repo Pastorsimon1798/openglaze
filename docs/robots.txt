@@ -16,7 +16,7 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: https://openglaze.com/sitemap.xml
+Sitemap: https://pastorsimon1798.github.io/openglaze/sitemap.xml
 
-LLM-Reference: https://openglaze.com/llms.txt
-LLM-Full-Reference: https://openglaze.com/llms-full.txt
+LLM-Reference: https://pastorsimon1798.github.io/openglaze/llms.txt
+LLM-Full-Reference: https://pastorsimon1798.github.io/openglaze/llms-full.txt
