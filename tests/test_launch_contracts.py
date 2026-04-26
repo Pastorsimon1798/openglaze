@@ -105,3 +105,10 @@ def test_runtime_ports_and_cors_defaults_match_documented_docker_port():
 def test_experimental_cloud_env_names_postgres_host():
     env = (ROOT / ".env.example").read_text()
     assert "POSTGRES_HOST=postgres" in env
+
+
+def test_codecov_action_uses_v6_input_name():
+    ci = (ROOT / ".github/workflows/ci.yml").read_text()
+    assert "codecov/codecov-action@v6" in ci
+    assert "files: ./coverage.xml" in ci
+    assert "file: ./coverage.xml" not in ci
