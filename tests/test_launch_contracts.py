@@ -136,3 +136,15 @@ def test_kyanite_domain_is_canonical_public_host():
         content = path.read_text()
         assert canonical in content, f"{path} does not reference canonical host"
         assert "pastorsimon1798.github.io/openglaze" not in content
+
+
+def test_app_serves_sitemap_markdown_html_aliases():
+    server = (ROOT / "server.py").read_text()
+    sitemap = (ROOT / "docs/sitemap.xml").read_text()
+
+    for page in ["user-guide", "API", "self-hosting"]:
+        assert f"/{page}.html" in sitemap
+        assert (ROOT / f"docs/{page}.md").exists()
+
+    assert "render_markdown_doc" in server
+    assert 'Path("docs") / f"{Path(path).stem}.md"' in server

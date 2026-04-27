@@ -17,6 +17,7 @@ import json
 import sqlite3
 import logging
 import secrets
+from html import escape
 from pathlib import Path
 from typing import Optional
 
@@ -219,6 +220,82 @@ def create_app(config: dict = None) -> Flask:
     def index():
         return send_from_directory("frontend", "index.html")
 
+    def render_markdown_doc(markdown_path: Path):
+        """Render repository markdown docs as simple crawlable HTML aliases."""
+        source = markdown_path.read_text(encoding="utf-8")
+        title = markdown_path.stem.replace("-", " ").title()
+        body = []
+        in_list = False
+        in_code = False
+        code_lines = []
+
+        def close_list():
+            nonlocal in_list
+            if in_list:
+                body.append("</ul>")
+                in_list = False
+
+        for raw_line in source.splitlines():
+            line = raw_line.rstrip()
+            if line.startswith("```"):
+                if in_code:
+                    body.append(
+                        f"<pre><code>{escape(chr(10).join(code_lines))}</code></pre>"
+                    )
+                    code_lines = []
+                    in_code = False
+                else:
+                    close_list()
+                    in_code = True
+                continue
+            if in_code:
+                code_lines.append(raw_line)
+                continue
+            if not line:
+                close_list()
+                continue
+            if line.startswith("#"):
+                close_list()
+                level = min(len(line) - len(line.lstrip("#")), 6)
+                text = line[level:].strip()
+                if level == 1:
+                    title = text
+                body.append(f"<h{level}>{escape(text)}</h{level}>")
+                continue
+            if line.startswith(("- ", "* ")):
+                if not in_list:
+                    body.append("<ul>")
+                    in_list = True
+                body.append(f"<li>{escape(line[2:])}</li>")
+                continue
+            close_list()
+            body.append(f"<p>{escape(line)}</p>")
+
+        close_list()
+        if in_code:
+            body.append(f"<pre><code>{escape(chr(10).join(code_lines))}</code></pre>")
+
+        canonical = f"https://openglaze.kyanitelabs.tech/{markdown_path.stem}.html"
+        html = "\n".join(
+            [
+                "<!doctype html>",
+                '<html lang="en">',
+                "<head>",
+                '<meta charset="utf-8">',
+                '<meta name="viewport" content="width=device-width, initial-scale=1">',
+                f"<title>{escape(title)} | OpenGlaze</title>",
+                f'<link rel="canonical" href="{canonical}">',
+                "</head>",
+                "<body>",
+                "<main>",
+                *body,
+                "</main>",
+                "</body>",
+                "</html>",
+            ]
+        )
+        return Response(html, mimetype="text/html")
+
     @app.route("/llms.txt")
     @app.route("/llms-full.txt")
     @app.route("/ai.txt")
@@ -237,6 +314,10 @@ def create_app(config: dict = None) -> Flask:
             docs_file = Path("docs") / path
             if docs_file.is_file():
                 return send_from_directory("docs", path)
+            if path.endswith(".html"):
+                markdown_file = Path("docs") / f"{Path(path).stem}.md"
+                if markdown_file.is_file():
+                    return render_markdown_doc(markdown_file)
         return send_from_directory("frontend", path)
 
     # ==========================================
