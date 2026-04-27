@@ -17,18 +17,18 @@ Strategy:
     (3) recipe stays balanced (sums ~100%).
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
-import copy
 
 from .parser import parse_recipe_string
 from .umf import calculate_umf, UMFResult
-from .materials import get_material, MATERIALS
+from .materials import get_material
 
 
 @dataclass
 class RecipeSuggestion:
     """A single optimized recipe suggestion."""
+
     recipe: str
     change_description: str
     predicted_umf: Dict
@@ -41,6 +41,7 @@ class RecipeSuggestion:
 @dataclass
 class OptimizationResult:
     """Result of recipe optimization."""
+
     success: bool
     original_recipe: str
     target: str
@@ -51,23 +52,23 @@ class OptimizationResult:
 
     def to_dict(self) -> dict:
         return {
-            'success': self.success,
-            'original_recipe': self.original_recipe,
-            'target': self.target,
-            'original_cte': self.original_cte,
-            'original_surface': self.original_surface,
-            'suggestions': [
+            "success": self.success,
+            "original_recipe": self.original_recipe,
+            "target": self.target,
+            "original_cte": self.original_cte,
+            "original_surface": self.original_surface,
+            "suggestions": [
                 {
-                    'recipe': s.recipe,
-                    'change_description': s.change_description,
-                    'predicted_cte': s.predicted_cte,
-                    'predicted_surface': s.predicted_surface,
-                    'score': s.score,
-                    'distance_from_target': s.distance_from_target,
+                    "recipe": s.recipe,
+                    "change_description": s.change_description,
+                    "predicted_cte": s.predicted_cte,
+                    "predicted_surface": s.predicted_surface,
+                    "score": s.score,
+                    "distance_from_target": s.distance_from_target,
                 }
                 for s in self.suggestions
             ],
-            'error': self.error,
+            "error": self.error,
         }
 
 
@@ -80,12 +81,32 @@ class RecipeOptimizer:
 
     # Known substitution pairs: (from, to, description)
     SUBSTITUTIONS = [
-        ('nepheline syenite', 'custer feldspar', 'Replace high-alkali nepheline with lower-alkali feldspar'),
-        ('custer feldspar', 'nepheline syenite', 'Replace feldspar with nepheline for more flux'),
-        ('whiting', 'wollastonite', 'Replace whiting with wollastonite (adds silica, less LOI)'),
-        ('epk', 'ball clay', 'Replace kaolin with ball clay (more flux, less alumina)'),
-        ('silica', 'epk', 'Replace silica with kaolin (adds alumina, lowers CTE, more matte)'),
-        ('epk', 'silica', 'Replace kaolin with silica (raises SiO2:Al2O3, more glossy)'),
+        (
+            "nepheline syenite",
+            "custer feldspar",
+            "Replace high-alkali nepheline with lower-alkali feldspar",
+        ),
+        (
+            "custer feldspar",
+            "nepheline syenite",
+            "Replace feldspar with nepheline for more flux",
+        ),
+        (
+            "whiting",
+            "wollastonite",
+            "Replace whiting with wollastonite (adds silica, less LOI)",
+        ),
+        ("epk", "ball clay", "Replace kaolin with ball clay (more flux, less alumina)"),
+        (
+            "silica",
+            "epk",
+            "Replace silica with kaolin (adds alumina, lowers CTE, more matte)",
+        ),
+        (
+            "epk",
+            "silica",
+            "Replace kaolin with silica (raises SiO2:Al2O3, more glossy)",
+        ),
     ]
 
     def optimize(
@@ -137,8 +158,11 @@ class RecipeOptimizer:
         original_surface = original_umf.surface_prediction
 
         # Guard: surface targets require Al2O3 in the recipe
-        sio2_al2o3 = original_umf.ratios.get('sio2_al2o3', 0.0)
-        if target in ('more_matte', 'more_glossy', 'reduce_running') and sio2_al2o3 == 0.0:
+        sio2_al2o3 = original_umf.ratios.get("sio2_al2o3", 0.0)
+        if (
+            target in ("more_matte", "more_glossy", "reduce_running")
+            and sio2_al2o3 == 0.0
+        ):
             return OptimizationResult(
                 success=True,
                 original_recipe=recipe,
@@ -150,7 +174,11 @@ class RecipeOptimizer:
             )
 
         # Guard: already at target CTE
-        if target == 'target_cte' and target_value is not None and original_cte is not None:
+        if (
+            target == "target_cte"
+            and target_value is not None
+            and original_cte is not None
+        ):
             if abs(original_cte - target_value) < 0.1:
                 return OptimizationResult(
                     success=True,
@@ -163,13 +191,17 @@ class RecipeOptimizer:
                 )
 
         # Build target evaluator
-        evaluator = self._build_evaluator(target, target_value, original_cte, original_surface, original_umf)
+        evaluator = self._build_evaluator(
+            target, target_value, original_cte, original_surface, original_umf
+        )
 
         candidates: List[Tuple[str, str, UMFResult, float]] = []
 
         # Determine which adjustment set to use
-        is_surface_target = target in ('more_matte', 'more_glossy')
-        adjustments = self.STANDARD_ADJUSTMENTS + (self.LARGE_ADJUSTMENTS if is_surface_target else [])
+        is_surface_target = target in ("more_matte", "more_glossy")
+        adjustments = self.STANDARD_ADJUSTMENTS + (
+            self.LARGE_ADJUSTMENTS if is_surface_target else []
+        )
 
         # 1. Single-material adjustments
         for mat_name, amount in original_materials.items():
@@ -189,13 +221,17 @@ class RecipeOptimizer:
                 total = sum(new_materials.values())
                 if total == 0:
                     continue
-                new_materials = {k: round(v / total * 100, 2) for k, v in new_materials.items()}
+                new_materials = {
+                    k: round(v / total * 100, 2) for k, v in new_materials.items()
+                }
 
                 candidate_recipe = self._materials_to_recipe(new_materials)
                 candidate_umf = calculate_umf(candidate_recipe, cone=original_umf.cone)
                 if candidate_umf.success:
                     score, distance = evaluator(candidate_umf)
-                    desc = f"{material.name} {amount:.1f} → {new_materials[mat_name]:.1f}%"
+                    desc = (
+                        f"{material.name} {amount:.1f} → {new_materials[mat_name]:.1f}%"
+                    )
                     candidates.append((candidate_recipe, desc, candidate_umf, score))
 
         # 2. Material substitutions
@@ -221,7 +257,9 @@ class RecipeOptimizer:
                 total = sum(new_materials.values())
                 if total == 0:
                     continue
-                new_materials = {k: round(v / total * 100, 2) for k, v in new_materials.items()}
+                new_materials = {
+                    k: round(v / total * 100, 2) for k, v in new_materials.items()
+                }
 
                 candidate_recipe = self._materials_to_recipe(new_materials)
                 candidate_umf = calculate_umf(candidate_recipe, cone=original_umf.cone)
@@ -233,10 +271,10 @@ class RecipeOptimizer:
 
         # 3. Add common materials if not present
         common_additions = {
-            'silica': 'Add silica',
-            'epk': 'Add kaolin',
-            'whiting': 'Add whiting',
-            'custer feldspar': 'Add feldspar',
+            "silica": "Add silica",
+            "epk": "Add kaolin",
+            "whiting": "Add whiting",
+            "custer feldspar": "Add feldspar",
         }
         for mat_key, add_desc in common_additions.items():
             if mat_key in original_materials:
@@ -277,22 +315,24 @@ class RecipeOptimizer:
             seen_recipes.add(key)
 
             # Skip if change is too small (< 2% CTE change for CTE targets)
-            if target.startswith('target_cte') and original_cte is not None:
+            if target.startswith("target_cte") and original_cte is not None:
                 if abs(umf.thermal_expansion - original_cte) < 0.2:
                     continue
 
             if len(suggestions) >= max_suggestions:
                 break
 
-            suggestions.append(RecipeSuggestion(
-                recipe=rec,
-                change_description=desc,
-                predicted_umf=umf.umf_formula,
-                predicted_cte=umf.thermal_expansion,
-                predicted_surface=umf.surface_prediction,
-                score=round(score, 1),
-                distance_from_target=round(score, 3),  # reused field
-            ))
+            suggestions.append(
+                RecipeSuggestion(
+                    recipe=rec,
+                    change_description=desc,
+                    predicted_umf=umf.umf_formula,
+                    predicted_cte=umf.thermal_expansion,
+                    predicted_surface=umf.surface_prediction,
+                    score=round(score, 1),
+                    distance_from_target=round(score, 3),  # reused field
+                )
+            )
 
         return OptimizationResult(
             success=True,
@@ -312,11 +352,14 @@ class RecipeOptimizer:
         original_umf: UMFResult,
     ):
         """Build a scoring function for a given target."""
-        sio2_al2o3 = original_umf.ratios.get('sio2_al2o3', 5.0)
-        knao = original_umf.umf_formula.get('K2O', 0) + original_umf.umf_formula.get('Na2O', 0)
-        b2o3 = original_umf.umf_formula.get('B2O3', 0)
+        sio2_al2o3 = original_umf.ratios.get("sio2_al2o3", 5.0)
+        knao = original_umf.umf_formula.get("K2O", 0) + original_umf.umf_formula.get(
+            "Na2O", 0
+        )
+        b2o3 = original_umf.umf_formula.get("B2O3", 0)
 
-        if target == 'target_cte' and target_value is not None:
+        if target == "target_cte" and target_value is not None:
+
             def evaluator(umf: UMFResult) -> Tuple[float, float]:
                 if umf.thermal_expansion is None:
                     return 0.0, 999.0
@@ -324,9 +367,11 @@ class RecipeOptimizer:
                 # Score: 100 at exact match, falls off with distance
                 score = max(0, 100 - distance * 20)
                 return score, distance
+
             return evaluator
 
-        elif target == 'reduce_cte':
+        elif target == "reduce_cte":
+
             def evaluator(umf: UMFResult) -> Tuple[float, float]:
                 if umf.thermal_expansion is None or original_cte is None:
                     return 0.0, 999.0
@@ -336,9 +381,11 @@ class RecipeOptimizer:
                 # Score by reduction amount, capped
                 score = min(100, reduction * 25)
                 return score, -reduction
+
             return evaluator
 
-        elif target == 'increase_cte':
+        elif target == "increase_cte":
+
             def evaluator(umf: UMFResult) -> Tuple[float, float]:
                 if umf.thermal_expansion is None or original_cte is None:
                     return 0.0, 999.0
@@ -347,9 +394,10 @@ class RecipeOptimizer:
                     return 0.0, 999.0
                 score = min(100, increase * 25)
                 return score, -increase
+
             return evaluator
 
-        elif target == 'more_matte':
+        elif target == "more_matte":
             # Cone-aware thresholds for matte boundary
             cone = original_umf.cone or 10
             if cone <= 3:
@@ -360,7 +408,7 @@ class RecipeOptimizer:
                 matte_threshold = 4.0
 
             def evaluator(umf: UMFResult) -> Tuple[float, float]:
-                new_ratio = umf.ratios.get('sio2_al2o3', 5.0)
+                new_ratio = umf.ratios.get("sio2_al2o3", 5.0)
                 if new_ratio >= sio2_al2o3:
                     return 0.0, 999.0
                 reduction = sio2_al2o3 - new_ratio
@@ -369,9 +417,10 @@ class RecipeOptimizer:
                 if new_ratio < matte_threshold:
                     score += 50
                 return score, -reduction
+
             return evaluator
 
-        elif target == 'more_glossy':
+        elif target == "more_glossy":
             cone = original_umf.cone or 10
             if cone <= 3:
                 glossy_threshold = 4.0
@@ -381,7 +430,7 @@ class RecipeOptimizer:
                 glossy_threshold = 5.0
 
             def evaluator(umf: UMFResult) -> Tuple[float, float]:
-                new_ratio = umf.ratios.get('sio2_al2o3', 5.0)
+                new_ratio = umf.ratios.get("sio2_al2o3", 5.0)
                 if new_ratio <= sio2_al2o3:
                     return 0.0, 999.0
                 increase = new_ratio - sio2_al2o3
@@ -390,22 +439,28 @@ class RecipeOptimizer:
                 if new_ratio > glossy_threshold:
                     score += 50
                 return score, -increase
+
             return evaluator
 
-        elif target == 'reduce_alkali':
+        elif target == "reduce_alkali":
+
             def evaluator(umf: UMFResult) -> Tuple[float, float]:
-                new_knao = umf.umf_formula.get('K2O', 0) + umf.umf_formula.get('Na2O', 0)
+                new_knao = umf.umf_formula.get("K2O", 0) + umf.umf_formula.get(
+                    "Na2O", 0
+                )
                 if new_knao >= knao:
                     return 0.0, 999.0
                 reduction = knao - new_knao
                 score = min(100, reduction * 50)
                 return score, -reduction
+
             return evaluator
 
-        elif target == 'reduce_running':
+        elif target == "reduce_running":
+
             def evaluator(umf: UMFResult) -> Tuple[float, float]:
-                new_ratio = umf.ratios.get('sio2_al2o3', 5.0)
-                new_b2o3 = umf.umf_formula.get('B2O3', 0)
+                new_ratio = umf.ratios.get("sio2_al2o3", 5.0)
+                new_b2o3 = umf.umf_formula.get("B2O3", 0)
                 score = 0.0
                 if new_ratio > sio2_al2o3:
                     score += (new_ratio - sio2_al2o3) * 15
@@ -414,11 +469,14 @@ class RecipeOptimizer:
                 if score <= 0:
                     return 0.0, 999.0
                 return min(100, score), -score
+
             return evaluator
 
         else:
+
             def evaluator(umf: UMFResult) -> Tuple[float, float]:
                 return 0.0, 999.0
+
             return evaluator
 
     @staticmethod

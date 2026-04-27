@@ -12,7 +12,7 @@ from .models import Studio, StudioMember, LabAssignment
 logger = logging.getLogger(__name__)
 
 # Invite code alphabet — no ambiguous chars (0/O, 1/I/L)
-_CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
 
 # Stale claim threshold
 CLAIM_TIMEOUT_DAYS = 14
@@ -21,7 +21,7 @@ CLAIM_TIMEOUT_DAYS = 14
 class StudioManager:
     """Manages studio groups, membership, and lab queue assignments."""
 
-    def __init__(self, db_path: str = 'glaze.db', user_id: Optional[str] = None):
+    def __init__(self, db_path: str = "glaze.db", user_id: Optional[str] = None):
         self.db_path = db_path
         self.user_id = user_id
 
@@ -33,7 +33,7 @@ class StudioManager:
 
     def _generate_invite_code(self, length: int = 6) -> str:
         """Generate a unique invite code."""
-        return ''.join(secrets.choice(_CODE_CHARS) for _ in range(length))
+        return "".join(secrets.choice(_CODE_CHARS) for _ in range(length))
 
     # ---- Studio CRUD ----
 
@@ -47,7 +47,9 @@ class StudioManager:
 
         # Ensure unique invite code
         while True:
-            cursor.execute('SELECT 1 FROM studios WHERE invite_code = ?', (invite_code,))
+            cursor.execute(
+                "SELECT 1 FROM studios WHERE invite_code = ?", (invite_code,)
+            )
             if not cursor.fetchone():
                 break
             invite_code = self._generate_invite_code()
@@ -56,31 +58,35 @@ class StudioManager:
         now = datetime.now().isoformat()
 
         cursor.execute(
-            'INSERT INTO studios (id, name, invite_code, created_by) VALUES (?, ?, ?, ?)',
+            "INSERT INTO studios (id, name, invite_code, created_by) VALUES (?, ?, ?, ?)",
             (studio_id, name, invite_code, user_id),
         )
         cursor.execute(
-            'INSERT INTO studio_members (studio_id, user_id, display_name, role) VALUES (?, ?, ?, ?)',
-            (studio_id, user_id, display_name, 'admin'),
+            "INSERT INTO studio_members (studio_id, user_id, display_name, role) VALUES (?, ?, ?, ?)",
+            (studio_id, user_id, display_name, "admin"),
         )
 
         conn.commit()
         conn.close()
 
         return {
-            'id': studio_id,
-            'name': name,
-            'invite_code': invite_code,
-            'created_by': user_id,
-            'created_at': now,
+            "id": studio_id,
+            "name": name,
+            "invite_code": invite_code,
+            "created_by": user_id,
+            "created_at": now,
         }
 
-    def join_by_code(self, invite_code: str, display_name: str, user_id: str) -> Optional[dict]:
+    def join_by_code(
+        self, invite_code: str, display_name: str, user_id: str
+    ) -> Optional[dict]:
         """Join a studio by invite code. Returns studio dict or None."""
         conn = self._get_connection()
         cursor = conn.cursor()
 
-        cursor.execute('SELECT * FROM studios WHERE invite_code = ?', (invite_code.upper(),))
+        cursor.execute(
+            "SELECT * FROM studios WHERE invite_code = ?", (invite_code.upper(),)
+        )
         row = cursor.fetchone()
         if not row:
             conn.close()
@@ -90,7 +96,7 @@ class StudioManager:
 
         # Check if already a member
         cursor.execute(
-            'SELECT 1 FROM studio_members WHERE studio_id = ? AND user_id = ?',
+            "SELECT 1 FROM studio_members WHERE studio_id = ? AND user_id = ?",
             (studio.id, user_id),
         )
         if cursor.fetchone():
@@ -98,8 +104,8 @@ class StudioManager:
             return studio.to_dict()
 
         cursor.execute(
-            'INSERT INTO studio_members (studio_id, user_id, display_name, role) VALUES (?, ?, ?, ?)',
-            (studio.id, user_id, display_name, 'member'),
+            "INSERT INTO studio_members (studio_id, user_id, display_name, role) VALUES (?, ?, ?, ?)",
+            (studio.id, user_id, display_name, "member"),
         )
         conn.commit()
         conn.close()
@@ -109,7 +115,7 @@ class StudioManager:
     def get_studio(self, studio_id: str) -> Optional[Studio]:
         conn = self._get_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM studios WHERE id = ?', (studio_id,))
+        cursor.execute("SELECT * FROM studios WHERE id = ?", (studio_id,))
         row = cursor.fetchone()
         conn.close()
         return Studio.from_dict(dict(row)) if row else None
@@ -117,7 +123,10 @@ class StudioManager:
     def get_members(self, studio_id: str) -> List[StudioMember]:
         conn = self._get_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM studio_members WHERE studio_id = ? ORDER BY joined_at', (studio_id,))
+        cursor.execute(
+            "SELECT * FROM studio_members WHERE studio_id = ? ORDER BY joined_at",
+            (studio_id,),
+        )
         rows = cursor.fetchall()
         conn.close()
         return [StudioMember.from_dict(dict(r)) for r in rows]
@@ -126,17 +135,21 @@ class StudioManager:
         conn = self._get_connection()
         cursor = conn.cursor()
         cursor.execute(
-            '''SELECT s.*, sm.role, sm.display_name
+            """SELECT s.*, sm.role, sm.display_name
                FROM studios s
                JOIN studio_members sm ON s.id = sm.studio_id
                WHERE sm.user_id = ?
-               ORDER BY sm.joined_at''',
+               ORDER BY sm.joined_at""",
             (user_id,),
         )
         rows = cursor.fetchall()
         conn.close()
         return [
-            {**Studio.from_dict(dict(r)).to_dict(), 'role': r['role'], 'display_name': r['display_name']}
+            {
+                **Studio.from_dict(dict(r)).to_dict(),
+                "role": r["role"],
+                "display_name": r["display_name"],
+            }
             for r in rows
         ]
 
@@ -149,16 +162,16 @@ class StudioManager:
 
         # Verify caller is admin
         cursor.execute(
-            'SELECT role FROM studio_members WHERE studio_id = ? AND user_id = ?',
+            "SELECT role FROM studio_members WHERE studio_id = ? AND user_id = ?",
             (studio_id, admin_user_id),
         )
         row = cursor.fetchone()
-        if not row or row['role'] != 'admin':
+        if not row or row["role"] != "admin":
             conn.close()
             return False
 
         cursor.execute(
-            'DELETE FROM studio_members WHERE studio_id = ? AND user_id = ?',
+            "DELETE FROM studio_members WHERE studio_id = ? AND user_id = ?",
             (studio_id, user_id),
         )
         affected = cursor.rowcount
@@ -166,22 +179,26 @@ class StudioManager:
         conn.close()
         return affected > 0
 
-    def regenerate_invite_code(self, studio_id: str, admin_user_id: str) -> Optional[str]:
+    def regenerate_invite_code(
+        self, studio_id: str, admin_user_id: str
+    ) -> Optional[str]:
         """Generate a new invite code. Admin only."""
         conn = self._get_connection()
         cursor = conn.cursor()
 
         cursor.execute(
-            'SELECT role FROM studio_members WHERE studio_id = ? AND user_id = ?',
+            "SELECT role FROM studio_members WHERE studio_id = ? AND user_id = ?",
             (studio_id, admin_user_id),
         )
         row = cursor.fetchone()
-        if not row or row['role'] != 'admin':
+        if not row or row["role"] != "admin":
             conn.close()
             return None
 
         new_code = self._generate_invite_code()
-        cursor.execute('UPDATE studios SET invite_code = ? WHERE id = ?', (new_code, studio_id))
+        cursor.execute(
+            "UPDATE studios SET invite_code = ? WHERE id = ?", (new_code, studio_id)
+        )
         conn.commit()
         conn.close()
         return new_code
@@ -191,17 +208,17 @@ class StudioManager:
         cursor = conn.cursor()
 
         cursor.execute(
-            'SELECT role FROM studio_members WHERE studio_id = ? AND user_id = ?',
+            "SELECT role FROM studio_members WHERE studio_id = ? AND user_id = ?",
             (studio_id, admin_user_id),
         )
         row = cursor.fetchone()
-        if not row or row['role'] != 'admin':
+        if not row or row["role"] != "admin":
             conn.close()
             return False
 
-        cursor.execute('DELETE FROM lab_assignments WHERE studio_id = ?', (studio_id,))
-        cursor.execute('DELETE FROM studio_members WHERE studio_id = ?', (studio_id,))
-        cursor.execute('DELETE FROM studios WHERE id = ?', (studio_id,))
+        cursor.execute("DELETE FROM lab_assignments WHERE studio_id = ?", (studio_id,))
+        cursor.execute("DELETE FROM studio_members WHERE studio_id = ?", (studio_id,))
+        cursor.execute("DELETE FROM studios WHERE id = ?", (studio_id,))
         conn.commit()
         conn.close()
         return True
@@ -214,14 +231,14 @@ class StudioManager:
         cursor = conn.cursor()
 
         cursor.execute(
-            '''SELECT c.*, la.id as assignment_id, la.assigned_to, la.claimed_at,
+            """SELECT c.*, la.id as assignment_id, la.assigned_to, la.claimed_at,
                       la.status as claim_status, la.claimed_by_name
                FROM combinations c
                LEFT JOIN lab_assignments la
                    ON la.combination_id = c.id AND la.studio_id = ?
                WHERE c.prediction_grade IN ('likely', 'possible', 'unlikely', 'unknown')
                  AND (la.status IS NULL OR la.status NOT IN ('completed', 'released'))
-               ORDER BY c.prediction_grade, c.created_at''',
+               ORDER BY c.prediction_grade, c.created_at""",
             (studio_id,),
         )
         rows = cursor.fetchall()
@@ -230,34 +247,36 @@ class StudioManager:
         results = []
         for r in rows:
             combo = dict(r)
-            assignment_id = combo.pop('assignment_id', None)
-            assigned_to = combo.pop('assigned_to', None)
-            claimed_at = combo.pop('claimed_at', None)
-            claim_status = combo.pop('claim_status', None)
-            claimed_by_name = combo.pop('claimed_by_name', None)
+            assignment_id = combo.pop("assignment_id", None)
+            assigned_to = combo.pop("assigned_to", None)
+            claimed_at = combo.pop("claimed_at", None)
+            claim_status = combo.pop("claim_status", None)
+            claimed_by_name = combo.pop("claimed_by_name", None)
 
-            combo['claim'] = None
+            combo["claim"] = None
             if assignment_id and claim_status:
-                combo['claim'] = {
-                    'id': assignment_id,
-                    'assigned_to': assigned_to,
-                    'claimed_at': claimed_at,
-                    'status': claim_status,
-                    'claimed_by_name': claimed_by_name,
+                combo["claim"] = {
+                    "id": assignment_id,
+                    "assigned_to": assigned_to,
+                    "claimed_at": claimed_at,
+                    "status": claim_status,
+                    "claimed_by_name": claimed_by_name,
                 }
             results.append(combo)
         return results
 
-    def claim_combo(self, studio_id: str, combination_id: int, user_id: str, display_name: str) -> Optional[LabAssignment]:
+    def claim_combo(
+        self, studio_id: str, combination_id: int, user_id: str, display_name: str
+    ) -> Optional[LabAssignment]:
         """Claim a combo for testing. Returns the assignment or None."""
         conn = self._get_connection()
         cursor = conn.cursor()
 
         # Check for existing active claim
         cursor.execute(
-            '''SELECT id, status FROM lab_assignments
+            """SELECT id, status FROM lab_assignments
                WHERE studio_id = ? AND combination_id = ?
-               AND status NOT IN ('completed', 'released')''',
+               AND status NOT IN ('completed', 'released')""",
             (studio_id, combination_id),
         )
         existing = cursor.fetchone()
@@ -267,8 +286,8 @@ class StudioManager:
 
         now = datetime.now().isoformat()
         cursor.execute(
-            'INSERT INTO lab_assignments (studio_id, combination_id, assigned_to, claimed_at, status, claimed_by_name) VALUES (?, ?, ?, ?, ?, ?)',
-            (studio_id, combination_id, user_id, now, 'claimed', display_name),
+            "INSERT INTO lab_assignments (studio_id, combination_id, assigned_to, claimed_at, status, claimed_by_name) VALUES (?, ?, ?, ?, ?, ?)",
+            (studio_id, combination_id, user_id, now, "claimed", display_name),
         )
         assignment_id = cursor.lastrowid
         conn.commit()
@@ -280,7 +299,7 @@ class StudioManager:
             combination_id=combination_id,
             assigned_to=user_id,
             claimed_at=now,
-            status='claimed',
+            status="claimed",
             claimed_by_name=display_name,
         )
 
@@ -290,9 +309,9 @@ class StudioManager:
         cursor = conn.cursor()
 
         cursor.execute(
-            '''UPDATE lab_assignments SET status = 'released'
+            """UPDATE lab_assignments SET status = 'released'
                WHERE studio_id = ? AND combination_id = ?
-               AND status IN ('claimed', 'in_progress')''',
+               AND status IN ('claimed', 'in_progress')""",
             (studio_id, combination_id),
         )
         affected = cursor.rowcount
@@ -306,27 +325,29 @@ class StudioManager:
         cursor = conn.cursor()
 
         cursor.execute(
-            '''SELECT la.*, c.base, c.top, c.prediction_grade
+            """SELECT la.*, c.base, c.top, c.prediction_grade
                FROM lab_assignments la
                JOIN combinations c ON la.combination_id = c.id
                WHERE la.studio_id = ? AND la.assigned_to = ?
                AND la.status IN ('claimed', 'in_progress')
-               ORDER BY la.claimed_at DESC''',
+               ORDER BY la.claimed_at DESC""",
             (studio_id, user_id),
         )
         rows = cursor.fetchall()
         conn.close()
         return [LabAssignment.from_dict(dict(r)) for r in rows]
 
-    def complete_claim(self, studio_id: str, combination_id: int, experiment_id: int) -> bool:
+    def complete_claim(
+        self, studio_id: str, combination_id: int, experiment_id: int
+    ) -> bool:
         """Mark a lab claim as completed, linking to experiment result."""
         conn = self._get_connection()
         cursor = conn.cursor()
 
         cursor.execute(
-            '''UPDATE lab_assignments SET status = 'completed'
+            """UPDATE lab_assignments SET status = 'completed'
                WHERE studio_id = ? AND combination_id = ?
-               AND status IN ('claimed', 'in_progress')''',
+               AND status IN ('claimed', 'in_progress')""",
             (studio_id, combination_id),
         )
         affected = cursor.rowcount
@@ -342,9 +363,9 @@ class StudioManager:
         cutoff = (datetime.now() - timedelta(days=CLAIM_TIMEOUT_DAYS)).isoformat()
 
         cursor.execute(
-            '''UPDATE lab_assignments SET status = 'released'
+            """UPDATE lab_assignments SET status = 'released'
                WHERE claimed_at < ?
-               AND status IN ('claimed', 'in_progress')''',
+               AND status IN ('claimed', 'in_progress')""",
             (cutoff,),
         )
         released = cursor.rowcount

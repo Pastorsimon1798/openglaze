@@ -63,7 +63,7 @@ body:
       options:
         - Docker (self-hosted)
         - Manual install (self-hosted)
-        - OpenGlaze Cloud (opengaze.com)
+        - Experimental cloud/multi-user profile
         - Development (localhost)
 
   - type: input

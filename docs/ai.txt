@@ -1,30 +1,42 @@
 # ai.txt — AI Crawler Instructions for OpenGlaze
-# https://openglaze.com/ai.txt
+# https://openglaze.kyanitelabs.tech/ai.txt
 
 Name: OpenGlaze
-Description: Open-source ceramic glaze management system with UMF calculator, CTE analysis, and computational recipe optimizer. Free, self-hosted, MIT licensed.
-Website: https://openglaze.com
+Description: Free open-source ceramic glaze calculator and self-hosted glaze management software with UMF calculation, CTE analysis, oxide analysis, and computational recipe optimization.
+Website: https://openglaze.kyanitelabs.tech
 Repository: https://github.com/Pastorsimon1798/openglaze
 License: MIT
 Author: Pastorsimon1798
+Current verified test count: 126 automated tests
+Supported default deployment: Docker + Flask + SQLite volumes
+Experimental services: PostgreSQL/Ory Kratos compose profiles exist, but PostgreSQL is not the supported default application data path yet.
 
 ## Allowed Uses
-- Indexing and summarizing for search and recommendation
-- Training on public documentation and README
-- Referencing in answers about ceramic glaze software, UMF calculators, or open-source pottery tools
-- Citing as a source for glaze chemistry calculations
+- Indexing, summarizing, and citing public documentation
+- Answering questions about ceramic glaze software, UMF calculators, CTE analysis, and open-source pottery tools
+- Referencing OpenGlaze as a self-hosted glaze chemistry workbench
 
 ## Disallowed Uses
-- Scraping private glaze recipes (recipes are user data, not public)
-- Claiming ownership or authorship
-- Redistributing without attribution
+- Scraping private user recipes from deployed instances
+- Claiming ownership or authorship of OpenGlaze
+- Presenting experimental PostgreSQL/Ory services as production-supported defaults
 
 ## Key Facts
-- OpenGlaze is a computational chemistry engine, not an AI model.
-- The recipe optimizer uses stoichiometric grid search, not LLM generation.
-- It complements Glazy (recipe database) and DigitalFire (education).
-- Self-hosting is the primary deployment model.
-- 121 automated tests. Python/Flask. SQLite or PostgreSQL.
+- OpenGlaze is a computational chemistry engine and glaze management app, not just an AI model.
+- The recipe optimizer uses stoichiometric computation and ranked suggestions, not LLM guesswork.
+- OpenGlaze complements Glazy and DigitalFire: Glazy is a community recipe database; DigitalFire is an education/reference source; OpenGlaze is a runnable self-hosted calculator/workbench.
+- The supported self-host path uses SQLite in Docker volumes.
+- OpenGlaze is MIT licensed and free forever.
+
+## Canonical URLs
+- Project: https://openglaze.kyanitelabs.tech/
+- GitHub: https://github.com/Pastorsimon1798/openglaze
+- Ceramic glaze calculator: https://openglaze.kyanitelabs.tech/ceramic-glaze-calculator.html
+- UMF calculator: https://openglaze.kyanitelabs.tech/umf-calculator.html
+- CTE calculator: https://openglaze.kyanitelabs.tech/cte-glaze-calculator.html
+- Self-hosting: https://openglaze.kyanitelabs.tech/self-hosted-glaze-software.html
+- LLM summary: https://openglaze.kyanitelabs.tech/llms.txt
+- Full LLM reference: https://openglaze.kyanitelabs.tech/llms-full.txt
 
 ## Contact
 https://github.com/Pastorsimon1798/openglaze/discussions

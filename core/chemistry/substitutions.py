@@ -19,17 +19,19 @@ logger = logging.getLogger(__name__)
 @dataclass
 class SubstitutionSuggestion:
     """A single substitution suggestion."""
+
     original: str
     substitute: str
     ratio: float
     confidence: str  # 'high', 'medium', 'low'
     notes: str
-    chemistry_impact: str = ''
+    chemistry_impact: str = ""
 
 
 @dataclass
 class SubstitutionResult:
     """Result of substitution analysis for a recipe."""
+
     success: bool
     unknown_materials: List[str] = field(default_factory=list)
     suggestions: List[SubstitutionSuggestion] = field(default_factory=list)
@@ -38,21 +40,21 @@ class SubstitutionResult:
 
     def to_dict(self) -> dict:
         return {
-            'success': self.success,
-            'unknown_materials': self.unknown_materials,
-            'suggestions': [
+            "success": self.success,
+            "unknown_materials": self.unknown_materials,
+            "suggestions": [
                 {
-                    'original': s.original,
-                    'substitute': s.substitute,
-                    'ratio': s.ratio,
-                    'confidence': s.confidence,
-                    'notes': s.notes,
-                    'chemistry_impact': s.chemistry_impact,
+                    "original": s.original,
+                    "substitute": s.substitute,
+                    "ratio": s.ratio,
+                    "confidence": s.confidence,
+                    "notes": s.notes,
+                    "chemistry_impact": s.chemistry_impact,
                 }
                 for s in self.suggestions
             ],
-            'reformulated_recipe': self.reformulated_recipe,
-            'error': self.error,
+            "reformulated_recipe": self.reformulated_recipe,
+            "error": self.error,
         }
 
 
@@ -68,14 +70,14 @@ class SubstitutionEngine:
     def _load_data(self):
         """Load substitution data into lookup structures."""
         if self._substitutions:
-            for entry in self._substitutions.get('one_to_one', []):
-                from_mat = entry['from'].lower()
+            for entry in self._substitutions.get("one_to_one", []):
+                from_mat = entry["from"].lower()
                 if from_mat not in self._one_to_one:
                     self._one_to_one[from_mat] = []
                 self._one_to_one[from_mat].append(entry)
 
-            for entry in self._substitutions.get('complex', []):
-                from_mat = entry['from'].lower()
+            for entry in self._substitutions.get("complex", []):
+                from_mat = entry["from"].lower()
                 self._complex[from_mat] = entry
 
     def suggest(self, material_name: str) -> List[SubstitutionSuggestion]:
@@ -93,38 +95,47 @@ class SubstitutionEngine:
         # 1. Check known one-to-one substitutions
         if name_lower in self._one_to_one:
             for entry in self._one_to_one[name_lower]:
-                suggestions.append(SubstitutionSuggestion(
-                    original=material_name,
-                    substitute=entry['to'],
-                    ratio=entry['ratio'],
-                    confidence='high',
-                    notes=entry.get('notes') or f"Direct substitution: use {entry['ratio']}× amount",
-                ))
+                suggestions.append(
+                    SubstitutionSuggestion(
+                        original=material_name,
+                        substitute=entry["to"],
+                        ratio=entry["ratio"],
+                        confidence="high",
+                        notes=entry.get("notes")
+                        or f"Direct substitution: use {entry['ratio']}× amount",
+                    )
+                )
 
         # 2. Check complex substitutions
         if name_lower in self._complex:
             entry = self._complex[name_lower]
-            suggestions.append(SubstitutionSuggestion(
-                original=material_name,
-                substitute=entry['to'],
-                ratio=entry.get('ratio', 'see notes'),
-                confidence='medium',
-                notes=entry.get('notes', 'Complex substitution — test required'),
-            ))
-            # Also add alternatives if present
-            for alt in entry.get('alternatives', []):
-                suggestions.append(SubstitutionSuggestion(
+            suggestions.append(
+                SubstitutionSuggestion(
                     original=material_name,
-                    substitute=alt,
-                    ratio=entry.get('ratio', 'see notes'),
-                    confidence='medium',
-                    notes=f"Alternative to {entry['to']}. {entry.get('notes', '')}",
-                ))
+                    substitute=entry["to"],
+                    ratio=entry.get("ratio", "see notes"),
+                    confidence="medium",
+                    notes=entry.get("notes", "Complex substitution — test required"),
+                )
+            )
+            # Also add alternatives if present
+            for alt in entry.get("alternatives", []):
+                suggestions.append(
+                    SubstitutionSuggestion(
+                        original=material_name,
+                        substitute=alt,
+                        ratio=entry.get("ratio", "see notes"),
+                        confidence="medium",
+                        notes=f"Alternative to {entry['to']}. {entry.get('notes', '')}",
+                    )
+                )
 
         # 3. Chemistry-based fallback suggestions
         material = get_material(material_name)
         if material:
-            suggestions.extend(self._chemistry_based_suggestions(material_name, material))
+            suggestions.extend(
+                self._chemistry_based_suggestions(material_name, material)
+            )
 
         # Deduplicate by substitute name
         seen = set()
@@ -137,7 +148,9 @@ class SubstitutionEngine:
 
         return unique
 
-    def _chemistry_based_suggestions(self, name: str, material) -> List[SubstitutionSuggestion]:
+    def _chemistry_based_suggestions(
+        self, name: str, material
+    ) -> List[SubstitutionSuggestion]:
         """Find chemistry-based substitutes from the material database."""
         suggestions = []
         name_lower = name.lower()
@@ -169,17 +182,19 @@ class SubstitutionEngine:
                     pct_diff = abs(my_pct - other_pct) / max(my_pct, 1)
 
                     if pct_diff < 0.3:  # Within 30%
-                        confidence = 'high' if pct_diff < 0.15 else 'medium'
+                        confidence = "high" if pct_diff < 0.15 else "medium"
                         ratio = my_pct / other_pct if other_pct > 0 else 1.0
 
-                        suggestions.append(SubstitutionSuggestion(
-                            original=name,
-                            substitute=other.name,
-                            ratio=round(ratio, 2),
-                            confidence=confidence,
-                            notes=f"Similar chemistry: both are {primary_oxide}-rich. Test for fit.",
-                            chemistry_impact=f"Primary oxide {primary_oxide}: {my_pct:.0f}% vs {other_pct:.0f}%"
-                        ))
+                        suggestions.append(
+                            SubstitutionSuggestion(
+                                original=name,
+                                substitute=other.name,
+                                ratio=round(ratio, 2),
+                                confidence=confidence,
+                                notes=f"Similar chemistry: both are {primary_oxide}-rich. Test for fit.",
+                                chemistry_impact=f"Primary oxide {primary_oxide}: {my_pct:.0f}% vs {other_pct:.0f}%",
+                            )
+                        )
 
         return suggestions
 
@@ -198,7 +213,7 @@ class SubstitutionEngine:
         if not parse_result.success:
             return SubstitutionResult(
                 success=False,
-                error=f"Could not parse recipe: {'; '.join(parse_result.errors)}"
+                error=f"Could not parse recipe: {'; '.join(parse_result.errors)}",
             )
 
         unknowns = []
@@ -206,9 +221,13 @@ class SubstitutionEngine:
 
         # Find unknown materials from parser errors
         for err in parse_result.errors:
-            if err.startswith('Unknown material:'):
+            if err.startswith("Unknown material:"):
                 # Extract material name from error message
-                mat_name = err.split('"')[1] if '"' in err else err.replace('Unknown material:', '').strip()
+                mat_name = (
+                    err.split('"')[1]
+                    if '"' in err
+                    else err.replace("Unknown material:", "").strip()
+                )
                 unknowns.append(mat_name)
                 mat_suggestions = self.suggest(mat_name)
                 suggestions.extend(mat_suggestions)
@@ -220,7 +239,9 @@ class SubstitutionEngine:
         # Try to build a reformulated recipe
         reformulated = None
         if unknowns and suggestions:
-            reformulated = self._build_reformulated_recipe(recipe_string, parse_result.materials, suggestions)
+            reformulated = self._build_reformulated_recipe(
+                recipe_string, parse_result.materials, suggestions
+            )
 
         return SubstitutionResult(
             success=True,
@@ -239,7 +260,7 @@ class SubstitutionEngine:
         # Build a map of unknown material -> best high-confidence substitute
         best_subs = {}
         for s in suggestions:
-            if s.confidence in ('high', 'medium'):
+            if s.confidence in ("high", "medium"):
                 orig_lower = s.original.lower()
                 if orig_lower not in best_subs:
                     best_subs[orig_lower] = s
@@ -260,7 +281,7 @@ class SubstitutionEngine:
             else:
                 parts.append(f"{mat.title()} {pct}")
 
-        return ', '.join(parts) if parts else None
+        return ", ".join(parts) if parts else None
 
 
 def suggest_substitutions(recipe: str) -> SubstitutionResult:

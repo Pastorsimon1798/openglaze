@@ -3,4 +3,4 @@
 from config.loader import CloudMode
 
 # Re-export for convenience
-__all__ = ['CloudMode']
+__all__ = ["CloudMode"]

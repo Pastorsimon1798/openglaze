@@ -16,4 +16,7 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: https://openglaze.com/sitemap.xml
+Sitemap: https://openglaze.kyanitelabs.tech/sitemap.xml
+
+LLM-Reference: https://openglaze.kyanitelabs.tech/llms.txt
+LLM-Full-Reference: https://openglaze.kyanitelabs.tech/llms-full.txt

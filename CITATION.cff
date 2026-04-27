@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+title: OpenGlaze
+message: If OpenGlaze helps your ceramic research, teaching, or studio practice, please cite the project repository.
+type: software
+authors:
+  - alias: Pastorsimon1798
+repository-code: https://github.com/Pastorsimon1798/openglaze
+url: https://openglaze.com
+license: MIT
+version: 0.1.0
+abstract: Free open-source ceramic glaze calculator and self-hosted glaze management software with UMF calculation, CTE analysis, oxide analysis, and computational recipe optimization.
+keywords:
+  - ceramic glaze calculator
+  - UMF calculator
+  - glaze chemistry
+  - pottery software
+  - open source ceramics

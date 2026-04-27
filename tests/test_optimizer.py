@@ -1,6 +1,5 @@
 """Tests for the recipe optimizer."""
 
-import pytest
 from core.chemistry.optimizer import RecipeOptimizer, optimize_recipe
 
 

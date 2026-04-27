@@ -17,22 +17,26 @@ logger = logging.getLogger(__name__)
 
 class JWTError(Exception):
     """Base exception for JWT errors."""
+
     pass
 
 
 class TokenExpiredError(JWTError):
     """Token has expired."""
+
     pass
 
 
 class InvalidTokenError(JWTError):
     """Token is invalid."""
+
     pass
 
 
 @dataclass
 class TokenPayload:
     """Decoded JWT payload."""
+
     user_id: str
     email: str
     tier: str
@@ -61,23 +65,25 @@ class JWTHandler:
     - Timing-safe comparison
     """
 
-    SUPPORTED_ALGORITHMS = {'RS256', 'HS256'}
+    SUPPORTED_ALGORITHMS = {"RS256", "HS256"}
 
     def __init__(
         self,
         secret_key: Optional[str] = None,
-        algorithm: str = 'HS256',
-        issuer: str = 'openglaze',
-        audience: str = 'openglaze-api',
+        algorithm: str = "HS256",
+        issuer: str = "openglaze",
+        audience: str = "openglaze-api",
         token_lifetime_hours: int = 24,
-        refresh_token_lifetime_days: int = 7
+        refresh_token_lifetime_days: int = 7,
     ):
-        self.secret_key = secret_key or os.environ.get('SECRET_KEY')
+        self.secret_key = secret_key or os.environ.get("SECRET_KEY")
         if not self.secret_key:
             raise ValueError("SECRET_KEY must be provided for JWT handling")
 
         if algorithm not in self.SUPPORTED_ALGORITHMS:
-            raise ValueError(f"Unsupported algorithm: {algorithm}. Use one of {self.SUPPORTED_ALGORITHMS}")
+            raise ValueError(
+                f"Unsupported algorithm: {algorithm}. Use one of {self.SUPPORTED_ALGORITHMS}"
+            )
 
         self.algorithm = algorithm
         self.issuer = issuer
@@ -92,8 +98,8 @@ class JWTHandler:
         self,
         user_id: str,
         email: str,
-        tier: str = 'free',
-        additional_claims: Optional[Dict] = None
+        tier: str = "free",
+        additional_claims: Optional[Dict] = None,
     ) -> str:
         """
         Create a new JWT access token.
@@ -110,15 +116,15 @@ class JWTHandler:
         now = datetime.utcnow()
 
         payload = {
-            'sub': user_id,
-            'email': email,
-            'tier': tier,
-            'iss': self.issuer,
-            'aud': self.audience,
-            'iat': int(now.timestamp()),
-            'exp': int((now + self.token_lifetime).timestamp()),
-            'jti': secrets.token_urlsafe(16),  # Unique token ID
-            'type': 'access'
+            "sub": user_id,
+            "email": email,
+            "tier": tier,
+            "iss": self.issuer,
+            "aud": self.audience,
+            "iat": int(now.timestamp()),
+            "exp": int((now + self.token_lifetime).timestamp()),
+            "jti": secrets.token_urlsafe(16),  # Unique token ID
+            "type": "access",
         }
 
         if additional_claims:
@@ -133,13 +139,13 @@ class JWTHandler:
         now = datetime.utcnow()
 
         payload = {
-            'sub': user_id,
-            'iss': self.issuer,
-            'aud': self.audience,
-            'iat': int(now.timestamp()),
-            'exp': int((now + self.refresh_lifetime).timestamp()),
-            'jti': secrets.token_urlsafe(16),
-            'type': 'refresh'
+            "sub": user_id,
+            "iss": self.issuer,
+            "aud": self.audience,
+            "iat": int(now.timestamp()),
+            "exp": int((now + self.refresh_lifetime).timestamp()),
+            "jti": secrets.token_urlsafe(16),
+            "type": "refresh",
         }
 
         return self._encode(payload)
@@ -172,32 +178,36 @@ class JWTHandler:
             raise InvalidTokenError(f"Failed to decode token: {e}")
 
         # Validate required fields
-        required_fields = ['sub', 'email', 'exp', 'iat']
+        required_fields = ["sub", "email", "exp", "iat"]
         missing = [f for f in required_fields if f not in payload]
         if missing:
             raise InvalidTokenError(f"Missing required fields: {missing}")
 
         # Check expiration
-        exp = payload.get('exp', 0)
+        exp = payload.get("exp", 0)
         if time.time() > exp:
             raise TokenExpiredError("Token has expired")
 
         # Validate issuer
-        if payload.get('iss') != self.issuer:
+        if payload.get("iss") != self.issuer:
             raise InvalidTokenError(f"Invalid issuer: {payload.get('iss')}")
 
         # Validate audience
-        aud = payload.get('aud')
-        if aud and aud != self.audience and self.audience not in (aud if isinstance(aud, list) else [aud]):
+        aud = payload.get("aud")
+        if (
+            aud
+            and aud != self.audience
+            and self.audience not in (aud if isinstance(aud, list) else [aud])
+        ):
             raise InvalidTokenError(f"Invalid audience: {aud}")
 
         return TokenPayload(
-            user_id=payload['sub'],
-            email=payload['email'],
-            tier=payload.get('tier', 'free'),
-            issued_at=payload['iat'],
+            user_id=payload["sub"],
+            email=payload["email"],
+            tier=payload.get("tier", "free"),
+            issued_at=payload["iat"],
             expires_at=exp,
-            raw=payload
+            raw=payload,
         )
 
     def revoke_token(self, token: str) -> None:
@@ -229,7 +239,7 @@ class JWTHandler:
         import base64
         import json
 
-        parts = token.split('.')
+        parts = token.split(".")
         if len(parts) != 3:
             raise InvalidTokenError("Malformed token")
 
@@ -241,7 +251,7 @@ class JWTHandler:
             raise InvalidTokenError("Invalid signature")
 
         try:
-            payload = json.loads(base64.urlsafe_b64decode(payload_b64 + '=='))
+            payload = json.loads(base64.urlsafe_b64decode(payload_b64 + "=="))
             return payload
         except Exception as e:
             raise InvalidTokenError(f"Failed to decode payload: {e}")
@@ -253,12 +263,10 @@ class JWTHandler:
         import hmac
 
         signature = hmac.new(
-            self.secret_key.encode(),
-            message.encode(),
-            hashlib.sha256
+            self.secret_key.encode(), message.encode(), hashlib.sha256
         ).digest()
 
-        return base64.urlsafe_b64encode(signature).decode().rstrip('=')
+        return base64.urlsafe_b64encode(signature).decode().rstrip("=")
 
     def _hash_token(self, token: str) -> str:
         """Create a hash of the token for blacklist storage."""

@@ -1,39 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://openglaze.com/</loc>
-    <lastmod>2026-04-24</lastmod>
+    <loc>https://openglaze.kyanitelabs.tech/</loc>
+    <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://openglaze.com/README.md</loc>
-    <lastmod>2026-04-24</lastmod>
+    <loc>https://openglaze.kyanitelabs.tech/README.md</loc>
+    <lastmod>2026-04-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://github.com/Pastorsimon1798/openglaze/blob/master/docs/user-guide.md</loc>
-    <lastmod>2026-04-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://openglaze.kyanitelabs.tech/ceramic-glaze-calculator.html</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://github.com/Pastorsimon1798/openglaze/blob/master/docs/API.md</loc>
-    <lastmod>2026-04-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://openglaze.kyanitelabs.tech/umf-calculator.html</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://github.com/Pastorsimon1798/openglaze/blob/master/docs/self-hosting.md</loc>
-    <lastmod>2026-04-24</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://openglaze.kyanitelabs.tech/glaze-recipe-calculator.html</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://openglaze.kyanitelabs.tech/cte-glaze-calculator.html</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://openglaze.kyanitelabs.tech/glazy-alternative.html</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://openglaze.kyanitelabs.tech/digitalfire-companion.html</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://openglaze.kyanitelabs.tech/open-source-pottery-software.html</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://openglaze.kyanitelabs.tech/self-hosted-glaze-software.html</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://openglaze.kyanitelabs.tech/llms.txt</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://github.com/Pastorsimon1798/openglaze/blob/master/docs/why-free-why-open-why-self-hosted.md</loc>
-    <lastmod>2026-04-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <loc>https://openglaze.kyanitelabs.tech/llms-full.txt</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://openglaze.kyanitelabs.tech/user-guide.html</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://openglaze.kyanitelabs.tech/API.html</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://openglaze.kyanitelabs.tech/self-hosting.html</loc>
+    <lastmod>2026-04-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>

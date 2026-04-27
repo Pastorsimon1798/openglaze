@@ -12,11 +12,20 @@ class GlazeManager:
 
     # Allowed column names for UPDATE statements
     ALLOWED_COLUMNS = {
-        'name', 'family', 'color', 'hex', 'chemistry', 'behavior',
-        'layering', 'warning', 'recipe', 'catalog_code', 'notes'
+        "name",
+        "family",
+        "color",
+        "hex",
+        "chemistry",
+        "behavior",
+        "layering",
+        "warning",
+        "recipe",
+        "catalog_code",
+        "notes",
     }
 
-    def __init__(self, db_path: str = 'glaze.db', user_id: Optional[str] = None):
+    def __init__(self, db_path: str = "glaze.db", user_id: Optional[str] = None):
         """
         Initialize GlazeManager.
 
@@ -40,11 +49,13 @@ class GlazeManager:
 
         if self.user_id:
             cursor.execute(
-                'SELECT * FROM glazes WHERE user_id = ? OR user_id IS NULL ORDER BY family, name',
-                (self.user_id,)
+                "SELECT * FROM glazes WHERE user_id = ? OR user_id IS NULL ORDER BY family, name",
+                (self.user_id,),
             )
         else:
-            cursor.execute('SELECT * FROM glazes WHERE user_id IS NULL ORDER BY family, name')
+            cursor.execute(
+                "SELECT * FROM glazes WHERE user_id IS NULL ORDER BY family, name"
+            )
 
         rows = cursor.fetchall()
         conn.close()
@@ -58,11 +69,13 @@ class GlazeManager:
 
         if self.user_id:
             cursor.execute(
-                'SELECT * FROM glazes WHERE id = ? AND (user_id = ? OR user_id IS NULL)',
-                (glaze_id, self.user_id)
+                "SELECT * FROM glazes WHERE id = ? AND (user_id = ? OR user_id IS NULL)",
+                (glaze_id, self.user_id),
             )
         else:
-            cursor.execute('SELECT * FROM glazes WHERE id = ? AND user_id IS NULL', (glaze_id,))
+            cursor.execute(
+                "SELECT * FROM glazes WHERE id = ? AND user_id IS NULL", (glaze_id,)
+            )
 
         row = cursor.fetchone()
         conn.close()
@@ -76,11 +89,13 @@ class GlazeManager:
 
         if self.user_id:
             cursor.execute(
-                'SELECT * FROM glazes WHERE name = ? AND (user_id = ? OR user_id IS NULL)',
-                (name, self.user_id)
+                "SELECT * FROM glazes WHERE name = ? AND (user_id = ? OR user_id IS NULL)",
+                (name, self.user_id),
             )
         else:
-            cursor.execute('SELECT * FROM glazes WHERE name = ? AND user_id IS NULL', (name,))
+            cursor.execute(
+                "SELECT * FROM glazes WHERE name = ? AND user_id IS NULL", (name,)
+            )
 
         row = cursor.fetchone()
         conn.close()
@@ -94,13 +109,13 @@ class GlazeManager:
 
         if self.user_id:
             cursor.execute(
-                'SELECT * FROM glazes WHERE family = ? AND (user_id = ? OR user_id IS NULL) ORDER BY name LIMIT 8',
-                (family, self.user_id)
+                "SELECT * FROM glazes WHERE family = ? AND (user_id = ? OR user_id IS NULL) ORDER BY name LIMIT 8",
+                (family, self.user_id),
             )
         else:
             cursor.execute(
-                'SELECT * FROM glazes WHERE family = ? AND user_id IS NULL ORDER BY name LIMIT 8',
-                (family,)
+                "SELECT * FROM glazes WHERE family = ? AND user_id IS NULL ORDER BY name LIMIT 8",
+                (family,),
             )
 
         rows = cursor.fetchall()
@@ -113,15 +128,27 @@ class GlazeManager:
         conn = self._get_connection()
         cursor = conn.cursor()
 
-        cursor.execute('''
+        cursor.execute(
+            """
             INSERT INTO glazes (id, name, family, color, hex, chemistry, behavior, layering, warning, recipe, catalog_code, notes, user_id)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (
-            glaze.id, glaze.name, glaze.family, glaze.color, glaze.hex,
-            glaze.chemistry, glaze.behavior, glaze.layering, glaze.warning,
-            glaze.recipe, glaze.catalog_code, glaze.notes,
-            self.user_id  # Always use current user_id for new glazes
-        ))
+        """,
+            (
+                glaze.id,
+                glaze.name,
+                glaze.family,
+                glaze.color,
+                glaze.hex,
+                glaze.chemistry,
+                glaze.behavior,
+                glaze.layering,
+                glaze.warning,
+                glaze.recipe,
+                glaze.catalog_code,
+                glaze.notes,
+                self.user_id,  # Always use current user_id for new glazes
+            ),
+        )
 
         conn.commit()
         conn.close()
@@ -137,11 +164,11 @@ class GlazeManager:
         set_clauses = []
         values = []
         for key, value in updates.items():
-            if key != 'id' and key != 'user_id':  # Don't update id or user_id
+            if key != "id" and key != "user_id":  # Don't update id or user_id
                 # Validate column name to prevent SQL injection
                 if key not in self.ALLOWED_COLUMNS:
                     raise ValueError(f"Invalid column name: {key}")
-                set_clauses.append(f'{key} = ?')
+                set_clauses.append(f"{key} = ?")
                 values.append(value)
 
         if not set_clauses:
@@ -168,9 +195,14 @@ class GlazeManager:
         cursor = conn.cursor()
 
         if self.user_id:
-            cursor.execute('DELETE FROM glazes WHERE id = ? AND user_id = ?', (glaze_id, self.user_id))
+            cursor.execute(
+                "DELETE FROM glazes WHERE id = ? AND user_id = ?",
+                (glaze_id, self.user_id),
+            )
         else:
-            cursor.execute('DELETE FROM glazes WHERE id = ? AND user_id IS NULL', (glaze_id,))
+            cursor.execute(
+                "DELETE FROM glazes WHERE id = ? AND user_id IS NULL", (glaze_id,)
+            )
 
         affected = cursor.rowcount
         conn.commit()
@@ -183,24 +215,30 @@ class GlazeManager:
         conn = self._get_connection()
         cursor = conn.cursor()
 
-        search_term = f'%{query}%'
+        search_term = f"%{query}%"
 
         if self.user_id:
-            cursor.execute('''
+            cursor.execute(
+                """
                 SELECT * FROM glazes
                 WHERE (user_id = ? OR user_id IS NULL)
                 AND (name LIKE ? OR family LIKE ? OR notes LIKE ?)
                 ORDER BY family, name
                 LIMIT 8
-            ''', (self.user_id, search_term, search_term, search_term))
+            """,
+                (self.user_id, search_term, search_term, search_term),
+            )
         else:
-            cursor.execute('''
+            cursor.execute(
+                """
                 SELECT * FROM glazes
                 WHERE user_id IS NULL
                 AND (name LIKE ? OR family LIKE ? OR notes LIKE ?)
                 ORDER BY family, name
                 LIMIT 8
-            ''', (search_term, search_term, search_term))
+            """,
+                (search_term, search_term, search_term),
+            )
 
         rows = cursor.fetchall()
         conn.close()
@@ -214,13 +252,15 @@ class GlazeManager:
 
         if self.user_id:
             cursor.execute(
-                'SELECT DISTINCT family FROM glazes WHERE user_id = ? OR user_id IS NULL ORDER BY family',
-                (self.user_id,)
+                "SELECT DISTINCT family FROM glazes WHERE user_id = ? OR user_id IS NULL ORDER BY family",
+                (self.user_id,),
             )
         else:
-            cursor.execute('SELECT DISTINCT family FROM glazes WHERE user_id IS NULL ORDER BY family')
+            cursor.execute(
+                "SELECT DISTINCT family FROM glazes WHERE user_id IS NULL ORDER BY family"
+            )
 
         rows = cursor.fetchall()
         conn.close()
 
-        return [row['family'] for row in rows if row['family']]
+        return [row["family"] for row in rows if row["family"]]

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glaze CTE Calculator — Predict Crazing and Shivering Risk</title>
+<meta name="description" content="Estimate ceramic glaze thermal expansion coefficient with OpenGlaze. Use CTE analysis to reason about crazing, shivering, and clay-body fit.">
+<link rel="canonical" href="https://openglaze.kyanitelabs.tech/cte-glaze-calculator.html">
+<meta property="og:title" content="Glaze CTE Calculator — Predict Crazing and Shivering Risk">
+<meta property="og:description" content="Estimate ceramic glaze thermal expansion coefficient with OpenGlaze. Use CTE analysis to reason about crazing, shivering, and clay-body fit.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://openglaze.kyanitelabs.tech/cte-glaze-calculator.html">
+<meta property="og:image" content="https://openglaze.kyanitelabs.tech/social-preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Glaze CTE Calculator — Predict Crazing and Shivering Risk">
+<meta name="twitter:description" content="Estimate ceramic glaze thermal expansion coefficient with OpenGlaze. Use CTE analysis to reason about crazing, shivering, and clay-body fit.">
+<meta name="twitter:image" content="https://openglaze.kyanitelabs.tech/social-preview.png">
+<style>
+:root{--clay:#faf8f5;--paper:#fff;--ink:#1b1714;--muted:#665d55;--line:#e5dbd0;--celadon:#467560;--celadon2:#e3f0ea;--tenmoku:#844831}*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--clay);color:var(--ink);line-height:1.65}a{color:var(--celadon);font-weight:700;text-decoration:none}a:hover{text-decoration:underline}.wrap{max-width:1120px;margin:0 auto;padding:32px 22px}.nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:56px}.brand{font-weight:900;color:var(--ink);font-size:1.1rem}.pill{background:var(--celadon2);color:var(--celadon);padding:8px 14px;border-radius:999px;font-size:.9rem}.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:42px;align-items:center}.eyebrow{text-transform:uppercase;letter-spacing:.14em;color:var(--tenmoku);font-weight:900;font-size:.78rem}h1{font-size:clamp(2.25rem,6vw,4.9rem);line-height:.96;letter-spacing:-.055em;margin:14px 0 18px}h2{font-size:clamp(1.65rem,3vw,2.5rem);line-height:1.05;letter-spacing:-.035em;margin:0 0 14px}h3{margin:0 0 8px}.dek{font-size:1.22rem;color:var(--muted);max-width:780px}.card{background:rgba(255,255,255,.82);border:1px solid var(--line);border-radius:26px;padding:26px;box-shadow:0 18px 50px rgba(58,44,35,.08)}.demo{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92rem}.demo-row{display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding:9px 0}.value{color:var(--celadon);font-weight:900}.cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:26px}.btn{display:inline-flex;border-radius:14px;padding:12px 18px;font-weight:900}.primary{background:var(--celadon);color:white}.secondary{background:white;border:1px solid var(--line);color:var(--ink)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:54px 0}.section{margin:72px 0}.answer{font-size:1.16rem;background:white;border-left:5px solid var(--celadon);border-radius:20px;padding:24px}.steps{counter-reset:s;display:grid;gap:14px}.step{background:white;border:1px solid var(--line);border-radius:18px;padding:18px}.step:before{counter-increment:s;content:counter(s);display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--celadon2);color:var(--celadon);font-weight:900;margin-right:10px}.faq{display:grid;gap:14px}.footer{border-top:1px solid var(--line);margin-top:72px;padding-top:26px;color:var(--muted);font-size:.95rem}@media(max-width:820px){.hero,.grid{grid-template-columns:1fr}.nav{align-items:flex-start;gap:16px;flex-direction:column}}
+</style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Glaze CTE calculator for crazing and shivering risk", "description": "Estimate ceramic glaze thermal expansion coefficient with OpenGlaze. Use CTE analysis to reason about crazing, shivering, and clay-body fit.", "url": "https://openglaze.kyanitelabs.tech/cte-glaze-calculator.html", "isPartOf": {"@type": "WebSite", "name": "OpenGlaze", "url": "https://openglaze.kyanitelabs.tech"}, "about": ["glaze CTE calculator", "crazing glaze fix", "shivering glaze chemistry"], "mainEntity": {"@type": "SoftwareApplication", "name": "OpenGlaze", "applicationCategory": "DesignApplication", "operatingSystem": "Any", "url": "https://github.com/Pastorsimon1798/openglaze", "license": "https://github.com/Pastorsimon1798/openglaze/blob/master/LICENSE", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can CTE predict every kiln result?", "acceptedAnswer": {"@type": "Answer", "text": "No. It is a useful model, not a substitute for test tiles and clay-body-specific validation."}}, {"@type": "Question", "name": "What problems can CTE help explain?", "acceptedAnswer": {"@type": "Answer", "text": "CTE can help explain crazing, shivering, and some glaze fit issues."}}]}</script>
+</head>
+<body>
+<div class="wrap">
+<nav class="nav"><a class="brand" href="index.html">◇ OpenGlaze</a><div><a href="https://github.com/Pastorsimon1798/openglaze">GitHub</a> · <a href="self-hosting.html">Self-hosting</a> · <a href="llms.txt">llms.txt</a></div></nav>
+<main>
+<section class="hero">
+<div>
+<div class="eyebrow">Open-source ceramic chemistry software</div>
+<h1>Glaze CTE calculator for crazing and shivering risk</h1>
+<p class="dek">Estimate thermal expansion and compare glaze fit before you commit to a kiln load.</p>
+<div class="cta"><a class="btn primary" href="https://github.com/Pastorsimon1798/openglaze">View OpenGlaze on GitHub</a><a class="btn secondary" href="self-hosting.html">Self-host with Docker</a></div>
+</div>
+<aside class="card demo" aria-label="OpenGlaze example calculation">
+<div class="demo-row"><span>Recipe</span><span class="value">Cone 6 test</span></div>
+<div class="demo-row"><span>UMF</span><span class="value">calculated</span></div>
+<div class="demo-row"><span>SiO₂:Al₂O₃</span><span class="value">visible</span></div>
+<div class="demo-row"><span>CTE risk</span><span class="value">flagged</span></div>
+<div class="demo-row"><span>Next test</span><span class="value">optimized</span></div>
+</aside>
+</section>
+<section class="section"><h2>Short answer</h2><p class="answer">OpenGlaze estimates glaze CTE from material chemistry to help potters reason about glaze fit. A higher mismatch can suggest crazing or shivering risk, which should then be confirmed with real test tiles.</p></section>
+<section class="grid"><div class="card"><h3>Why it matters</h3><p>Crazing and shivering are often discovered after firing. CTE analysis gives you an early warning that a recipe may not fit the clay body.</p></div><div class="card"><h3>Private by default</h3><p>The supported launch path is self-hosted SQLite with Docker volumes, so studio recipes stay under your control.</p></div><div class="card"><h3>Computational, not magic</h3><p>The optimizer uses chemistry calculations and ranked suggestions; kiln tests still confirm real-world results.</p></div></section>
+<section class="section"><h2>How OpenGlaze helps</h2><div class="steps"><div class="step">Calculate the glaze oxide chemistry.</div>
+<div class="step">Estimate CTE and compare against typical clay body ranges.</div>
+<div class="step">Use optimizer suggestions to move the recipe toward a safer fit.</div></div></section>
+<section class="section"><h2>Related searches</h2><p><span class="pill">glaze CTE calculator</span><span class="pill">crazing glaze fix</span><span class="pill">shivering glaze chemistry</span></p></section>
+<section class="section"><h2>FAQ</h2><div class="faq"><div class="card"><h3>Can CTE predict every kiln result?</h3><p>No. It is a useful model, not a substitute for test tiles and clay-body-specific validation.</p></div>
+<div class="card"><h3>What problems can CTE help explain?</h3><p>CTE can help explain crazing, shivering, and some glaze fit issues.</p></div></div></section>
+<section class="section"><h2>Explore more OpenGlaze guides</h2><ul><li><a href="ceramic-glaze-calculator.html">Free ceramic glaze calculator for potters</a></li><li><a href="umf-calculator.html">UMF calculator for ceramic glaze chemistry</a></li><li><a href="glaze-recipe-calculator.html">Glaze recipe calculator for repeatable testing</a></li><li><a href="cte-glaze-calculator.html">Glaze CTE calculator for crazing and shivering risk</a></li><li><a href="glazy-alternative.html">OpenGlaze is a chemistry companion to Glazy</a></li><li><a href="digitalfire-companion.html">A practical open-source companion to DigitalFire learning</a></li><li><a href="open-source-pottery-software.html">Open-source pottery software for glaze development</a></li><li><a href="self-hosted-glaze-software.html">Self-hosted glaze software for private studio recipes</a></li></ul></section>
+</main>
+<footer class="footer">OpenGlaze is MIT licensed open-source software. <a href="https://github.com/Pastorsimon1798/openglaze">Star the project on GitHub</a> or read the <a href="user-guide.html">user guide</a>.</footer>
+</div>
+</body>
+</html>

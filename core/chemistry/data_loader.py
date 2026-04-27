@@ -15,15 +15,17 @@ logger = logging.getLogger(__name__)
 # Try to find ceramics-foundation data directory
 # Check relative to this file (in core/chemistry/), then relative to server root
 _DATA_DIR_CANDIDATES = [
-    Path(__file__).resolve().parent.parent.parent / 'ceramics-foundation' / 'data',
-    Path(__file__).resolve().parent.parent.parent.parent / 'ceramics-foundation' / 'data',
+    Path(__file__).resolve().parent.parent.parent / "ceramics-foundation" / "data",
+    Path(__file__).resolve().parent.parent.parent.parent
+    / "ceramics-foundation"
+    / "data",
 ]
 
 
 def _find_data_dir() -> Optional[Path]:
     """Find the ceramics-foundation data directory."""
     for candidate in _DATA_DIR_CANDIDATES:
-        if candidate.is_dir() and (candidate / 'oxides.json').exists():
+        if candidate.is_dir() and (candidate / "oxides.json").exists():
             return candidate
     return None
 
@@ -31,7 +33,7 @@ def _find_data_dir() -> Optional[Path]:
 def _find_studios_dir() -> Optional[Path]:
     """Find the ceramics-foundation studios directory."""
     for candidate in _DATA_DIR_CANDIDATES:
-        studios_dir = candidate.parent / 'studios'
+        studios_dir = candidate.parent / "studios"
         if studios_dir.is_dir():
             return studios_dir
     return None
@@ -40,10 +42,10 @@ def _find_studios_dir() -> Optional[Path]:
 def _load_json(path: Path) -> Optional[Any]:
     """Load a JSON file, returning None on any error."""
     try:
-        with open(path, 'r') as f:
+        with open(path, "r") as f:
             return json.load(f)
     except (FileNotFoundError, json.JSONDecodeError, OSError) as e:
-        logger.debug(f'Could not load {path}: {e}')
+        logger.debug(f"Could not load {path}: {e}")
         return None
 
 
@@ -55,9 +57,9 @@ def load_oxide_data() -> Optional[Dict[str, Dict]]:
     data_dir = _find_data_dir()
     if data_dir is None:
         return None
-    data = _load_json(data_dir / 'oxides.json')
-    if data and 'oxides' in data:
-        return data['oxides']
+    data = _load_json(data_dir / "oxides.json")
+    if data and "oxides" in data:
+        return data["oxides"]
     return None
 
 
@@ -69,9 +71,9 @@ def load_material_data() -> Optional[Dict[str, Dict]]:
     data_dir = _find_data_dir()
     if data_dir is None:
         return None
-    data = _load_json(data_dir / 'materials.json')
-    if data and 'materials' in data:
-        return data['materials']
+    data = _load_json(data_dir / "materials.json")
+    if data and "materials" in data:
+        return data["materials"]
     return None
 
 
@@ -83,9 +85,9 @@ def load_chemistry_rules() -> Optional[List[Dict]]:
     data_dir = _find_data_dir()
     if data_dir is None:
         return None
-    data = _load_json(data_dir / 'chemistry-rules.json')
-    if data and 'rules' in data:
-        return data['rules']
+    data = _load_json(data_dir / "chemistry-rules.json")
+    if data and "rules" in data:
+        return data["rules"]
     return None
 
 
@@ -97,9 +99,9 @@ def load_surface_thresholds() -> Optional[Dict[str, float]]:
     data_dir = _find_data_dir()
     if data_dir is None:
         return None
-    data = _load_json(data_dir / 'surface-prediction.json')
-    if data and 'sio2_al2o3_thresholds' in data:
-        return data['sio2_al2o3_thresholds']
+    data = _load_json(data_dir / "surface-prediction.json")
+    if data and "sio2_al2o3_thresholds" in data:
+        return data["sio2_al2o3_thresholds"]
     return None
 
 
@@ -111,7 +113,7 @@ def load_studio_profile(studio_name: str) -> Optional[Dict]:
     studios_dir = _find_studios_dir()
     if studios_dir is None:
         return None
-    profile_path = studios_dir / studio_name / 'profile.json'
+    profile_path = studios_dir / studio_name / "profile.json"
     return _load_json(profile_path)
 
 
@@ -123,10 +125,10 @@ def load_studio_glazes(studio_name: str) -> Optional[List[str]]:
     studios_dir = _find_studios_dir()
     if studios_dir is None:
         return None
-    glazes_dir = studios_dir / studio_name / 'glazes'
+    glazes_dir = studios_dir / studio_name / "glazes"
     if not glazes_dir.is_dir():
         return None
-    return [f.name for f in glazes_dir.iterdir() if f.suffix == '.yaml']
+    return [f.name for f in glazes_dir.iterdir() if f.suffix == ".yaml"]
 
 
 def load_firing_data() -> Optional[Dict]:
@@ -134,8 +136,8 @@ def load_firing_data() -> Optional[Dict]:
     data_dir = _find_data_dir()
     if data_dir is None:
         return None
-    data = _load_json(data_dir / 'firing.json')
-    if data and 'cones' in data:
+    data = _load_json(data_dir / "firing.json")
+    if data and "cones" in data:
         return data
     return None
 
@@ -148,7 +150,7 @@ def load_kiln_data(studio_name: str) -> Optional[Dict]:
     studios_dir = _find_studios_dir()
     if studios_dir is None:
         return None
-    kilns_path = studios_dir / studio_name / 'kilns.json'
+    kilns_path = studios_dir / studio_name / "kilns.json"
     return _load_json(kilns_path)
 
 
@@ -174,7 +176,7 @@ def get_template_path(studio_name: str, collection: str) -> Optional[str]:
     studios_dir = _find_studios_dir()
     if studios_dir is None:
         return None
-    glaze_path = studios_dir / studio_name / 'glazes' / collection
+    glaze_path = studios_dir / studio_name / "glazes" / collection
     if glaze_path.exists():
         return str(glaze_path)
     return None
@@ -188,9 +190,9 @@ def load_thermal_expansion() -> Optional[Dict[str, Dict]]:
     data_dir = _find_data_dir()
     if data_dir is None:
         return None
-    data = _load_json(data_dir / 'thermal-expansion.json')
-    if data and 'coefficients' in data:
-        return data['coefficients']
+    data = _load_json(data_dir / "thermal-expansion.json")
+    if data and "coefficients" in data:
+        return data["coefficients"]
     return None
 
 
@@ -202,8 +204,8 @@ def load_umf_targets() -> Optional[Dict[str, Dict]]:
     data_dir = _find_data_dir()
     if data_dir is None:
         return None
-    data = _load_json(data_dir / 'umf-target-ranges.json')
-    if data and 'ranges' in data:
+    data = _load_json(data_dir / "umf-target-ranges.json")
+    if data and "ranges" in data:
         return data
     return None
 
@@ -216,7 +218,7 @@ def load_layering_rules() -> Optional[Dict]:
     data_dir = _find_data_dir()
     if data_dir is None:
         return None
-    data = _load_json(data_dir / 'layering-rules.json')
+    data = _load_json(data_dir / "layering-rules.json")
     return data
 
 
@@ -228,8 +230,8 @@ def load_material_substitutions() -> Optional[Dict]:
     data_dir = _find_data_dir()
     if data_dir is None:
         return None
-    data = _load_json(data_dir / 'material-substitutions.json')
-    if data and ('one_to_one' in data or 'complex' in data):
+    data = _load_json(data_dir / "material-substitutions.json")
+    if data and ("one_to_one" in data or "complex" in data):
         return data
     return None
 
@@ -242,7 +244,7 @@ def load_firing_schedules() -> Optional[Dict]:
     data_dir = _find_data_dir()
     if data_dir is None:
         return None
-    data = _load_json(data_dir / 'firing-schedules.json')
+    data = _load_json(data_dir / "firing-schedules.json")
     return data
 
 
@@ -254,7 +256,7 @@ def load_clay_bodies() -> Optional[Dict]:
     data_dir = _find_data_dir()
     if data_dir is None:
         return None
-    data = _load_json(data_dir / 'clay-bodies.json')
-    if data and 'clay_bodies' in data:
+    data = _load_json(data_dir / "clay-bodies.json")
+    if data and "clay_bodies" in data:
         return data
     return None
