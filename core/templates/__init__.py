@@ -20,9 +20,9 @@ def list_templates() -> List[str]:
     return [f.stem for f in templates_dir.glob('*.yaml')]
 
 
-def get_studio_glazes() -> Dict:
-    """Get the 32 studio glazes template."""
-    return load_template('studio-glazes-cone10')
+def get_community_glazes() -> Dict:
+    """Get the 44 community glazes template."""
+    return load_template('community-glazes')
 
 
-__all__ = ['load_template', 'list_templates', 'get_studio_glazes']
+__all__ = ['load_template', 'list_templates', 'get_community_glazes']

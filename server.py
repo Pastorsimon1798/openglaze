@@ -1702,7 +1702,7 @@ def _run_migrations(conn):
 
 
 def seed_database(conn):
-    """Seed database with studio glazes and combinations if empty."""
+    """Seed database with community glazes and combinations if empty."""
     cursor = conn.cursor()
 
     # Only seed if glazes table is empty
@@ -1710,11 +1710,11 @@ def seed_database(conn):
     if cursor.fetchone()[0] > 0:
         return
 
-    logger.info("Seeding database with studio glazes and combinations...")
+    logger.info("Seeding database with community glazes and combinations...")
 
     # Load YAML template
-    from core.templates import get_studio_glazes
-    template = get_studio_glazes()
+    from core.templates import get_community_glazes
+    template = get_community_glazes()
     if not template:
         logger.warning("No template found — skipping seed")
         return

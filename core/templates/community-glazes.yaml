@@ -1,0 +1,887 @@
+# Community Glazes Template
+# Traditional and published glazes across cone 6 and cone 10
+# All glazes are traditional (centuries-old), published in ceramic literature,
+# or generic chemistry (base + colorant). No proprietary or commercial formulas.
+
+id: community-glazes
+name: Community Glazes
+description: 44 traditional and published glazes across cone 6 and cone 10
+firing: Cone 6 Oxidation/Reduction and Cone 10 Reduction
+bisque: Electric Kiln Cone 06
+version: 2.0.0
+created: 2026-03-16
+updated: 2026-04-27
+
+glazes:
+  # ==========================================
+  # CLEARS (Cone 10)
+  # ==========================================
+  - name: Zinc-Free Clear
+    id: zinc-free-clear
+    cone: "10"
+    atmosphere: reduction
+    family: clear
+    hex: "#e8e4dc"
+    chemistry: "Zinc-free clear glaze — silica, feldspar, whiting base"
+    behavior: "Preserves true colors underneath; won't shift copper reds or chrome greens"
+    layering: "Excellent over any color; protects surface without color modification"
+    food_safe: true
+    source: "Published zinc-free clear glaze formulation"
+
+  - name: Zinc Clear
+    id: zinc-clear
+    cone: "10"
+    atmosphere: reduction
+    family: clear
+    hex: "#f0ebe3"
+    chemistry: "Contains zinc oxide as flux — enhances color response from oxides"
+    behavior: "Zinc enhances oxide color response; may shift chrome greens to brown"
+    layering: "DO NOT use over chrome-tin pinks or chrome greens. Good over copper greens and blues."
+    warning: "Contains zinc — destroys chrome-tin pink and shifts chrome green to brown"
+    food_safe: true
+    source: "Published zinc-containing clear glaze formulation"
+
+  # ==========================================
+  # WHITES (Cone 10)
+  # ==========================================
+  - name: Opaque White
+    id: opaque-white
+    cone: "10"
+    atmosphere: reduction
+    family: white
+    hex: "#f5f2ed"
+    chemistry: "Zirconium white: 8-12% zirconium silicate opacifier; zinc-free"
+    behavior: "Bright opaque white; excellent coverage; reflects light through transparent overlays"
+    layering: "THE base for transparent colors — ensures clean, bright development"
+    recipe: "Custer Feldspar 40, Silica 25, Whiting 15, Kaolin 10, Zircopax 10"
+    food_safe: true
+    source: "Standard zirconium white — published in multiple ceramic references"
+
+  # ==========================================
+  # GREENS (Cone 10)
+  # ==========================================
+  - name: Jade Green
+    id: jade-green
+    cone: "10"
+    atmosphere: reduction
+    family: green
+    hex: "#5a8a5a"
+    chemistry: "Iron green: 3-5% Fe2O3 in heavy reduction; more opaque than celadon"
+    behavior: "Opaque jade green; pools darker in recesses"
+    layering: "Over white = brighter green. Over shino = jade over warm carbon trap."
+    recipe: "Custer Feldspar 30, Whiting 20, EPK 15, Silica 35, Red Iron Oxide 4"
+    food_safe: true
+    source: "Based on Ming Dynasty Chinese greenware type"
+
+  - name: Celadon
+    id: celadon
+    cone: "10"
+    atmosphere: reduction
+    family: green
+    hex: "#7eb09b"
+    chemistry: "1-2% iron oxide in reduction; calcium flux promotes jade color"
+    behavior: "Translucent jade-like green; pools darker in recesses, breaks lighter on edges"
+    layering: "Over shino = classic combo. Over white = cleaner green. Over tenmoku = dark celadon."
+    recipe: "Custer Feldspar 45, Silica 25, Whiting 18, EPK 12, Red Iron Oxide 1.5"
+    food_safe: true
+    source: "Traditional Asian glaze — thousands of years of history"
+
+  - name: Warm Celadon
+    id: warm-celadon
+    cone: "10"
+    atmosphere: reduction
+    family: green
+    hex: "#8aa07a"
+    chemistry: "Warm celadon: 2-3% iron oxide + 1% yellow iron oxide"
+    behavior: "Warmer celadon; amber-green instead of blue-green"
+    layering: "Over white = warmer green. Over shino = warm jade over carbon trap."
+    recipe: "Custer Feldspar 28, Whiting 20, EPK 20, Silica 32, Red Iron Oxide 2.5, Yellow Iron Oxide 1"
+    food_safe: true
+    source: "Warm celadon variation — published recipe"
+
+  # ==========================================
+  # SHINOS (Cone 10)
+  # ==========================================
+  - name: Carbon Trap Shino
+    id: carbon-trap-shino
+    cone: "10"
+    atmosphere: reduction
+    family: shino
+    hex: "#c9a070"
+    chemistry: "High soda feldspar base (60-70%) with spodumene; carbon trap mechanism"
+    behavior: "Iridescent metallic sheen; carbon trap orange/gray patterns"
+    layering: "ACCEPTS overlays well: Tenmoku, Celadon, Iron Red work over it."
+    warning: "NEVER apply over another glaze — will crawl catastrophically. Shinos MUST be the base layer."
+    recipe: "Soda Feldspar 65, Spodumene 15, EPK 10, Nepheline Syenite 10"
+    food_safe: true
+    source: "Published shino formulation — well-documented in ceramic literature"
+
+  - name: Classic Shino
+    id: classic-shino
+    cone: "10"
+    atmosphere: reduction
+    family: shino
+    hex: "#d4956a"
+    chemistry: "High soda, low clay for maximum carbon trapping"
+    behavior: "Orange/gray carbon trap patterns"
+    layering: "Excellent under Celadon, Chun Blue, Tenmoku, Iron Luster."
+    warning: "NEVER apply over another glaze — will crawl. MUST be base layer."
+    recipe: "Nepheline Syenite 48, Soda Ash 4, Spodumene 22, EPK 15, Silica 11"
+    food_safe: true
+    source: "Published shino formulation (Malcom Davis) — widely shared"
+
+  # ==========================================
+  # BLUES (Cone 10)
+  # ==========================================
+  - name: Cobalt Blue
+    id: cobalt-blue
+    cone: "10"
+    atmosphere: reduction
+    family: blue
+    hex: "#3a5f8a"
+    chemistry: "Cobalt-based blue: 0.5-1% cobalt carbonate"
+    behavior: "Stable cobalt blue; most predictable colorant"
+    layering: "Over white = bright clean blue. Over iron base = blue-green/teal shift."
+    recipe: "Base glaze + Cobalt Carbonate 0.5-1%"
+    food_safe: true
+    source: "Standard cobalt blue — published in ceramic textbooks"
+
+  - name: Copper-Cobalt Blue
+    id: copper-cobalt-blue
+    cone: "10"
+    atmosphere: reduction
+    family: blue
+    hex: "#4a7c9b"
+    chemistry: "Copper/cobalt blend: copper 1% + cobalt 0.5%"
+    behavior: "Complex blue with depth from dual colorants"
+    layering: "Over white = clean complex blue. Over iron = may darken significantly."
+    food_safe: true
+    source: "Community copper-cobalt blue — published recipe"
+
+  - name: Chun Blue
+    id: chun-blue
+    cone: "10"
+    atmosphere: reduction
+    family: blue
+    hex: "#5a8ab0"
+    chemistry: "Copper (0.5-1%) + iron (1-2%) in reduction; fluid melt"
+    behavior: "Blue with purple edges; creates purple flash over iron glazes like Tenmoku"
+    layering: "Over Tenmoku = purple flash (classic). Over shino = blue over warm carbon trap."
+    recipe: "G-200 Feldspar 41.2, EPK 17.6, Flint 26.7, Whiting 8.8, Gerstley Borate 8.6, Dolomite 8.6, Zinc Oxide 1.7, Tin Oxide 2.5, Rutile 3.9, Copper Carbonate 0.5"
+    food_safe: false
+    source: "Traditional Chinese Jun/Chun ware type — published formulation"
+
+  # ==========================================
+  # REDS (Cone 10)
+  # ==========================================
+  - name: Iron Red
+    id: iron-red
+    cone: "10"
+    atmosphere: reduction
+    family: red
+    hex: "#8b3a3a"
+    chemistry: "Iron saturation red: 8-12% iron oxide in reduction"
+    behavior: "Deep rust red to brick red; breaks to amber where thin"
+    layering: "Over shino = warm metallic-red. Over white = cleaner red."
+    recipe: "Custer Feldspar 40, Whiting 15, EPK 15, Silica 30, Red Iron Oxide 10"
+    food_safe: true
+    source: "Classic iron red glaze — published in ceramic references"
+
+  - name: Copper Red
+    id: copper-red
+    cone: "10"
+    atmosphere: reduction
+    family: red
+    hex: "#b33a3a"
+    chemistry: "Copper red: 0.5-1.5% CuCO3 in heavy reduction with tin oxide 1-2%"
+    behavior: "Bright copper red; requires heavy reduction; breaks to white on edges over white base"
+    layering: "Zinc-Free Clear over preserves red. Over white = clean breaks. Iron in base KILLS this glaze."
+    warning: "NEVER layer over iron-rich bases. Iron suppresses copper red development."
+    recipe: "Potash Feldspar 40, Whiting 20, Kaolin 15, Silica 25 + Tin Oxide 1.5%, Copper Carbonate 0.75%"
+    food_safe: false
+    source: "Published in John Britt — The Complete Guide to High-Fire Glazes"
+
+  - name: Panama Red
+    id: panama-red
+    cone: "10"
+    atmosphere: reduction
+    family: red
+    hex: "#a83232"
+    chemistry: "Copper red: 0.5-1% CuCO3 + 1-2% tin oxide in reduction"
+    behavior: "Blood red to tomato red; may show blue-purple edges where thin over white"
+    layering: "Zinc-Free Clear over preserves red. Opaque White under = clean breaks."
+    warning: "Requires heavy reduction. Iron kills copper red."
+    recipe: "Custer Feldspar 48, Whiting 14, EPK 6, Silica 15, Ferro 3134 9, Zinc 0.5, Talc 4 + Tin 1.2%, Copper Carbonate 0.8%"
+    food_safe: false
+    source: "Published in John Britt — Panama Red family"
+
+  # ==========================================
+  # PURPLES (Cone 10)
+  # ==========================================
+  - name: Manganese Purple
+    id: manganese-purple
+    cone: "10"
+    atmosphere: reduction
+    family: purple
+    hex: "#7a4a8a"
+    chemistry: "Manganese-cobalt purple: 3-4% manganese dioxide + 0.5% cobalt carbonate"
+    behavior: "Vibrant purple; surface depends on base glaze"
+    layering: "Zinc-Free Clear over adds gloss. White underlayer = brighter lavender."
+    recipe: "Base glaze + Manganese Dioxide 3.5%, Cobalt Carbonate 0.5%"
+    food_safe: false
+    source: "Community manganese-cobalt purple — published recipe"
+
+  - name: Chrome-Tin Pink
+    id: chrome-tin-pink
+    cone: "10"
+    atmosphere: reduction
+    family: purple
+    hex: "#c9a0b0"
+    chemistry: "Chrome-tin pink: Chrome oxide 0.2-0.4% + tin oxide 1.5-2%"
+    behavior: "Soft coral to rose pink"
+    layering: "White underlayer ESSENTIAL. MUST use zinc-free clear over."
+    warning: "Zinc destroys chrome-tin pink."
+    recipe: "Base + Chrome Oxide 0.3%, Tin Oxide 1.5%"
+    food_safe: true
+    source: "Chrome-tin pink — published in ceramic chemistry references"
+
+  - name: Chrome-Tin Raspberry
+    id: chrome-tin-raspberry
+    cone: "10"
+    atmosphere: reduction
+    family: purple
+    hex: "#a04060"
+    chemistry: "Chrome-tin raspberry: higher chrome (0.4-0.5%) + tin oxide (2%)"
+    behavior: "Deep raspberry to magenta; more saturated than Chrome-Tin Pink"
+    layering: "White underlayer essential. Zinc-free clear only."
+    warning: "Same zinc warnings as Chrome-Tin Pink."
+    recipe: "Base + Chrome Oxide 0.4%, Tin Oxide 2%"
+    food_safe: true
+    source: "Chrome-tin raspberry — published in ceramic chemistry references"
+
+  # ==========================================
+  # BROWNS / DARKS (Cone 10)
+  # ==========================================
+  - name: Iron-Rutile Brown
+    id: iron-rutile-brown
+    cone: "10"
+    atmosphere: reduction
+    family: brown
+    hex: "#5a4030"
+    chemistry: "Iron-rutile brown: 5-6% red iron oxide + 2-3% rutile"
+    behavior: "Rich warm brown with rutile variegation"
+    layering: "Accepts transparent overlays. Celadon over = olive-brown."
+    recipe: "Custer Feldspar 40, Whiting 15, EPK 10, Silica 35, Red Iron Oxide 5, Rutile 3"
+    food_safe: true
+    source: "Community iron-rutile brown — published recipe"
+
+  - name: Tea Dust
+    id: tea-dust
+    cone: "10"
+    atmosphere: reduction
+    family: brown
+    hex: "#6a5540"
+    chemistry: "High iron (~8%) + rutile/ilmenite for crystal spots"
+    behavior: "Dark brown with yellow-green crystal spots"
+    layering: "Very iron-rich — will darken any glaze over it."
+    warning: "Very high iron content. Will suppress copper red development."
+    food_safe: true
+    source: "Traditional tea dust glaze — published in ceramic reference books"
+
+  - name: Tenmoku
+    id: tenmoku
+    cone: "10"
+    atmosphere: reduction
+    family: brown
+    hex: "#2a1a10"
+    chemistry: "8-10% iron oxide in reduction; stiff melt"
+    behavior: "Dark brown/black with amber breaks where thin"
+    layering: "Chun Blue over = purple flash at boundary. Celadon over = dark celadon."
+    recipe: "Custer Feldspar 35, Silica 25, Whiting 15, Kaolin 15, Iron Oxide 10"
+    food_safe: true
+    source: "Traditional Japanese glaze — centuries of history"
+
+  - name: Oil Spot Tenmoku
+    id: oil-spot-tenmoku
+    cone: "10"
+    atmosphere: reduction
+    family: reactive
+    hex: "#1a1510"
+    chemistry: "High iron (~10%) with excess iron floating to surface during firing"
+    behavior: "Black base with gold/silver metallic oil spots"
+    layering: "DO NOT layer — oil spot formation requires direct surface exposure."
+    warning: "Oil spots require specific cooling schedule."
+    recipe: "Custer Feldspar 30, Silica 20, Whiting 15, Kaolin 15, Red Iron Oxide 12, Rutile 2"
+    food_safe: true
+    source: "Traditional Chinese Song Dynasty glaze"
+
+  - name: Hare's Fur Tenmoku
+    id: hares-fur-tenmoku
+    cone: "10"
+    atmosphere: reduction
+    family: reactive
+    hex: "#1a1210"
+    chemistry: "Very high iron (~12%) with fluid melt creating streaky runs"
+    behavior: "Black with amber/rust streaks running down vertical surfaces"
+    layering: "DO NOT layer over. Can have clear or shino UNDER it."
+    warning: "Very fluid — will run off pots if too thick."
+    recipe: "Custer Feldspar 28, Silica 18, Whiting 12, Kaolin 10, Red Iron Oxide 14"
+    food_safe: true
+    source: "Traditional Chinese Song Dynasty glaze"
+
+  - name: Rutile-Eye Brown
+    id: rutile-eye-brown
+    cone: "10"
+    atmosphere: reduction
+    family: brown
+    hex: "#3a2a1a"
+    chemistry: "Iron oxide (5%) + Rutile (4%) — rutile creates 'eye' variegation"
+    behavior: "Dark brown/black with variegated 'eye' patterns from rutile"
+    layering: "Similar to Tenmoku behavior. Accepts transparent overlays."
+    recipe: "Custer Feldspar 40, Whiting 20, EPK 10, Silica 30, Red Iron Oxide 5, Rutile 4"
+    food_safe: true
+    source: "Published on Ceramic Action blog (Matt Fiske)"
+
+  # ==========================================
+  # YELLOWS (Cone 10)
+  # ==========================================
+  - name: Iron Yellow
+    id: iron-yellow
+    cone: "10"
+    atmosphere: reduction
+    family: yellow
+    hex: "#c9a962"
+    chemistry: "Iron yellow: 4-5% yellow iron oxide or praseodymium zirconium stain"
+    behavior: "Warm honey yellow; varies with atmosphere"
+    layering: "Celadon over = chartreuse. Chun Blue over = blue where they meet."
+    recipe: "Base + Yellow Iron Oxide 4% OR Praseodymium Stain 6%"
+    food_safe: true
+    source: "Community iron yellow — published recipe"
+
+  - name: Iron Luster
+    id: iron-luster
+    cone: "10"
+    atmosphere: reduction
+    family: yellow
+    hex: "#c9a050"
+    chemistry: "Iron reduction luster: 4-5% iron oxide with slow cooling"
+    behavior: "Golden honey to amber; iridescent from iron crystallization"
+    layering: "Tenmoku over = dramatic dark-over-gold. Zinc-Free Clear over = gloss without shift."
+    recipe: "Base glaze + Red Iron Oxide 4.5%"
+    food_safe: null
+    source: "Community iron luster — published recipe"
+
+  # ==========================================
+  # CRYSTALS (Cone 10)
+  # ==========================================
+  - name: Strontium Crystal Matte
+    id: strontium-crystal-matte
+    cone: "10"
+    atmosphere: reduction
+    family: crystal
+    hex: "#a09080"
+    chemistry: "High strontium carbonate as flux — creates macro-crystalline matte surface"
+    behavior: "Forms visible crystal structures; matte base"
+    layering: "Celadon over may obscure crystals. Clear over adds gloss."
+    recipe: "Strontium Carbonate 18, Feldspar 35, Silica 30, Kaolin 15, Whiting 2"
+    food_safe: true
+    source: "Pete Pinnell Strontium Crystal Matte — published on Glazy.org"
+
+  # ==========================================
+  # REACTIVE (Cone 10)
+  # ==========================================
+  - name: Reactive Rutile
+    id: reactive-rutile
+    cone: "10"
+    atmosphere: reduction
+    family: reactive
+    hex: "#7a6a5a"
+    chemistry: "Rutile-based (TiO2 with ~10% iron); reactive to iron in clay body"
+    behavior: "Highly variegating: tan/peach when thick, blue/purple near iron"
+    layering: "Unpredictable. Color responds to iron content in clay body and thickness."
+    food_safe: true
+    source: "Community rutile-based reactive glaze — published formulation"
+
+  - name: Ash Glaze
+    id: ash-glaze
+    cone: "10"
+    atmosphere: reduction
+    family: reactive
+    hex: "#b0a080"
+    chemistry: "Wood ash (unwashed) as primary flux; variable composition"
+    behavior: "Warm beige to green to amber; runs and pools creating natural drip patterns"
+    layering: "Best used alone. Ash glaze variability makes layering predictions unreliable."
+    warning: "Ash composition varies by tree species, season, and soil."
+    recipe: "Wood Ash 40, Feldspar 30, Ball Clay 15, Silica 15"
+    food_safe: true
+    source: "Oldest glaze type in ceramics — used for thousands of years"
+
+  # ==========================================
+  # CONE 6 — OXIDATION (electric kiln)
+  # ==========================================
+
+  - name: Clear (Cone 6)
+    id: clear-cone-6
+    cone: "6"
+    atmosphere: oxidation
+    family: clear
+    hex: "#e8e4dc"
+    chemistry: "Mid-range clear: frit-based or feldspar-silica with boron flux"
+    behavior: "Crystal clear in oxidation; protects underlying colors"
+    layering: "Use over any colored glaze for gloss protection."
+    recipe: "Ferro Frit 3134 30, Feldspar 25, Silica 25, Kaolin 10, Whiting 10"
+    food_safe: true
+    source: "Standard mid-range clear — published in ceramic textbooks"
+
+  - name: White (Cone 6)
+    id: white-cone-6
+    cone: "6"
+    atmosphere: oxidation
+    family: white
+    hex: "#f5f2ed"
+    chemistry: "Zirconium opacified white for mid-range oxidation"
+    behavior: "Bright opaque white; excellent coverage in electric kiln"
+    layering: "THE base for all transparent colors at cone 6."
+    recipe: "Feldspar 35, Silica 20, Whiting 15, Kaolin 10, Zircopax 12, Frit 3134 8"
+    food_safe: true
+    source: "Standard cone 6 white — published in multiple references"
+
+  - name: Matte White (Cone 6)
+    id: matte-white-cone-6
+    cone: "6"
+    atmosphere: oxidation
+    family: white
+    hex: "#e8e2d8"
+    chemistry: "High alumina matte white"
+    behavior: "Soft matte white surface; velvety feel"
+    layering: "Use as base for transparent colors when matte surface is desired."
+    recipe: "Feldspar 40, Whiting 20, Kaolin 20, Silica 10, Zircopax 10"
+    food_safe: true
+    source: "Standard matte white — published in ceramic textbooks"
+
+  - name: Celadon (Cone 6)
+    id: celadon-cone-6
+    cone: "6"
+    atmosphere: oxidation
+    family: green
+    hex: "#90b8a0"
+    chemistry: "Iron green in oxidation: 1.5-2% iron oxide"
+    behavior: "Light jade green; more blue-toned than reduction celadon"
+    layering: "Over shino = lighter version of classic combo. Over white = clean light green."
+    recipe: "Feldspar 40, Silica 25, Whiting 18, Kaolin 12, Frit 3134 5, Red Iron Oxide 1.5"
+    food_safe: true
+    source: "Mid-range celadon — published in John Britt mid-range references"
+
+  - name: Copper Green (Cone 6)
+    id: copper-green-cone-6
+    cone: "6"
+    atmosphere: oxidation
+    family: green
+    hex: "#5a9a5a"
+    chemistry: "Copper in oxidation: 2-3% copper carbonate = reliable bright green"
+    behavior: "Bright emerald green; most reliable way to get green in oxidation"
+    layering: "Over white = cleanest green. Clear over = gloss protection."
+    recipe: "Base glaze + Copper Carbonate 2.5%"
+    food_safe: true
+    source: "Copper green in oxidation — textbook ceramic chemistry"
+
+  - name: Cobalt Blue (Cone 6)
+    id: cobalt-blue-cone-6
+    cone: "6"
+    atmosphere: oxidation
+    family: blue
+    hex: "#3a5f8a"
+    chemistry: "Cobalt blue: 0.5-1% cobalt carbonate"
+    behavior: "Stable cobalt blue; works identically in oxidation and reduction"
+    layering: "Over white = bright clean blue. Most predictable color at any temperature."
+    recipe: "Base glaze + Cobalt Carbonate 0.75%"
+    food_safe: true
+    source: "Cobalt blue at mid-range — published in ceramic textbooks"
+
+  - name: Turquoise (Cone 6)
+    id: turquoise-cone-6
+    cone: "6"
+    atmosphere: oxidation
+    family: blue
+    hex: "#4a9a8a"
+    chemistry: "Copper + zinc: 1.5% copper carbonate + 3% zinc oxide in oxidation"
+    behavior: "Bright turquoise blue-green; zinc shifts copper from green toward blue"
+    layering: "Over white = clean turquoise. Clear over = deeper gloss."
+    recipe: "Base glaze + Copper Carbonate 1.5%, Zinc Oxide 3%"
+    food_safe: true
+    source: "Copper-zinc turquoise — published in ceramic chemistry references"
+
+  - name: Chun Blue (Cone 6)
+    id: chun-blue-cone-6
+    cone: "6"
+    atmosphere: oxidation
+    family: blue
+    hex: "#5a8ab0"
+    chemistry: "Copper + iron mid-range oxidation: copper 0.5-1% + iron 1-2%"
+    behavior: "Blue with subtle purple edges; lighter than cone 10 reduction version"
+    layering: "Over temmoku = subtle purple flash. Over white = clean blue."
+    food_safe: false
+    source: "Mid-range Chun type — published formulation"
+
+  - name: Iron Red (Cone 6)
+    id: iron-red-cone-6
+    cone: "6"
+    atmosphere: oxidation
+    family: red
+    hex: "#9a4a3a"
+    chemistry: "High iron (8-10%) in oxidation; slower cooling promotes red over brown"
+    behavior: "Warm rust red to brick red; reliable in electric kiln with slow cooling"
+    layering: "Clear over = glossy protection. Over white = cleaner red with white breaks."
+    recipe: "Feldspar 35, Silica 20, Whiting 15, Kaolin 10, Frit 3134 10, Red Iron Oxide 10"
+    food_safe: true
+    source: "Mid-range iron red — published in John Britt mid-range references"
+
+  - name: Manganese Purple (Cone 6)
+    id: manganese-purple-cone-6
+    cone: "6"
+    atmosphere: oxidation
+    family: purple
+    hex: "#7a4a8a"
+    chemistry: "Manganese-cobalt purple: 3% manganese dioxide + 0.5% cobalt carbonate"
+    behavior: "Purple in oxidation; reliable and stable"
+    layering: "Over white = lavender. Clear over = glossy purple."
+    recipe: "Base glaze + Manganese Dioxide 3%, Cobalt Carbonate 0.5%"
+    food_safe: false
+    source: "Manganese-cobalt purple at mid-range — published recipe"
+
+  - name: Temmoku (Cone 6)
+    id: temmoku-cone-6
+    cone: "6"
+    atmosphere: oxidation
+    family: brown
+    hex: "#2a1a10"
+    chemistry: "High iron (~8%) in mid-range oxidation"
+    behavior: "Dark brown to near-black; amber breaks where thin"
+    layering: "Over white = dramatic contrast. Chun Blue over = subtle purple."
+    recipe: "Feldspar 30, Silica 20, Whiting 15, Kaolin 15, Frit 3134 10, Red Iron Oxide 10"
+    food_safe: true
+    source: "Mid-range temmoku — published in ceramic references"
+
+  - name: Shino (Cone 6)
+    id: shino-cone-6
+    cone: "6"
+    atmosphere: oxidation
+    family: shino
+    hex: "#d4956a"
+    chemistry: "Soda feldspar base adapted for mid-range"
+    behavior: "Warm orange to cream; less dramatic carbon trap than cone 10"
+    layering: "Use as base layer. Celadon over = warm green over orange."
+    warning: "MUST be base layer — same rule as cone 10 shinos."
+    recipe: "Soda Feldspar 55, Spodumene 15, EPK 15, Nepheline Syenite 10, Silica 5"
+    food_safe: true
+    source: "Mid-range shino adaptation — published in ceramic literature"
+
+  # ==========================================
+  # CONE 6 — REDUCTION (gas kiln)
+  # ==========================================
+
+  - name: Copper Red (Cone 6)
+    id: copper-red-cone-6
+    cone: "6"
+    atmosphere: reduction
+    family: red
+    hex: "#b33a3a"
+    chemistry: "Copper red at mid-range: 0.5-1% copper carbonate + 1-2% tin oxide in reduction"
+    behavior: "Copper red in cone 6 reduction; slightly softer than cone 10"
+    layering: "Over white = clean breaks. Zinc-Free Clear over = protection."
+    warning: "Requires gas kiln with good reduction. Not for electric kilns."
+    recipe: "Custer Feldspar 42, Silica 20, Whiting 18, Kaolin 10, Frit 3134 10 + Tin Oxide 1.5%, Copper Carbonate 0.75%"
+    food_safe: false
+    source: "Published in John Britt — The Complete Guide to Mid-Range Glazes"
+
+  - name: Carbon Trap Shino (Cone 6)
+    id: carbon-trap-shino-cone-6
+    cone: "6"
+    atmosphere: reduction
+    family: shino
+    hex: "#c9a070"
+    chemistry: "Soda feldspar base with spodumene; carbon trap in mid-range reduction"
+    behavior: "Iridescent orange/gray patterns; similar to cone 10 but slightly less dramatic"
+    layering: "Accepts overlays: Celadon, Temmoku work over it. MUST be base layer."
+    warning: "NEVER apply over another glaze. Requires reduction."
+    recipe: "Soda Feldspar 60, Spodumene 15, EPK 10, Nepheline Syenite 10, Soda Ash 5"
+    food_safe: true
+    source: "Mid-range carbon trap shino — published in ceramic literature"
+
+  - name: Oribe (Cone 6)
+    id: oribe-cone-6
+    cone: "6"
+    atmosphere: oxidation
+    family: green
+    hex: "#4a8a4a"
+    chemistry: "Copper green in oxidation: 2-3% copper carbonate; traditional Japanese Oribe type"
+    behavior: "Bright green; named after tea master Furuta Oribe (16th century)"
+    layering: "Over white = cleaner green. Clear over = gloss."
+    recipe: "Base glaze + Copper Carbonate 2.5%"
+    food_safe: true
+    source: "Traditional Japanese Oribe glaze — documented since 1600s"
+
+  - name: Kaki (Cone 6)
+    id: kaki-cone-6
+    cone: "6"
+    atmosphere: oxidation
+    family: red
+    hex: "#b06a30"
+    chemistry: "Iron-saturated: 6-8% red iron oxide; persimmon orange to dark red-brown"
+    behavior: "Warm persimmon to brick orange; richer than simple iron red"
+    layering: "Over white = bright persimmon. Clear over = deeper color."
+    recipe: "Feldspar 35, Silica 20, Whiting 15, Kaolin 10, Frit 3134 10, Red Iron Oxide 8"
+    food_safe: true
+    source: "Traditional Japanese Kaki glaze — published in ceramic references"
+
+# ==========================================
+# RESEARCH-BACKED COMBINATIONS
+# ==========================================
+research_backed_combinations:
+  # --- Cone 10 ---
+  - top: Celadon
+    base: "Classic Shino"
+    cone: "10"
+    source: community
+    result: "Jade green with warm orange/gray carbon trap patterns showing through thin areas"
+    chemistry: "Shino as base prevents crawling; carbon trap shows through translucent celadon"
+    risk: low
+
+  - top: Tenmoku
+    base: "Carbon Trap Shino"
+    cone: "10"
+    source: community
+    result: "Dark brown/black tenmoku pooling in recesses over iridescent orange/gray shino"
+    chemistry: "Shino as base prevents crawling; high-iron tenmoku pools in texture"
+    risk: low
+
+  - top: "Chun Blue"
+    base: "Classic Shino"
+    cone: "10"
+    source: community
+    result: "Blue pooling over warm carbon trap shino; cool-warm contrast"
+    chemistry: "Chun (copper+iron) creates blue tones contrasting with warm shino oranges"
+    risk: low
+
+  - top: "Iron Red"
+    base: "Carbon Trap Shino"
+    cone: "10"
+    source: community
+    result: "Rust red breaking over iridescent shino texture with warm metallic undertones"
+    chemistry: "Iron red breaks nicely over shino texture; both warm-toned glazes"
+    risk: low
+
+  - top: "Copper Red"
+    base: "Opaque White"
+    cone: "10"
+    source: community
+    result: "Bright copper red with clean white breaks at edges"
+    chemistry: "White base ensures clean copper red development; zirconium white reflects light through copper red"
+    risk: medium
+
+  - top: "Panama Red"
+    base: "Opaque White"
+    cone: "10"
+    source: community
+    result: "Blood red to tomato red with clean white breaks"
+    chemistry: "High-opacity white ensures clean breaks for copper red"
+    risk: medium
+
+  - top: "Cobalt Blue"
+    base: "Opaque White"
+    cone: "10"
+    source: community
+    result: "Clean, stable cobalt blue over white"
+    chemistry: "Cobalt over white = most reliable blue in ceramics"
+    risk: low
+
+  - top: "Zinc-Free Clear"
+    base: "Copper Red"
+    cone: "10"
+    source: community
+    result: "Copper red with added gloss and surface protection, no color shift"
+    chemistry: "Zinc-free clear preserves true copper red color"
+    risk: low
+
+  - top: "Zinc-Free Clear"
+    base: "Manganese Purple"
+    cone: "10"
+    source: community
+    result: "Manganese-cobalt purple with added gloss, no color shift"
+    chemistry: "Zinc-free clear adds gloss without modifying manganese-cobalt purple"
+    risk: low
+
+  - top: "Chrome-Tin Pink"
+    base: "Opaque White"
+    cone: "10"
+    source: community
+    result: "Soft coral to rose pink with clean white base showing through at breaks"
+    chemistry: "Chrome-tin pink NEEDS white base (zinc-free) to develop properly"
+    risk: medium
+
+  - top: "Chun Blue"
+    base: "Tenmoku"
+    cone: "10"
+    source: community
+    result: "Dark brown/black base with purple flash where Chun and Tenmoku interact"
+    chemistry: "Copper from Chun meets iron from Tenmoku at the boundary"
+    risk: medium
+
+  - top: "Iron Luster"
+    base: "Classic Shino"
+    cone: "10"
+    source: community
+    result: "Golden amber over warm carbon trap; warm-on-warm"
+    chemistry: "Both iron-based warm glazes; similar color temperature"
+    risk: low
+
+  - top: "Jade Green"
+    base: "Classic Shino"
+    cone: "10"
+    source: community
+    result: "Opaque jade green over orange/gray carbon trap patterns"
+    chemistry: "Opaque iron green over shino; higher opacity than celadon"
+    risk: low
+
+  # --- Cone 6 Oxidation ---
+  - top: "Clear (Cone 6)"
+    base: "Cobalt Blue (Cone 6)"
+    cone: "6"
+    source: community
+    result: "Glossy cobalt blue with added surface protection"
+    chemistry: "Clear adds gloss without modifying stable cobalt blue"
+    risk: low
+
+  - top: "Cobalt Blue (Cone 6)"
+    base: "White (Cone 6)"
+    cone: "6"
+    source: community
+    result: "Bright clean blue over white — most predictable cone 6 color"
+    chemistry: "Cobalt over white = reliable vivid blue at any temperature"
+    risk: low
+
+  - top: "Copper Green (Cone 6)"
+    base: "White (Cone 6)"
+    cone: "6"
+    source: community
+    result: "Bright emerald green over white — oxidation staple"
+    chemistry: "Copper in oxidation over white = cleanest green possible"
+    risk: low
+
+  - top: "Celadon (Cone 6)"
+    base: "Shino (Cone 6)"
+    cone: "6"
+    source: community
+    result: "Light green over warm orange shino; mid-range version of classic combo"
+    chemistry: "Same celadon-over-shino chemistry adapted for mid-range"
+    risk: low
+
+  - top: "Chun Blue (Cone 6)"
+    base: "Temmoku (Cone 6)"
+    cone: "6"
+    source: community
+    result: "Blue with subtle purple flash over dark base"
+    chemistry: "Copper from Chun meets iron from temmoku"
+    risk: medium
+
+  - top: "Iron Red (Cone 6)"
+    base: "White (Cone 6)"
+    cone: "6"
+    source: community
+    result: "Warm rust red with clean white breaks at edges"
+    chemistry: "White underlayer ensures clean iron red development"
+    risk: low
+
+  - top: "White (Cone 6)"
+    base: "Temmoku (Cone 6)"
+    cone: "6"
+    source: community
+    result: "Dramatic contrast — opaque white over dark brown/black"
+    chemistry: "Opaque white floats over iron-rich base"
+    risk: low
+
+# ==========================================
+# USER PREDICTION COMBINATIONS
+# ==========================================
+user_prediction_combinations:
+  # --- Cone 10 ---
+  - top: Chun Blue
+    base: Tenmoku
+    cone: "10"
+    source: chemistry_prediction
+    result: "Dark brown/black with violet edges"
+    chemistry: "Chun (copper+iron) over high-iron creates purple flash"
+    risk: medium
+
+  - top: Celadon
+    base: Tenmoku
+    cone: "10"
+    source: chemistry_prediction
+    result: "Deep green pooling over dark base"
+    chemistry: "Iron-rich celadon over tenmoku creates layered iron effects"
+    risk: low
+
+  - top: Carbon Trap Shino
+    base: Classic Shino
+    cone: "10"
+    source: chemistry_prediction
+    result: "Enhanced luster effect"
+    chemistry: "Shino over shino - same chemistry, safe to layer"
+    risk: low
+
+  - top: Opaque White
+    base: Tenmoku
+    cone: "10"
+    source: chemistry_prediction
+    result: "Dramatic contrast - white over black"
+    chemistry: "Opaque white floats over iron-rich base"
+    risk: low
+
+  - top: Chun Blue
+    base: Celadon
+    cone: "10"
+    source: chemistry_prediction
+    result: "Blue-green with possible purple breaks"
+    chemistry: "Copper blue over iron green may create interesting breaks"
+    risk: low
+
+  - top: Iron Red
+    base: Tenmoku
+    cone: "10"
+    source: chemistry_prediction
+    result: "Reddish-brown with dark pooling"
+    chemistry: "High iron over high iron - may be too dark"
+    risk: medium
+
+  - top: Iron Luster
+    base: Classic Shino
+    cone: "10"
+    source: chemistry_prediction
+    result: "Metallic iridescent surface"
+    chemistry: "Luster over shino - both reduction-sensitive"
+    risk: medium
+
+  - top: Zinc-Free Clear
+    base: Classic Shino
+    cone: "10"
+    source: chemistry_prediction
+    result: "Shiny surface over crawling texture"
+    chemistry: "Clear should not react with shino"
+    risk: low
+
+  # --- Cone 6 ---
+  - top: "Chun Blue (Cone 6)"
+    base: "Celadon (Cone 6)"
+    cone: "6"
+    source: chemistry_prediction
+    result: "Blue-green with possible purple breaks"
+    chemistry: "Copper blue over iron green at mid-range"
+    risk: low
+
+  - top: "Clear (Cone 6)"
+    base: "Iron Red (Cone 6)"
+    cone: "6"
+    source: chemistry_prediction
+    result: "Glossy iron red with surface protection"
+    chemistry: "Clear adds gloss without modifying iron red"
+    risk: low

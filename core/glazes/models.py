@@ -38,7 +38,7 @@ class Glaze:
     catalog_code: Optional[str] = None
     food_safe: Optional[bool] = None
     notes: Optional[str] = None
-    # Default Studio / gamification columns
+    # Cone / atmosphere / gamification columns
     cone: Optional[str] = None
     atmosphere: Optional[str] = None
     base_type: Optional[str] = None

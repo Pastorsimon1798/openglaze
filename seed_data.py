@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Seed OpenGlaze demo database with Default Studio glazes and sample data."""
+"""Seed OpenGlaze demo database with community glazes and sample data."""
 from core.db import connect_db, json, os, sys, yaml
 from datetime import datetime, timedelta
 
@@ -149,7 +149,7 @@ if __name__ == "__main__":
         seed_combinations(conn)
         seed_predictions(conn)
         seed_activity_log(conn)
-        print(f"\nDone! Seeded {count} Default Studio glazes.")
+        print(f"\nDone! Seeded {count} community glazes.")
     except Exception as e:
         print(f"Error: {e}"); import traceback; traceback.print_exc()
     finally:
