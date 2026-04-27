@@ -1219,6 +1219,9 @@ def create_app(config: dict = None) -> Flask:
     @app.route('/api/experiments/<int:exp_id>/firing-log', methods=['POST'])
     def submit_firing_log(exp_id):
         """Submit a firing log for an experiment."""
+        auth_err = require_auth_for_write()
+        if auth_err:
+            return auth_err
         data = request.json or {}
         try:
             success = g.exp_manager.log_firing_result(exp_id, data)
@@ -1245,6 +1248,9 @@ def create_app(config: dict = None) -> Flask:
     @app.route('/api/experiments/<int:exp_id>/share', methods=['POST'])
     def share_experiment(exp_id):
         """Share experiment result with studio."""
+        auth_err = require_auth_for_write()
+        if auth_err:
+            return auth_err
         if not STUDIOS_AVAILABLE:
             return jsonify({"error": "Not available"}), 503
 

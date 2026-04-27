@@ -254,14 +254,16 @@ class SecurityHeaders:
     def _add_security_headers(self, response):
         """Add security headers to response."""
 
-        # Content Security Policy — tightened to avoid unsafe-inline for scripts.
-        # Style-src keeps 'unsafe-inline' because the SPA relies on inline styles
-        # for dynamic colour swatches; this is lower risk than inline scripts.
+        # Content Security Policy.
+        # Script-src keeps 'unsafe-inline' because the SPA still uses inline
+        # onclick handlers in index.html (sidebar, modal, family filters).
+        # TODO: Migrate all inline handlers to addEventListener, then remove
+        # 'unsafe-inline' and use nonce-based CSP instead.
         csp_script_nonce = getattr(response, '_csp_script_nonce', '')
         script_src = (
-            f"'self' 'nonce-{csp_script_nonce}' https://cdn.jsdelivr.net"
+            f"'self' 'unsafe-inline' 'nonce-{csp_script_nonce}' https://cdn.jsdelivr.net"
             if csp_script_nonce
-            else "'self' https://cdn.jsdelivr.net"
+            else "'self' 'unsafe-inline' https://cdn.jsdelivr.net"
         )
         csp = (
             f"default-src 'self'; "

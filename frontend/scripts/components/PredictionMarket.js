@@ -52,6 +52,7 @@ class PredictionMarket {
             </div>
         `;
         this.element.__market = this;
+        this.element.querySelector('.pred-submit').addEventListener('click', () => this.submit());
         this.container.appendChild(this.element);
     }
 
