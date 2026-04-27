@@ -10,19 +10,19 @@ If OpenGlaze saves you a test tile, a failed kiln load, or hours of recipe tweak
 
 One-time or recurring donations via Ko-fi:
 
-> **[ko-fi.com/yourname](https://ko-fi.com/yourname)** *(update with your link)*
+> **Coming soon**
 
 ### 🎗️ Patreon
 
 Monthly support for ongoing development:
 
-> **[patreon.com/yourname](https://patreon.com/yourname)** *(update with your link)*
+> **Coming soon**
 
 ### ⭐ GitHub Sponsors
 
 Sponsor directly through GitHub:
 
-> **[github.com/sponsors/yourname](https://github.com/sponsors/yourname)** *(update with your link)*
+> **Coming soon**
 
 ## What Your Support Covers
 

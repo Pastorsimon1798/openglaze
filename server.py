@@ -40,7 +40,7 @@ from core.security import init_security, rate_limit, get_rate_limiter
 
 # Import auth (cloud mode)
 try:
-    from core.auth import AuthMiddleware, get_current_user, get_user_id, require_auth
+    from core.auth import AuthMiddleware, get_current_user, get_user_id
 
     AUTH_AVAILABLE = True
 except ImportError:
@@ -178,6 +178,22 @@ def create_app(config: dict = None) -> Flask:
 
             studio_user_id = get_user_id_or_simple()
             g.studio_manager = StudioManager(db_path, user_id=studio_user_id)
+
+    def require_auth_for_write():
+        """Enforce authentication on write endpoints in cloud mode.
+
+        Returns an error response if auth is required but user is not
+        authenticated, or None if the request may proceed.
+        """
+        if not features["auth_enabled"] or not AUTH_AVAILABLE:
+            return None
+        try:
+            user = get_current_user()
+            if user:
+                return None
+        except Exception:
+            pass
+        return jsonify({"error": "Authentication required"}), 401
 
     def get_current_user_id() -> Optional[str]:
         """Get current user ID (cloud mode only)."""
@@ -363,15 +379,9 @@ def create_app(config: dict = None) -> Flask:
     @rate_limit(requests_per_minute=30)
     def create_glaze():
         """Create a new glaze."""
-        if features["auth_enabled"] and AUTH_AVAILABLE:
-
-            @require_auth
-            def check_auth():
-                pass
-
-            result = check_auth()
-            if result:
-                return result
+        auth_err = require_auth_for_write()
+        if auth_err:
+            return auth_err
 
         data = request.json
         if not data:
@@ -385,15 +395,9 @@ def create_app(config: dict = None) -> Flask:
     @rate_limit(requests_per_minute=30)
     def update_glaze(glaze_id: str):
         """Update a glaze."""
-        if features["auth_enabled"] and AUTH_AVAILABLE:
-
-            @require_auth
-            def check_auth():
-                pass
-
-            result = check_auth()
-            if result:
-                return result
+        auth_err = require_auth_for_write()
+        if auth_err:
+            return auth_err
 
         data = request.json
         if not data:
@@ -408,15 +412,9 @@ def create_app(config: dict = None) -> Flask:
     @rate_limit(requests_per_minute=30)
     def delete_glaze(glaze_id: str):
         """Delete a glaze."""
-        if features["auth_enabled"] and AUTH_AVAILABLE:
-
-            @require_auth
-            def check_auth():
-                pass
-
-            result = check_auth()
-            if result:
-                return result
+        auth_err = require_auth_for_write()
+        if auth_err:
+            return auth_err
 
         success = g.glaze_manager.delete(glaze_id)
         if success:
@@ -467,6 +465,9 @@ def create_app(config: dict = None) -> Flask:
     @rate_limit(requests_per_minute=30)
     def create_combination():
         """Create a new combination."""
+        auth_err = require_auth_for_write()
+        if auth_err:
+            return auth_err
         data = request.json
         if not data:
             return jsonify({"error": "No data provided"}), 400
@@ -486,6 +487,9 @@ def create_app(config: dict = None) -> Flask:
     @rate_limit(requests_per_minute=30)
     def promote_combination(combo_id: int):
         """Promote a hypothesis to confirmed."""
+        auth_err = require_auth_for_write()
+        if auth_err:
+            return auth_err
         data = request.json or {}
         result = data.get("result", "")
         success = g.combo_manager.promote_to_confirmed(combo_id, result)
@@ -508,6 +512,9 @@ def create_app(config: dict = None) -> Flask:
     @rate_limit(requests_per_minute=30)
     def update_combination(combo_id: int):
         """Update a combination (stage, prediction_grade, etc.)."""
+        auth_err = require_auth_for_write()
+        if auth_err:
+            return auth_err
         data = request.json
         if not data:
             return jsonify({"error": "No data provided"}), 400
@@ -936,6 +943,9 @@ def create_app(config: dict = None) -> Flask:
     @rate_limit(requests_per_minute=30)
     def create_experiment():
         """Create a new experiment."""
+        auth_err = require_auth_for_write()
+        if auth_err:
+            return auth_err
         data = request.json
         if not data:
             return jsonify({"error": "No data provided"}), 400
@@ -948,6 +958,9 @@ def create_app(config: dict = None) -> Flask:
     @rate_limit(requests_per_minute=30)
     def advance_experiment(exp_id: int):
         """Advance experiment to next stage."""
+        auth_err = require_auth_for_write()
+        if auth_err:
+            return auth_err
         success = g.exp_manager.advance_stage(exp_id)
         if success:
             return jsonify({"success": True})
@@ -957,6 +970,9 @@ def create_app(config: dict = None) -> Flask:
     @rate_limit(requests_per_minute=30)
     def record_experiment_result(exp_id: int):
         """Record experiment result."""
+        auth_err = require_auth_for_write()
+        if auth_err:
+            return auth_err
         data = request.json or {}
         result = data.get("result", "")
         rating = data.get("rating")
@@ -970,6 +986,9 @@ def create_app(config: dict = None) -> Flask:
     @rate_limit(requests_per_minute=30)
     def archive_experiment(exp_id: int):
         """Archive an experiment."""
+        auth_err = require_auth_for_write()
+        if auth_err:
+            return auth_err
         data = request.json or {}
         archive_type = data.get("type", "successful")
         success = g.exp_manager.archive(exp_id, archive_type)
@@ -985,6 +1004,9 @@ def create_app(config: dict = None) -> Flask:
     @rate_limit(requests_per_minute=20)
     def upload_photo():
         """Upload a photo file. Accepts multipart/form-data with 'photo' field."""
+        auth_err = require_auth_for_write()
+        if auth_err:
+            return auth_err
         if "photo" not in request.files:
             return jsonify({"error": "No photo field in upload"}), 400
 
@@ -1129,6 +1151,9 @@ def create_app(config: dict = None) -> Flask:
     @rate_limit(requests_per_minute=30)
     def add_to_inbox():
         """Add idea to inbox."""
+        auth_err = require_auth_for_write()
+        if auth_err:
+            return auth_err
         data = request.json or {}
         conn = get_db_connection(db_path)
         cursor = conn.cursor()
@@ -1373,6 +1398,9 @@ def create_app(config: dict = None) -> Flask:
     @app.route("/api/experiments/<int:exp_id>/firing-log", methods=["POST"])
     def submit_firing_log(exp_id):
         """Submit a firing log for an experiment."""
+        auth_err = require_auth_for_write()
+        if auth_err:
+            return auth_err
         data = request.json or {}
         try:
             success = g.exp_manager.log_firing_result(exp_id, data)
@@ -1404,6 +1432,9 @@ def create_app(config: dict = None) -> Flask:
     @app.route("/api/experiments/<int:exp_id>/share", methods=["POST"])
     def share_experiment(exp_id):
         """Share experiment result with studio."""
+        auth_err = require_auth_for_write()
+        if auth_err:
+            return auth_err
         if not STUDIOS_AVAILABLE:
             return jsonify({"error": "Not available"}), 503
 
@@ -1929,7 +1960,7 @@ def _run_migrations(conn):
 
 
 def seed_database(conn):
-    """Seed database with studio glazes and combinations if empty."""
+    """Seed database with community glazes and combinations if empty."""
     cursor = conn.cursor()
 
     # Only seed if glazes table is empty
@@ -1937,12 +1968,12 @@ def seed_database(conn):
     if cursor.fetchone()[0] > 0:
         return
 
-    logger.info("Seeding database with studio glazes and combinations...")
+    logger.info("Seeding database with community glazes and combinations...")
 
     # Load YAML template
-    from core.templates import get_studio_glazes
+    from core.templates import get_community_glazes
 
-    template = get_studio_glazes()
+    template = get_community_glazes()
     if not template:
         logger.warning("No template found — skipping seed")
         return

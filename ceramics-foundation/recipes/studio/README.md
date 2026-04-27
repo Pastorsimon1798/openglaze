@@ -1,6 +1,11 @@
 # Studio Recipes
 
-Custom and community recipes used in the studio.
+> **DEPRECATION NOTE (2026-04-27):** The studio-specific recipes listed below were
+> originally compiled for a specific studio. The project is now studio-agnostic.
+> Some recipe names reference old studio-specific glazes that have been removed.
+> For the current glaze database, see `frontend/scripts/data.js`.
+
+Custom and community recipes. Generic/traditional recipes remain valid.
 
 ## Documented Recipes
 

@@ -38,8 +38,8 @@ pip install -r requirements.txt
 # Install dev dependencies (if separate)
 pip install pytest pytest-cov black ruff
 
-# Set up pre-commit hooks (optional)
-pre-commit install
+# Set up pre-commit hooks (optional, requires .pre-commit-config.yaml)
+# pre-commit install
 ```
 
 ### Running Locally

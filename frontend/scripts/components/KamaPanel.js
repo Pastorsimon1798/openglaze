@@ -205,17 +205,19 @@ class KamaPanel {
     formatContent(content, streaming = false) {
         if (streaming) {
             // Lightweight: avoid broken markdown from partial chunks during streaming
-            return content
+            const raw = content
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\*(.*?)\*/g, '<em>$1</em>')
                 .replace(/`([^`]+)`/g, '<code>$1</code>')
                 .replace(/\n/g, '<br>');
+            return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(raw) : raw;
         }
         if (typeof marked !== 'undefined' && marked.parse) {
-            return marked.parse(content, { breaks: true, gfm: true });
+            const raw = marked.parse(content, { breaks: true, gfm: true });
+            return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(raw) : raw;
         }
         // Fallback: bold, italic, line breaks, lists, headers
-        return content
+        const raw = content
             .replace(/^### (.*$)/gm, '<strong style="font-size:1.05em">$1</strong>')
             .replace(/^## (.*$)/gm, '<strong style="font-size:1.1em">$1</strong>')
             .replace(/^# (.*$)/gm, '<strong style="font-size:1.2em">$1</strong>')
@@ -225,6 +227,7 @@ class KamaPanel {
             .replace(/^\d+\. (.*$)/gm, '<span style="margin-left:1em;display:block">$&</span>')
             .replace(/`([^`]+)`/g, '<code style="background:var(--cream);padding:1px 4px;border-radius:3px;font-size:0.9em">$1</code>')
             .replace(/\n/g, '<br>');
+        return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(raw) : raw;
     }
 
     addLoadingMessage() {

@@ -21,6 +21,16 @@ let topAutocomplete = null;
 let studioPanel = null;
 let glazeTips = null;
 
+// Sanitize HTML to prevent XSS — uses DOMPurify if available
+function safeHTML(str) {
+    if (typeof DOMPurify !== 'undefined') {
+        return DOMPurify.sanitize(str, { ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'span', 'br', 'p', 'h3', 'h4', 'pre', 'code', 'a', 'div', 'ul', 'ol', 'li'], ALLOWED_ATTR: ['class', 'style', 'href', 'title'] });
+    }
+    const el = document.createElement('div');
+    el.textContent = str;
+    return el.innerHTML;
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('OpenGlaze initializing...')
@@ -222,19 +232,19 @@ function renderGlazesView() {
 
             const section = document.createElement('div')
             section.className = 'glaze-family-section'
-            section.innerHTML = `
+            section.innerHTML = safeHTML(`
                 <div class="glaze-family-header">
                     <h3 class="glaze-family-title">${family}</h3>
                     <span class="glaze-family-count">${glazes.length} glazes</span>
                 </div>
                 <div class="glaze-family-grid"></div>
-            `
+            `)
 
             const grid = section.querySelector('.glaze-family-grid')
             glazes.forEach(glaze => {
                 const card = document.createElement('div')
                 card.className = 'glaze-detail-card card'
-                card.innerHTML = `
+                card.innerHTML = safeHTML(`
                     <div class="glaze-detail-header">
                         <div class="glaze-detail-swatch" style="background-color: ${glaze.hex || '#ccc'}"></div>
                         <div class="glaze-detail-info">
@@ -275,7 +285,7 @@ function renderGlazesView() {
                     ${glaze.source ? `
                         <p class="glaze-detail-source">Source: ${glaze.source}</p>
                     ` : ''}
-                `
+                `)
                 grid.appendChild(card)
             })
 

@@ -1,9 +1,16 @@
 # Glaze Taxonomy
 
-**Studio:** Membership Studio
-**Firing:** Cone 10 Reduction (Gas)
+> **DEPRECATION NOTICE (2026-04-27):** This file was originally compiled for a specific
+> studio. The studio has been removed from the project — OpenGlaze is now a generic,
+> studio-agnostic tool. The **glaze TYPE taxonomy** (Tenmoku, Celadon, Shino, etc.) and
+> **chemistry classifications** below remain accurate. However, individual glaze entries
+> may reference old studio-specific names (Long Beach Black, Froggy, etc.) that no longer
+> exist in the app. For the current glaze database, see `frontend/scripts/data.js`.
+> For the server-side template, see `core/templates/community-glazes.yaml`.
+
+**Firing:** Cone 6 and Cone 10 (oxidation and reduction)
 **Bisque:** Electric Kiln Cone 06
-**Extraction Date:** 2026-03-15
+**Original Extraction Date:** 2026-03-15
 
 ---
 

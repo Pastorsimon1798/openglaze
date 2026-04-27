@@ -138,7 +138,7 @@ class StudioPanel {
         const studio = studios[0];
         const members = studio.members || [];
 
-        container.innerHTML = `
+        container.innerHTML = (typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize : (s => s))(`
             <div class="studio-detail card">
                 <div class="studio-detail-header">
                     <h4>${studio.name}</h4>
@@ -160,7 +160,7 @@ class StudioPanel {
                 </div>
             </div>
             <div id="lab-queue-container" style="margin-top: 1.5rem;"></div>
-        `;
+        `);
 
         container.querySelector('#copy-invite-btn').addEventListener('click', () => {
             navigator.clipboard.writeText(studio.invite_code).then(() => {

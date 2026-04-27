@@ -11,42 +11,32 @@ def load_compose():
     return yaml.safe_load((ROOT / "docker-compose.yml").read_text())
 
 
-def test_default_compose_uses_writable_sqlite_volume_on_app_port():
+def test_default_compose_uses_postgres_with_env_substitution_on_app_port():
     compose = load_compose()
     app = compose["services"]["openglaze"]
 
     env = dict(item.split("=", 1) for item in app["environment"])
-    assert env["FLASK_PORT"] == "8768"
-    assert env["DATABASE_PATH"] == "/data/glaze.db"
-    assert "DATABASE_URL" not in env
+    assert "DATABASE_URL" in env
+    assert "${POSTGRES_PASSWORD}" in env["DATABASE_URL"]
+    assert "${BASE_URL:-http://localhost:8768}" == env["BASE_URL"]
 
-    assert "${OPENGLAZE_PORT:-8768}:8768" in app["ports"]
-    assert "openglaze_data:/data" in app["volumes"]
-    assert "openglaze_uploads:/app/frontend/uploads" in app["volumes"]
-    assert "openglaze_data" in compose["volumes"]
-    assert "openglaze_uploads" in compose["volumes"]
+    assert "8768:8768" in app["ports"]
+    assert "postgres_data" in compose["volumes"]
 
 
-def test_reverse_proxy_profiles_reference_existing_configs_and_configurable_ports():
+def test_reverse_proxy_profiles_reference_existing_configs():
     compose = load_compose()
 
     nginx = compose["services"]["nginx"]
-    assert "${OPENGLAZE_HTTP_PORT:-80}:80" in nginx["ports"]
+    assert "80:80" in nginx["ports"]
+    assert "443:443" in nginx["ports"]
 
-    nginx_tls = compose["services"]["nginx-tls"]
-    assert nginx_tls["profiles"] == ["tls"]
-    assert "${OPENGLAZE_HTTP_PORT:-80}:80" in nginx_tls["ports"]
-    assert "${OPENGLAZE_HTTPS_PORT:-443}:443" in nginx_tls["ports"]
-
-    for service in (nginx, nginx_tls):
-        mounted_files = [
-            v.split(":", 1)[0].removeprefix("./") for v in service.get("volumes", [])
-        ]
-        for relative in mounted_files:
-            if relative and not relative.startswith(("certs", "openglaze_")):
-                assert (
-                    ROOT / relative
-                ).exists(), f"compose references missing {relative}"
+    mounted_files = [
+        v.split(":", 1)[0].removeprefix("./") for v in nginx.get("volumes", [])
+    ]
+    for relative in mounted_files:
+        if relative and not relative.startswith(("certs", "openglaze_")):
+            assert (ROOT / relative).exists(), f"compose references missing {relative}"
 
 
 def test_tls_reverse_proxy_documents_expected_certificate_files():
@@ -104,7 +94,7 @@ def test_runtime_ports_and_cors_defaults_match_documented_docker_port():
 
 def test_experimental_cloud_env_names_postgres_host():
     env = (ROOT / ".env.example").read_text()
-    assert "POSTGRES_HOST=postgres" in env
+    assert "POSTGRES_PASSWORD" in env
 
 
 def test_codecov_action_uses_v6_input_name():

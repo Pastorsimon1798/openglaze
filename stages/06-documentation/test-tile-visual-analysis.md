@@ -1,6 +1,9 @@
 # Test Tile Visual Analysis
 
-**Studio:** Default Studio
+> **DEPRECATION NOTICE (2026-04-27):** This document references studio-specific glaze names
+> (Long Beach Black, etc.) that have been removed from the project. The visual analysis
+> methodology remains valid. For current glaze names, see `frontend/scripts/data.js`.
+
 **Firing:** Cone 10 Reduction (Gas)
 **Analysis Date:** 2026-03-19
 **Test Tile Photo:** [33 tiles on white tile board]

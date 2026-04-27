@@ -1,6 +1,6 @@
 # Ceramics Foundation Workspace
 
-Domain knowledge for ceramics vision pipeline, caption generation, and AI Glaze Lab. Cone 10 reduction at Default Studio (Long Beach).
+Domain knowledge for ceramics vision pipeline, caption generation, and AI Glaze Lab. Cone 10 reduction.
 
 ---
 
@@ -12,7 +12,7 @@ ceramics-foundation/
 ├── CONTEXT.md             # Task routing
 ├── INDEX.md               # Quick reference
 ├── taxonomies/            # Classification for vision AI
-│   ├── glazes.md          # 32 studio glazes + surface quality
+│   ├── glazes.md          # 32 community glazes + surface quality
 │   ├── vessel-anatomy.md  # Forms, parts, profiles
 │   └── colors.md          # ~123 mineral/ceramic color terms
 ├── chemistry/             # Technical reference
@@ -67,8 +67,7 @@ ceramics-foundation/
 
 **Firing:** Cone 10 reduction (gas kiln)
 **Bisque:** Electric cone 06
-**Studio:** Default Studio, Long Beach CA
-**Inventory:** 32 glazes (Laguna/Aardvark/community)
+**Inventory:** 44 community glazes (28 cone 10, 16 cone 6)
 
 **Critical:** All color descriptions assume reduction atmosphere (muted vs bright oxidation).
 

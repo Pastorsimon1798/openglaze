@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS glazes (
     catalog_code TEXT,           -- Commercial catalog reference
     food_safe BOOLEAN DEFAULT NULL,  -- true=known food safe, false=not food safe, null=unknown
     notes TEXT,
-    -- Default Studio / gamification columns
+    -- Cone / atmosphere / gamification columns
     cone TEXT,
     atmosphere TEXT CHECK(atmosphere IN ('oxidation', 'reduction', 'neutral', 'salt', 'wood')),
     base_type TEXT CHECK(base_type IN ('transparent', 'opaque', 'matte', 'satin', 'gloss', 'semi-opaque')),

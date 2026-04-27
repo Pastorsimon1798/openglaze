@@ -140,20 +140,26 @@ class InMemoryRateLimiter:
 
 
 def get_client_identifier() -> str:
-    """Get client identifier from request."""
+    """Get client identifier from request.
+
+    Only trusts proxy headers when TRUSTED_PROXY is configured via
+    environment variable.  Without that setting, only the direct
+    remote_addr is used to prevent header spoofing.
+    """
+    import os
     from flask import request
 
-    # Try X-Forwarded-For header (reverse proxy)
-    forwarded = request.headers.get("X-Forwarded-For")
-    if forwarded:
-        return forwarded.split(",")[0].strip()
+    trusted_proxy = os.environ.get("TRUSTED_PROXY", "")
+    if trusted_proxy and request.remote_addr == trusted_proxy:
+        # Behind a known reverse proxy — trust the first value
+        forwarded = request.headers.get("X-Forwarded-For")
+        if forwarded:
+            return forwarded.split(",")[0].strip()
+        real_ip = request.headers.get("X-Real-IP")
+        if real_ip:
+            return real_ip
 
-    # Try X-Real-IP header
-    real_ip = request.headers.get("X-Real-IP")
-    if real_ip:
-        return real_ip
-
-    # Fall back to remote address
+    # Direct connection or untrusted proxy
     return request.remote_addr or "unknown"
 
 
@@ -247,17 +253,27 @@ class SecurityHeaders:
     def _add_security_headers(self, response):
         """Add security headers to response."""
 
-        # Content Security Policy - strict but allows inline scripts for SPA
+        # Content Security Policy.
+        # Script-src keeps 'unsafe-inline' because the SPA still uses inline
+        # onclick handlers in index.html (sidebar, modal, family filters).
+        # TODO: Migrate all inline handlers to addEventListener, then remove
+        # 'unsafe-inline' and use nonce-based CSP instead.
+        csp_script_nonce = getattr(response, "_csp_script_nonce", "")
+        script_src = (
+            f"'self' 'unsafe-inline' 'nonce-{csp_script_nonce}' https://cdn.jsdelivr.net"
+            if csp_script_nonce
+            else "'self' 'unsafe-inline' https://cdn.jsdelivr.net"
+        )
         csp = (
-            "default-src 'self'; "
-            "script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; "
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
-            "font-src 'self' https://fonts.gstatic.com; "
-            "img-src 'self' data: blob: https:; "
-            "connect-src 'self' http://localhost:* ws://localhost:*; "
-            "frame-ancestors 'none'; "
-            "base-uri 'self'; "
-            "form-action 'self';"
+            f"default-src 'self'; "
+            f"script-src {script_src}; "
+            f"style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+            f"font-src 'self' https://fonts.gstatic.com; "
+            f"img-src 'self' data: blob: https:; "
+            f"connect-src 'self' http://localhost:* ws://localhost:*; "
+            f"frame-ancestors 'none'; "
+            f"base-uri 'self'; "
+            f"form-action 'self';"
         )
         response.headers["Content-Security-Policy"] = csp
 

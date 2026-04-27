@@ -24,7 +24,7 @@ When you first access OpenGlaze:
 
 1. Create an account or log in
 2. Your studio profile is automatically created with default settings
-3. The database is seeded with the Default Studio glaze collection
+3. The database is seeded with the community glaze collection
 4. You're ready to start managing glazes!
 
 ### Navigation Overview

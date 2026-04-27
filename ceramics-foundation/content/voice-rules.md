@@ -1,7 +1,14 @@
 # Voice Rules: Anti-Robot Writing Guidelines
 
+> **DIRECTION NOTE (2026-04-27):** OpenGlaze is now studio-agnostic. Do NOT generate
+> captions referencing any specific studio, city, or location (no "Default Studio",
+> "Long Beach", "Clay on First"). Generate generic captions that any potter anywhere
+> could use. References to specific studios have been removed from the app.
+>
+> The writing style rules below (anti-robot patterns, emoji rules, etc.) remain valid.
+
 **Purpose:** Create authentically human pottery captions that avoid AI detection patterns
-**Last Updated:** 2026-03-15
+**Last Updated:** 2026-04-27
 **TDD Status:** All rules are actionable and testable
 
 ---

@@ -18,9 +18,7 @@ class GamificationPanel {
         this.element.innerHTML = `
             <div class="gam-header">
                 <h3 class="gam-title">Your Progress</h3>
-                <button class="gam-refresh" onclick="this.closest('.gamification-panel').__panel.fetch()">
-                    &#x21bb;
-                </button>
+                <button class="gam-refresh">&#x21bb;</button>
             </div>
             <div class="gam-stats" id="gam-stats">
                 <div class="gam-stat loading">
@@ -49,7 +47,8 @@ class GamificationPanel {
                 </div>
             </div>
         `;
-        this.element.__panel = this;
+        // Wire up refresh button without inline onclick
+        this.element.querySelector('.gam-refresh').addEventListener('click', () => this.fetch());
         this.container.appendChild(this.element);
     }
 
@@ -78,7 +77,7 @@ class GamificationPanel {
                 <span class="gam-stat-label">Points</span>
             </div>
             <div class="gam-stat ${streak >= 3 ? 'gam-streak-fire' : ''}">
-                <span class="gam-stat-value">${streak}${streak >= 3 ? ' \uD83D\uDD25' : ''}</span>
+                <span class="gam-stat-value">${streak}${streak >= 3 ? ' 🔥' : ''}</span>
                 <span class="gam-stat-label">Day Streak</span>
             </div>
             <div class="gam-stat">
@@ -94,11 +93,12 @@ class GamificationPanel {
             grid.innerHTML = '<div class="gam-empty">No badges earned yet</div>';
             return;
         }
-        grid.innerHTML = this.badges.map(b => `
+        const _s = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize : (x => x);
+        grid.innerHTML = _s(this.badges.map(b => `
             <div class="gam-badge" title="${b.description || b.name}">
-                <span class="gam-badge-icon">${b.icon || '\u2B50'}</span>
+                <span class="gam-badge-icon">${b.icon || '⭐'}</span>
                 <span class="gam-badge-name">${b.name}</span>
             </div>
-        `).join('');
+        `).join(''));
     }
 }

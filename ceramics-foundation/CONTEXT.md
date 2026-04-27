@@ -1,5 +1,12 @@
 # Ceramics Foundation - Task Routing
 
+> **DIRECTION NOTE (2026-04-27):** OpenGlaze is now a generic, studio-agnostic project.
+> All studio-specific data (Default Studio / Clay on First / Long Beach) has been removed
+> from user-facing files. The app ships 44 traditional/published glazes across cone 6 and
+> cone 10 with no proprietary or commercial formulas. Do NOT reference any specific studio,
+> manufacturer product codes, or studio-invented glaze names in new work.
+> See `frontend/scripts/data.js` and `core/templates/community-glazes.yaml` for current data.
+
 **Type:** Foundation workspace (Layer 3 domain knowledge)
 **Used by:** Pipeline workspaces (Instagram, Glaze Experiments, etc.)
 

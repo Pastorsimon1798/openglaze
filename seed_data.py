@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
-"""Seed OpenGlaze demo database with Default Studio glazes and sample data."""
+"""Seed OpenGlaze demo database with community glazes and sample data."""
 
 import json
 import os
 import sqlite3
 import sys
-from datetime import datetime, timedelta
 
 import yaml
-
 from core.db import connect_db
+from datetime import datetime, timedelta
 
 DEMO_USER_ID = "demo-user-001"
 
@@ -329,7 +328,6 @@ if __name__ == "__main__":
     try:
         if "--reset" in sys.argv:
             reset_demo(conn)
-        import yaml
 
         # Try ceramics-foundation submodule path first, fall back to templates/
         template_path = None
@@ -372,7 +370,7 @@ if __name__ == "__main__":
         seed_combinations(conn)
         seed_predictions(conn)
         seed_activity_log(conn)
-        print(f"\nDone! Seeded {count} Default Studio glazes.")
+        print(f"\nDone! Seeded {count} community glazes.")
     except Exception as e:
         print(f"Error: {e}")
         import traceback

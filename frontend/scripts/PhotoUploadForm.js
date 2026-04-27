@@ -121,7 +121,12 @@ class PhotoUploadForm {
         formData.append('photo', file);
 
         try {
-            const resp = await fetch('/api/upload', { method: 'POST', body: formData });
+            const headers = {};
+            const token = localStorage.getItem('simple_auth_token');
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+            const resp = await fetch('/api/upload', { method: 'POST', body: formData, headers });
             const data = await resp.json();
 
             if (data.success) {

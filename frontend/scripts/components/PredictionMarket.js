@@ -41,9 +41,7 @@ class PredictionMarket {
                            class="pred-confidence-slider"
                            oninput="document.getElementById('pred-confidence-val').textContent = this.value">
                 </div>
-                <button class="btn btn-primary pred-submit" onclick="this.closest('.prediction-market').__market.submit()">
-                    Submit Prediction
-                </button>
+                <button class="btn btn-primary pred-submit">Submit Prediction</button>
                 <div class="pred-result" id="pred-result" style="display:none;"></div>
             </div>
             <div class="pred-leaderboard-section">
@@ -54,6 +52,7 @@ class PredictionMarket {
             </div>
         `;
         this.element.__market = this;
+        this.element.querySelector('.pred-submit').addEventListener('click', () => this.submit());
         this.container.appendChild(this.element);
     }
 
@@ -67,8 +66,9 @@ class PredictionMarket {
                 select.innerHTML = '<option value="">No hypothesis combos available</option>';
                 return;
             }
+            const sanitize = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize : (s => s);
             select.innerHTML = '<option value="">Select a combination...</option>' +
-                this.combos.map(c => `<option value="${c.id}">${c.base} over ${c.top}</option>`).join('');
+                this.combos.map(c => `<option value="${parseInt(c.id)}">${sanitize(c.base)} over ${sanitize(c.top)}</option>`).join('');
         } catch (e) {
             console.error('Load combos error:', e);
         }

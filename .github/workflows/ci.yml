@@ -33,8 +33,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pytest pytest-cov black ruff
+          pip install -r requirements-dev.txt
 
       - name: Check formatting with Black
         run: black --check --diff .
@@ -101,4 +100,4 @@ jobs:
         run: bandit -r . -f json -o bandit-report.json --exclude ./venv || true
 
       - name: Check dependencies for known vulnerabilities
-        run: safety check || true
+        run: safety check

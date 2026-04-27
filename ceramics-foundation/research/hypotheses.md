@@ -1,5 +1,10 @@
 # Open Research Hypotheses
 
+> **DIRECTION NOTE (2026-04-27):** Some hypotheses below reference studio-specific scenarios
+> (Laguna vs Aardvark at Default Studio, specific studio glaze catalogs). The studio has been
+> removed from the project. The chemistry hypotheses (H-001 through H-003) remain valid.
+> Studio-specific hypotheses (H-004, H-005) are historical only.
+
 Ongoing questions with confidence levels. Updated as new findings corroborate or refute.
 
 ## Glaze Chemistry

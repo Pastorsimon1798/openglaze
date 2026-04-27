@@ -1,7 +1,12 @@
 # Ceramics Foundation - Master Index
 
+> **DIRECTION NOTE (2026-04-27):** Some cross-references below may point to old
+> studio-specific glaze names (Long Beach Black, Froggy, etc.) that no longer exist in
+> the app. The taxonomy structure and chemistry data are still valid. For current glaze
+> names and data, see `frontend/scripts/data.js`.
+
 **Purpose:** Quick lookup tables and cross-references for all taxonomies
-**Last Updated:** 2026-03-15
+**Last Updated:** 2026-04-27
 **Total Terms:** 150+ organized across 3 taxonomies
 
 ---

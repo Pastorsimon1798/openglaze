@@ -1,6 +1,10 @@
 # Glaze Layering & Blending Combinations — HIGH FIRE
 
-**Studio:** Membership Studio
+> **DEPRECATION NOTICE (2026-04-27):** This document references studio-specific glaze names
+> (Long Beach Black, Froggy, Tighty Whitey, etc.) that have been removed from the project.
+> The layering chemistry and combination methodology below remain valid. For current glaze
+> names, see `frontend/scripts/data.js`.
+
 **Firing:** Cone 10 Reduction (Gas)
 **Created:** 2026-03-15
 
