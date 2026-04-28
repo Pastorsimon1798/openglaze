@@ -30,7 +30,7 @@ This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDU
 
 ### Prerequisites
 
-- Python 3.12+
+- Python 3.11+
 - Docker & Docker Compose (optional, for full stack)
 - Node.js 20+ (for frontend tooling)
 

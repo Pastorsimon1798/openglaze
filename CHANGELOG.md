@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] - 2026-04-27
 
 ### Added
-- 44 community glazes across cone 5, 6, and 10 (was 32 cone-10-only)
+- 44 community glazes across cone 6 and 10 (was 32 cone-10-only)
 - Cone 6 oxidation glazes for electric kiln users (12 glazes)
 - Cone 6 reduction glazes for gas kiln users (4 glazes)
 - `cone` and `atmosphere` fields on every glaze entry
@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Seed data and server templates updated from "studio" to "community" terminology
 - Docker Compose uses env var substitution for secrets (no hardcoded passwords)
 - CI upgraded: actions/checkout@v6, setup-python@v6, cache@v5, codecov@v6
-- Dependencies updated: Flask>=3.1.3, requests>=2.33.1, flask-cors>=6.0.2, gunicorn>=25.3.0
+- Dependencies updated to minimum floors in requirements.txt
 - Test suite expanded from 111 to 139 tests
 - Live site served from openglaze.kyanitelabs.tech
 - `.env.example` cleaned up with proper sections and no default secrets

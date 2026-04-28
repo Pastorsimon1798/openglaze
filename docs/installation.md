@@ -72,15 +72,15 @@ Open <http://localhost:8767> unless you set `FLASK_PORT`.
 | `SECRET_KEY` | generated per process if omitted | Set this for persistent sessions |
 | `RATELIMIT_PER_MINUTE` | `60` | In-memory request rate limit |
 
-## Experimental cloud profile
+## Experimental services
 
-The compose file includes `postgres`, `kratos`, and `mailhog` under the `cloud` profile for future work:
+The compose file includes `postgres` and `kratos` services that start by default alongside the app. A `dev` profile adds `mailhog` for email testing:
 
 ```bash
-docker compose --profile cloud up -d
+docker compose --profile dev up -d
 ```
 
-This is **not** the supported launch path yet because application managers still use SQLite connections.
+PostgreSQL and Ory Kratos are **not** the supported launch path yet because the application data layer still uses SQLite connections by default.
 
 ## Troubleshooting
 

@@ -144,7 +144,7 @@ Frequently asked questions about the open-source ceramic glaze calculator.
 
 ## Q: Can I import recipes from Glazy?
 
-**A:** OpenGlaze supports importing recipes from Glazy CSV exports. You can also import from DigitalFire INSIGHT .dfd files and OpenGlaze's native YAML format. Full direct Glazy API integration is on the roadmap. The recommended workflow today is to export your recipes from Glazy as CSV and import them into OpenGlaze.
+**A:** Direct Glazy CSV and DigitalFire INSIGHT .dfd import are planned roadmap features. Today, you can import recipes via OpenGlaze's native YAML format or enter them manually through the web interface. The recommended workflow is to create a YAML file following the community-glazes template and load it through the database seeder or API.
 
 ## Q: What is the Kama assistant?
 

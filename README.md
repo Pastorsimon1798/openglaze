@@ -19,7 +19,7 @@
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
   </a>
   <a href="https://www.python.org/">
-    <img src="https://img.shields.io/badge/Python-3.12+-blue.svg" alt="Python 3.12+">
+    <img src="https://img.shields.io/badge/Python-3.11+-blue.svg" alt="Python 3.11+">
   </a>
   <a href="https://www.docker.com/">
     <img src="https://img.shields.io/badge/Docker-Ready-blue" alt="Docker Ready">
@@ -133,14 +133,14 @@ curl http://localhost:8768/health
 # Install dependencies
 pip install -r requirements.txt
 
-# Set up database and seed with default studio glazes
+# Set up database and seed with community glazes
 python seed_data.py
 
 # Run
 python server.py
 ```
 
-Open http://localhost:8768 in your browser.
+Open http://localhost:8768 in your browser. (Docker default; manual install defaults to 8767.)
 
 ## Features
 
@@ -280,8 +280,8 @@ AI crawlers and answer engines can use [`docs/llms.txt`](docs/llms.txt), [`docs/
 ┌────────────────────▼────────────────────────────────────────┐
 │                      Data Layer                              │
 │  ┌──────────┐  ┌──────────┐  ┌──────────────────────────┐  │
-│  │SQLite/   │  │Ory       │  │Ceramics Foundation Data  │  │
-│  │PostgreSQL│  │Kratos    │  │(Materials, Recipes, etc.)│  │
+│  │SQLite    │  │Ory       │  │Ceramics Foundation Data  │  │
+│  │          │  │Kratos    │  │(Materials, Recipes, etc.)│  │
 │  └──────────┘  └──────────┘  └──────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
 ```

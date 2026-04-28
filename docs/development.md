@@ -17,7 +17,7 @@ Guide for developers contributing to OpenGlaze.
 
 ### Prerequisites
 
-- Python 3.12+
+- Python 3.11+
 - Docker & Docker Compose (for full stack testing)
 - Node.js 20+ (optional, for frontend linting)
 
@@ -50,7 +50,7 @@ python seed_data.py
 python server.py
 
 # Full stack (PostgreSQL, Kratos)
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Environment Variables for Development
@@ -74,7 +74,7 @@ ANTHROPIC_API_KEY=sk-ant-your-key
 ```
 openglaze/
 ├── server.py              # Flask app factory and routes
-├── auth.py                # Authentication wrappers
+├── auth.py                # Authentication wrappers (see core/auth/)
 ├── seed_data.py           # Database seeder
 ├── core/
 │   ├── schema.sql         # Database schema (single source of truth)
@@ -102,7 +102,7 @@ openglaze/
 ├── tests/                 # Test suite
 │   ├── conftest.py        # Shared fixtures
 │   ├── test_chemistry.py
-│   ├── test_ai.py
+│   ├── test_kama_context.py
 │   ├── test_routes.py
 │   └── ...
 ├── docs/                  # Documentation
@@ -132,7 +132,7 @@ open htmlcov/index.html  # View coverage report
 
 ```bash
 pytest tests/test_chemistry.py -v -k "umf"
-pytest tests/test_ai.py -v
+pytest tests/test_kama_context.py -v
 pytest tests/test_routes.py -v
 ```
 

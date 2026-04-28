@@ -103,9 +103,10 @@ CaO: 0.55
 
 Import from common formats:
 
-- **Glazy CSV** — Export from glazy.com
-- **Digitalfire INSIGHT** — .dfd files
+- **JSON/CSV** — Export from OpenGlaze dashboard
 - **YAML** — OpenGlaze native format
+- **Glazy CSV** — Planned (roadmap)
+- **Digitalfire INSIGHT** — Planned (roadmap)
 
 ## The Chemistry Engine
 
@@ -497,7 +498,7 @@ Unlock badges for achievements:
 | Glaze not showing in list | Check filter settings, verify permissions |
 | UMF calculation seems wrong | Verify recipe format and material names |
 | Kama not responding | Check AI provider settings in config |
-| Photos not uploading | Check file size (max 10MB) and format |
+| Photos not uploading | Check file size (max 5MB) and format (JPG/PNG/WebP) |
 | Can't invite studio member | Verify they have an OpenGlaze account |
 | Database errors on startup | Delete `glaze.db` and re-run `seed_data.py` |
 

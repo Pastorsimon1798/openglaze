@@ -129,7 +129,7 @@ def create_app(config: dict = None) -> Flask:
     app.config["FEATURES"] = features
 
     # CORS configuration
-    configured_port = os.environ.get("FLASK_PORT", "8768")
+    configured_port = os.environ.get("FLASK_PORT", "8767")
     cors_origins = [
         f"http://localhost:{configured_port}",
         f"http://127.0.0.1:{configured_port}",
@@ -212,7 +212,7 @@ def create_app(config: dict = None) -> Flask:
             {
                 "status": "healthy",
                 "mode": mode.name if hasattr(mode, "name") else "unknown",
-                "version": "1.0.0",
+                "version": "1.1.0",
             }
         )
 
