@@ -334,7 +334,10 @@ def create_app(config: dict = None) -> Flask:
                 markdown_file = Path("docs") / f"{Path(path).stem}.md"
                 if markdown_file.is_file():
                     return render_markdown_doc(markdown_file)
-        return send_from_directory("frontend", path)
+        response = send_from_directory("frontend", path)
+        if path == "sw.js":
+            response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        return response
 
     # ==========================================
     # MODE INFO ROUTE
