@@ -71,7 +71,12 @@ self.addEventListener('fetch', event => {
         return;
     }
 
-    // Cache-first for static assets
+    // Cache-first for same-origin static assets
+    // Let cross-origin (CDN) requests pass through without SW interception
+    if (url.origin !== self.location.origin) {
+        return;
+    }
+
     event.respondWith(
         caches.match(event.request)
             .then(cached => cached || fetch(event.request))
