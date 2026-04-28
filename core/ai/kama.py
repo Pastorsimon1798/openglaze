@@ -215,9 +215,7 @@ ANALYZE and PREDICT — don't just approve or deny. Warn about risks with qualif
         if provider == "lmstudio":
             self.endpoint = endpoint or os.environ.get(
                 "LM_STUDIO_URL",
-                os.environ.get(
-                    "LMSTUDIO_BASE_URL", "http://127.0.0.1:1234/v1"
-                ),
+                os.environ.get("LMSTUDIO_BASE_URL", "http://127.0.0.1:1234/v1"),
             )
             self.model = model or os.environ.get(
                 "LM_STUDIO_MODEL",
@@ -234,7 +232,9 @@ ANALYZE and PREDICT — don't just approve or deny. Warn about risks with qualif
             self.endpoint = endpoint or os.environ.get(
                 "ANTHROPIC_API", "https://api.anthropic.com/v1/messages"
             )
-            self.model = model or os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-20250514")
+            self.model = model or os.environ.get(
+                "ANTHROPIC_MODEL", "claude-sonnet-4-20250514"
+            )
             self.api_key = os.environ.get("ANTHROPIC_API_KEY")
             if not self.api_key:
                 logger.warning("ANTHROPIC_API_KEY not set - cloud AI will not work")
@@ -443,7 +443,7 @@ ANALYZE and PREDICT — don't just approve or deny. Warn about risks with qualif
                 return response.json()
             except (Timeout, ConnectionError):
                 if attempt < self.max_retries - 1:
-                    time.sleep(2 ** attempt)
+                    time.sleep(2**attempt)
                     continue
                 raise
 
@@ -501,8 +501,11 @@ ANALYZE and PREDICT — don't just approve or deny. Warn about risks with qualif
 
         try:
             response = requests.post(
-                url, json=payload, headers=headers,
-                stream=True, timeout=self.timeout,
+                url,
+                json=payload,
+                headers=headers,
+                stream=True,
+                timeout=self.timeout,
             )
             if response.status_code != 200:
                 raise AIServiceError(
