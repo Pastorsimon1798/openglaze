@@ -224,7 +224,7 @@ When predicting, always:
         self,
         endpoint: str = None,
         model: str = None,
-        provider: str = "ollama",
+        provider: str = "lmstudio",
         timeout: int = 90,
         max_retries: int = 3,
     ):
@@ -234,27 +234,47 @@ When predicting, always:
         Args:
             endpoint: API endpoint URL
             model: Model name to use
-            provider: AI provider ('ollama' or 'anthropic')
+            provider: AI provider ('lmstudio', 'ollama', or 'anthropic')
             timeout: Request timeout in seconds
             max_retries: Maximum retry attempts
         """
         self.provider = provider
-        self.endpoint = endpoint or os.environ.get(
-            "OLLAMA_API", "http://localhost:11434/api/chat"
-        )
-        self.model = model or os.environ.get("OLLAMA_MODEL", "kimi-k2.5:cloud")
         self.timeout = timeout
         self.max_retries = max_retries
         self.conversation_store = _conversation_store
 
-        # Load system prompt from config file, fallback to class default
-        self.SYSTEM_PROMPT = self._load_system_prompt()
-
-        # API key for cloud mode
-        if provider == "anthropic":
+        # Resolve endpoint by provider
+        if provider == "lmstudio":
+            self.endpoint = endpoint or os.environ.get(
+                "LM_STUDIO_URL",
+                os.environ.get(
+                    "LMSTUDIO_BASE_URL", "http://127.0.0.1:1234/v1"
+                ),
+            )
+            self.model = model or os.environ.get(
+                "LM_STUDIO_MODEL",
+                os.environ.get("LMSTUDIO_MODEL", ""),
+            )
+            self.api_key = os.environ.get("LM_STUDIO_API_KEY", "")
+        elif provider == "ollama":
+            self.endpoint = endpoint or os.environ.get(
+                "OLLAMA_API", "http://localhost:11434/api/chat"
+            )
+            self.model = model or os.environ.get("OLLAMA_MODEL", "kimi-k2.5:cloud")
+            self.api_key = ""
+        elif provider == "anthropic":
+            self.endpoint = endpoint or os.environ.get(
+                "ANTHROPIC_API", "https://api.anthropic.com/v1/messages"
+            )
+            self.model = model or os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-20250514")
             self.api_key = os.environ.get("ANTHROPIC_API_KEY")
             if not self.api_key:
                 logger.warning("ANTHROPIC_API_KEY not set - cloud AI will not work")
+        else:
+            raise ValueError(f"Unknown provider: {provider}")
+
+        # Load system prompt from config file, fallback to class default
+        self.SYSTEM_PROMPT = self._load_system_prompt()
 
     def _load_system_prompt(self) -> str:
         """Load system prompt from config file, fallback to default."""
@@ -417,12 +437,47 @@ When predicting, always:
 
     def _make_request(self, messages: List[Dict], stream: bool = False) -> Dict:
         """Make request to AI provider."""
-        if self.provider == "ollama":
+        if self.provider == "lmstudio":
+            return self._lmstudio_request(messages, stream)
+        elif self.provider == "ollama":
             return self._ollama_request(messages, stream)
         elif self.provider == "anthropic":
             return self._anthropic_request(messages, stream)
         else:
             raise ValueError(f"Unknown provider: {self.provider}")
+
+    def _lmstudio_request(self, messages: List[Dict], stream: bool) -> Dict:
+        """Make request to LM Studio (OpenAI-compatible)."""
+        base = self.endpoint.rstrip("/")
+        url = f"{base}/chat/completions"
+        headers = {"Content-Type": "application/json"}
+        if self.api_key:
+            headers["Authorization"] = f"Bearer {self.api_key}"
+
+        payload = {
+            "model": self.model,
+            "messages": messages,
+            "stream": False,
+            "max_tokens": 4096,
+        }
+
+        for attempt in range(self.max_retries):
+            try:
+                response = requests.post(
+                    url, json=payload, headers=headers, timeout=self.timeout
+                )
+                if response.status_code == 429:
+                    raise RateLimitError("Rate limited by LM Studio")
+                if response.status_code != 200:
+                    raise AIServiceError(
+                        f"LM Studio error: {response.status_code} {response.text[:200]}"
+                    )
+                return response.json()
+            except (Timeout, ConnectionError):
+                if attempt < self.max_retries - 1:
+                    time.sleep(2 ** attempt)
+                    continue
+                raise
 
     def _ollama_request(self, messages: List[Dict], stream: bool) -> Dict:
         """Make request to Ollama."""
@@ -454,10 +509,57 @@ When predicting, always:
 
     def _stream_request(self, messages: List[Dict]) -> Generator[str, None, None]:
         """Stream request to AI provider."""
-        if self.provider == "ollama":
+        if self.provider == "lmstudio":
+            yield from self._lmstudio_stream(messages)
+        elif self.provider == "ollama":
             yield from self._ollama_stream(messages)
         elif self.provider == "anthropic":
             yield from self._anthropic_stream(messages)
+
+    def _lmstudio_stream(self, messages: List[Dict]) -> Generator[str, None, None]:
+        """Stream from LM Studio (OpenAI-compatible SSE)."""
+        base = self.endpoint.rstrip("/")
+        url = f"{base}/chat/completions"
+        headers = {"Content-Type": "application/json"}
+        if self.api_key:
+            headers["Authorization"] = f"Bearer {self.api_key}"
+
+        payload = {
+            "model": self.model,
+            "messages": messages,
+            "stream": True,
+            "max_tokens": 4096,
+        }
+
+        try:
+            response = requests.post(
+                url, json=payload, headers=headers,
+                stream=True, timeout=self.timeout,
+            )
+            if response.status_code != 200:
+                raise AIServiceError(
+                    f"LM Studio stream error: {response.status_code} {response.text[:200]}"
+                )
+            for line in response.iter_lines():
+                if not line:
+                    continue
+                text = line.decode("utf-8", errors="replace")
+                if not text.startswith("data: "):
+                    continue
+                data = text[6:]
+                if data.strip() == "[DONE]":
+                    break
+                try:
+                    chunk = json.loads(data)
+                    delta = chunk.get("choices", [{}])[0].get("delta", {})
+                    content = delta.get("content", "")
+                    if content:
+                        yield content
+                except json.JSONDecodeError:
+                    pass
+        except (Timeout, ConnectionError) as e:
+            logger.error(f"LM Studio stream error: {e}")
+            raise AIServiceError(f"LM Studio stream error: {e}")
 
     def _ollama_stream(self, messages: List[Dict]) -> Generator[str, None, None]:
         """Stream from Ollama."""
@@ -555,7 +657,7 @@ def get_kama() -> KamaAI:
     """Get or create default Kama instance."""
     global _default_kama
     if _default_kama is None:
-        provider = os.environ.get("AI_PROVIDER", "ollama")
+        provider = os.environ.get("AI_PROVIDER", "lmstudio")
         _default_kama = KamaAI(provider=provider)
     return _default_kama
 

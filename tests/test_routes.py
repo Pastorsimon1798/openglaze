@@ -34,9 +34,9 @@ class TestAskStreamRoute:
             "os.environ",
             {
                 "DATABASE_PATH": test_db_path,
-                "AI_PROVIDER": "ollama",
-                "OLLAMA_API": "http://localhost:11434/api/chat",
-                "OLLAMA_MODEL": "test-model",
+                "AI_PROVIDER": "lmstudio",
+                "LM_STUDIO_URL": "http://127.0.0.1:1234/v1",
+                "LM_STUDIO_MODEL": "test-model",
             },
         ):
             from server import create_app
@@ -97,9 +97,9 @@ class TestOptimizeRoute:
             "os.environ",
             {
                 "DATABASE_PATH": test_db_path,
-                "AI_PROVIDER": "ollama",
-                "OLLAMA_API": "http://localhost:11434/api/chat",
-                "OLLAMA_MODEL": "test-model",
+                "AI_PROVIDER": "lmstudio",
+                "LM_STUDIO_URL": "http://127.0.0.1:1234/v1",
+                "LM_STUDIO_MODEL": "test-model",
             },
         ):
             from server import create_app

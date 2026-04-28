@@ -1118,7 +1118,7 @@ def create_app(config: dict = None) -> Flask:
                         "ai_available": False,
                         "error": "AI backend unavailable",
                         "message": "The AI assistant is currently offline. Please ensure Ollama is running or configure a cloud AI provider (ANTHROPIC_API_KEY).",
-                        "help": "For Ollama: run 'ollama serve' or check your OLLAMA_API endpoint. For cloud: set ANTHROPIC_API_KEY environment variable.",
+                        "help": "For LM Studio: open LM Studio and start a local server on port 1234. For Ollama: run 'ollama serve'. For cloud: set ANTHROPIC_API_KEY.",
                     }
                 ),
                 503,
