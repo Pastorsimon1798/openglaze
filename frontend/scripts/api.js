@@ -1,6 +1,5 @@
 /**
  * OpenGlaze API Client
- * Tries fetch('/api/...') first, falls back to window.DATA
  */
 
 const API = {
@@ -38,8 +37,7 @@ const API = {
 
     async getGlazes() {
         const result = await this._fetch('/glazes');
-        if (result) return result;
-        return window.DATA ? window.DATA.glazes : [];
+        return result || [];
     },
 
     async getCombinations() {
@@ -50,17 +48,6 @@ const API = {
                 stage: c.stage || 'idea',
                 prediction_grade: c.prediction_grade || 'unknown',
             }));
-        }
-        if (window.DATA) {
-            const rb = (window.DATA.research_backed || []).map(c => ({
-                ...c, stage: 'documented', type: c.type || 'research-backed',
-                prediction_grade: c.prediction_grade || 'unknown',
-            }));
-            const up = (window.DATA.user_predictions || []).map(c => ({
-                ...c, stage: 'idea', type: c.type || 'user-prediction',
-                prediction_grade: c.prediction_grade || 'unknown',
-            }));
-            return [...rb, ...up];
         }
         return [];
     },

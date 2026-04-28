@@ -169,55 +169,23 @@ class KamaAI:
     """
 
     # Default fallback prompt (used if config file doesn't exist)
-    _DEFAULT_SYSTEM_PROMPT = """You are **Kama** — the kiln god. You are a glaze consultant.
+    # Ceramics knowledge comes from the database via ContextRetriever (RAG),
+    # NOT from this prompt. Keep this minimal — personality and formatting only.
+    _DEFAULT_SYSTEM_PROMPT = """You are Kama — the kiln god, a glaze consultant who has watched potters fire for centuries.
 
-FORMATTING: Always use markdown formatting in your responses:
-- Use **bold** for glaze names and key terms
-- Use bullet points (-) for lists of properties, risks, or steps
-- Use numbered lists (1. 2. 3.) for sequential instructions
-- Use ## headings for major sections
-- Use blank lines between paragraphs (double newline)
-- Keep responses concise — max 3-4 short paragraphs unless asked for detail
+FORMATTING: Always use markdown formatting:
+- **bold** for glaze names and key terms
+- Bullet points (-) for lists
+- Numbered lists (1. 2. 3.) for steps
+- ## headings for sections
+- Blank lines between paragraphs
+- Concise — 2-4 paragraphs unless asked for detail
 
-When asked about combinations, ANALYZE and PREDICT, don't just approve or deny.
+"A OVER B" means A is the TOP layer (applied LAST), B is the BASE (applied FIRST).
 
-CRITICAL KNOWLEDGE:
+Use the reference data provided with each question to ground your answers in specific glaze chemistry, combinations, and rules from the database. If the context doesn't contain enough information, say so.
 
-**Understanding "OVER":**
-"A OVER B" means A is the TOP layer (applied LAST), B is the BASE layer (applied FIRST).
-- Example: "Celadon OVER Tenmoku" = Celadon on top, Tenmoku below
-
-**Shino Rules:**
-- Shino over Shino = generally compatible (similar thermal expansion and chemistry)
-- Shino over other glazes = HIGH crawl risk (Shinos have high clay content and shrink significantly during firing; different thermal expansion causes pull-away)
-- Other glazes over Shino = usually works (Shino as base is more stable)
-
-**Color Prediction (guidelines — many factors affect final color):**
-- Iron 1-4% + oxidation = amber/tan/brown (depends on percentage and base glaze)
-- Iron 1-4% + reduction = celadon green to tenmoku black (depends on iron % and atmosphere intensity)
-- Copper 0.5-2% + oxidation = turquoise/green
-- Copper 1-3% + heavy reduction = MAY develop red (requires specific conditions: high alkali base, proper reduction timing, controlled cooling — not guaranteed)
-
-**Layering Principles:**
-1. Thermal expansion (COE) compatibility is critical — mismatched COE causes crazing or shivering
-2. Similar chemistry = generally compatible (but not guaranteed)
-3. High iron over high iron = very dark results (avoid if you want color separation)
-4. Copper glazes are atmosphere-sensitive — oxidation vs reduction dramatically changes color
-5. Clear glazes add depth but can mute underlying colors
-6. White opaque glazes can cover dark bases (thicker application = more coverage)
-
-**Common Issues:**
-- Crawling: Glaze pulls away from surface (high risk with Shino over non-Shino, or glazes applied too thick)
-- Running: Glaze becomes too fluid and runs off piece (too much flux, overfiring, or applied too thick)
-- Pinholing: Small holes in glaze surface (underfired, or gas trapped during melt)
-- Crazing: Network of fine cracks (thermal expansion mismatch between glaze and clay body)
-- Shivering: Glaze flakes off (glaze COE too low for clay body)
-
-When predicting, always:
-1. Identify the chemistry of each glaze
-2. Predict color/surface interaction
-3. Warn about known risks — use qualified language ("may", "tends to", "high risk"), not absolutes
-4. Suggest alternatives if high risk
+ANALYZE and PREDICT — don't just approve or deny. Warn about risks with qualified language ("may", "tends to", "high risk"), not absolutes. Suggest alternatives. Happy accidents are real.
 """
 
     def __init__(
@@ -619,28 +587,63 @@ When predicting, always:
         return response.json()
 
     def _anthropic_stream(self, messages: List[Dict]) -> Generator[str, None, None]:
-        """Stream from Anthropic API."""
-        # Implementation for Anthropic streaming
-        raise NotImplementedError("Anthropic streaming not yet implemented")
+        """Stream from Anthropic API using SSE."""
+        if not self.api_key:
+            raise AIServiceError("ANTHROPIC_API_KEY not configured")
 
-    def analyze_combination(self, top: str, base: str) -> str:
-        """Analyze a specific glaze combination."""
-        question = f"Analyze the combination: {top} OVER {base}. What result can I expect? What are the risks?"
+        system = messages[0]["content"]
+        anthropic_messages = messages[1:]
 
-        # Add Shino warning if applicable
-        if "shino" in top.lower() and "shino" not in base.lower():
-            return (
-                f"⚠️ WARNING: Shino over non-Shino glazes often CRAWLS. {top} applied over {base} may pull away from the surface.\n\n"
-                + self.ask(question)
+        headers = {
+            "x-api-key": self.api_key,
+            "anthropic-version": "2023-06-01",
+            "Content-Type": "application/json",
+        }
+
+        payload = {
+            "model": self.model,
+            "max_tokens": 4096,
+            "system": system,
+            "messages": anthropic_messages,
+            "stream": True,
+        }
+
+        try:
+            response = requests.post(
+                "https://api.anthropic.com/v1/messages",
+                headers=headers,
+                json=payload,
+                timeout=self.timeout,
+                stream=True,
             )
 
-        return self.ask(question)
+            if response.status_code != 200:
+                raise AIServiceError(f"Anthropic stream error: {response.status_code}")
 
-    def suggest_combinations(self, glaze: str, as_top: bool = True) -> str:
-        """Suggest combinations for a glaze."""
-        position = "top layer" if as_top else "base layer"
-        question = f"Suggest good glaze combinations where {glaze} is the {position}. What glazes would pair well?"
-        return self.ask(question)
+            for line in response.iter_lines():
+                if not line:
+                    continue
+                line = line.decode("utf-8") if isinstance(line, bytes) else line
+                if not line.startswith("data: "):
+                    continue
+                data_str = line[6:]
+                if data_str.strip() == "[DONE]":
+                    break
+                try:
+                    data = json.loads(data_str)
+                    if data.get("type") == "content_block_delta":
+                        delta = data.get("delta", {})
+                        text = delta.get("text", "")
+                        if text:
+                            yield text
+                except json.JSONDecodeError:
+                    pass
+
+        except AIServiceError:
+            raise
+        except Exception as e:
+            logger.error(f"Anthropic stream error: {e}")
+            raise AIServiceError(f"Anthropic stream error: {e}")
 
     def clear_conversation(
         self, session_id: Optional[str] = None, user_id: Optional[str] = None

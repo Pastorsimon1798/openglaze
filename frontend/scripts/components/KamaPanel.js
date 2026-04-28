@@ -403,7 +403,7 @@ class KamaPanel {
             return;
         }
 
-        const glazes = window.DATA ? window.DATA.glazes : [];
+        const glazes = window._glazesCache || [];
         this.suggestionMatches = glazes.filter(g =>
             g.name.toLowerCase().includes(query) ||
             (g.code && g.code.toLowerCase().includes(query))

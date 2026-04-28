@@ -2,17 +2,6 @@
 -- Works for both personal (SQLite) and cloud (PostgreSQL) modes
 -- user_id is NULLABLE: NULL in personal mode, populated in cloud mode
 
--- Users table (synced with Kratos, used in cloud/demo mode)
-CREATE TABLE IF NOT EXISTS users (
-    id TEXT PRIMARY KEY,  -- Kratos identity ID
-    email TEXT UNIQUE NOT NULL,
-    studio_name TEXT,
-    tier TEXT DEFAULT 'free' CHECK(tier IN ('free', 'pro', 'studio', 'education')),
-    template_id TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 -- Glazes: All studio glazes
 CREATE TABLE IF NOT EXISTS glazes (
     id TEXT PRIMARY KEY,
@@ -39,16 +28,6 @@ CREATE TABLE IF NOT EXISTS glazes (
     user_id TEXT,                -- NULL in personal mode, tenant ID in cloud
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Ingredients table (for recipe building)
-CREATE TABLE IF NOT EXISTS ingredients (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT UNIQUE NOT NULL,
-    category TEXT CHECK(category IN ('flux', 'stabilizer', 'glassformer', 'colorant', 'opacifier', 'additive')),
-    chemical_formula TEXT,
-    notes TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Combinations: Research-backed, user-predicted, confirmed, and surprise layering combos
@@ -136,26 +115,6 @@ CREATE TABLE IF NOT EXISTS archive (
     notes TEXT,
     photo TEXT,
     type TEXT NOT NULL CHECK(type IN ('successful', 'failed')),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Progress: Pipeline state tracking
-CREATE TABLE IF NOT EXISTS progress (
-    id INTEGER PRIMARY KEY CHECK(id = 1),
-    user_id TEXT,
-    stage TEXT DEFAULT 'ideation',
-    status TEXT DEFAULT 'ready',
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Templates: Shared glaze collections (cloud feature)
-CREATE TABLE IF NOT EXISTS templates (
-    id TEXT PRIMARY KEY,
-    name TEXT NOT NULL,
-    description TEXT,
-    glazes_yaml TEXT,
-    is_public BOOLEAN DEFAULT FALSE,
-    created_by TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -252,32 +211,6 @@ CREATE TABLE IF NOT EXISTS predictions (
 );
 
 -- ==========================================================================
--- FIRINGS (kiln logs)
--- ==========================================================================
-
-CREATE TABLE IF NOT EXISTS firings (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id TEXT NOT NULL,
-    name TEXT NOT NULL,
-    kiln_name TEXT,
-    cone_target TEXT,
-    atmosphere TEXT,
-    start_time TIMESTAMP,
-    end_time TIMESTAMP,
-    notes TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS firing_glazes (
-    firing_id INTEGER NOT NULL,
-    glaze_id INTEGER NOT NULL,
-    position TEXT,
-    notes TEXT,
-    result_image_url TEXT,
-    PRIMARY KEY (firing_id, glaze_id)
-);
-
--- ==========================================================================
 -- INDEXES
 -- ==========================================================================
 
@@ -301,27 +234,4 @@ CREATE INDEX IF NOT EXISTS idx_predictions_resolved ON predictions(resolved);
 CREATE INDEX IF NOT EXISTS idx_badges_user_id ON badges(user_id);
 CREATE INDEX IF NOT EXISTS idx_activity_log_user_id ON activity_log(user_id);
 CREATE INDEX IF NOT EXISTS idx_activity_log_date ON activity_log(user_id, created_at);
-CREATE INDEX IF NOT EXISTS idx_firings_user_id ON firings(user_id);
-
--- Insert initial progress record (for personal mode)
-INSERT OR IGNORE INTO progress (id, stage, status, user_id) VALUES (1, 'ideation', 'ready', NULL);
-
--- Insert default ingredients
-INSERT OR IGNORE INTO ingredients (name, category) VALUES
-    ('Feldspar', 'flux'),
-    ('Whiting', 'flux'),
-    ('Dolomite', 'flux'),
-    ('Talc', 'flux'),
-    ('Zinc Oxide', 'flux'),
-    ('Silica', 'glassformer'),
-    ('Frit 3124', 'glassformer'),
-    ('Frit 3134', 'glassformer'),
-    ('Kaolin', 'stabilizer'),
-    ('Ball Clay', 'stabilizer'),
-    ('Bentonite', 'additive'),
-    ('Cobalt Carbonate', 'colorant'),
-    ('Copper Carbonate', 'colorant'),
-    ('Iron Oxide', 'colorant'),
-    ('Rutile', 'colorant'),
-    ('Tin Oxide', 'opacifier'),
-    ('Zircopax', 'opacifier');
+CREATE INDEX IF NOT EXISTS idx_activity_log_date ON activity_log(user_id, created_at);

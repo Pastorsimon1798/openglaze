@@ -34,7 +34,6 @@ function safeHTML(str) {
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('OpenGlaze initializing...')
-    console.log('window.DATA exists:', !!window.DATA)
 
     // Mobile sidebar toggle
     initMobileSidebar()
@@ -80,18 +79,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('GlazeTips error:', e)
     }
 
-    // Load data from API or fallback to DATA module
-    state.glazes = window.DATA ? window.DATA.glazes : []
+    // Load data from API
+    state.glazes = await API.getGlazes() || []
+    window._glazesCache = state.glazes
     console.log('Loaded glazes:', state.glazes.length)
 
-    // Load combinations with new type system
-    if (window.DATA) {
-        const researchBacked = (window.DATA.research_backed || []).map(c => ({...c, stage: 'documented', type: 'research-backed', prediction_grade: c.prediction_grade || 'unknown'}))
-        const userPredictions = (window.DATA.user_predictions || []).map(c => ({...c, stage: 'idea', type: 'user-prediction', prediction_grade: c.prediction_grade || 'unknown'}))
-        state.combinations = [...researchBacked, ...userPredictions]
-        console.log('Loaded combinations:', state.combinations.length)
-        console.log('Research-backed:', researchBacked.length, 'User predictions:', userPredictions.length)
-    }
+    // Load combinations with type system
+    const combos = await API.getCombinations() || []
+    state.combinations = combos
+    console.log('Loaded combinations:', state.combinations.length)
 
     console.log('Current stage:', state.currentStage)
     console.log('Combinations with stage "idea":', state.combinations.filter(c => c.stage === 'idea').length)

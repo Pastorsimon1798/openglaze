@@ -177,20 +177,6 @@ def get_user_id() -> Optional[str]:
     return user.get("user_id") if user else None
 
 
-def optional_auth(f: Callable) -> Callable:
-    """
-    Decorator that allows but doesn't require authentication.
-    Sets g.current_user if authenticated, None otherwise.
-    """
-
-    @functools.wraps(f)
-    def decorated_function(*args, **kwargs):
-        # Auth middleware already sets g.current_user
-        return f(*args, **kwargs)
-
-    return decorated_function
-
-
 def get_user_id_or_simple() -> Optional[str]:
     """
     Get user_id from Ory Kratos session or simple auth token.
@@ -208,8 +194,8 @@ def get_user_id_or_simple() -> Optional[str]:
                 session = validate_session(token)
                 if session:
                     return session["user_id"]
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(f"Simple auth lookup failed: {e}")
 
     # Fall back to Ory Kratos
     return get_user_id()
@@ -228,6 +214,6 @@ def get_simple_user() -> Optional[dict]:
                 from .simple_auth import validate_session
 
                 return validate_session(token)
-            except Exception:
-                pass
+            except Exception as e:
+                logger.debug(f"Simple auth token validation failed: {e}")
     return None

@@ -2,7 +2,6 @@
 
 import sqlite3
 import logging
-from contextlib import contextmanager
 
 logger = logging.getLogger(__name__)
 
@@ -29,13 +28,3 @@ def connect_db(db_path: str) -> sqlite3.Connection:
     conn.row_factory = sqlite3.Row
     conn.executescript(_CONNECTION_PRAGMAS)
     return conn
-
-
-@contextmanager
-def get_connection(db_path: str):
-    """Context manager that yields a connection and ensures cleanup."""
-    conn = connect_db(db_path)
-    try:
-        yield conn
-    finally:
-        conn.close()

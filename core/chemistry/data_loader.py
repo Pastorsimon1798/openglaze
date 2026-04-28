@@ -78,13 +78,18 @@ def load_material_data() -> Optional[Dict[str, Dict]]:
 
 
 def load_chemistry_rules() -> Optional[List[Dict]]:
-    """Load chemistry rules from chemistry-rules.json.
+    """Load chemistry rules from seed-chemistry-rules.json (canonical) or chemistry-rules.json (fallback).
 
     Returns list of rule dicts or None if unavailable.
     """
     data_dir = _find_data_dir()
     if data_dir is None:
         return None
+    # Prefer the complete seed file
+    data = _load_json(data_dir / "seed-chemistry-rules.json")
+    if data and "rules" in data:
+        return data["rules"]
+    # Fallback to the smaller curated file
     data = _load_json(data_dir / "chemistry-rules.json")
     if data and "rules" in data:
         return data["rules"]
