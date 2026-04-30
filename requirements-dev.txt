@@ -1,5 +1,5 @@
 -r requirements.txt
-debugpy>=1.8.0
+debugpy>=1.8.20
 pytest>=7.0.0
 watchfiles>=0.21.0
 black>=24.0.0
