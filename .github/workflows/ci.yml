@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64]
     strategy:
       matrix:
         python-version: ['3.12', '3.13', '3.14']
@@ -52,7 +52,7 @@ jobs:
           fail_ci_if_error: false
 
   docker:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64]
     needs: test
     if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
 
@@ -80,7 +80,7 @@ jobs:
           exit 1
 
   security:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64]
 
     steps:
       - name: Checkout code
