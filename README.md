@@ -9,11 +9,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Pastorsimon1798/openglaze/actions/workflows/ci.yml">
-    <img src="https://github.com/Pastorsimon1798/openglaze/actions/workflows/ci.yml/badge.svg" alt="CI">
+  <a href="https://github.com/KyaniteLabs/openglaze/actions/workflows/ci.yml">
+    <img src="https://github.com/KyaniteLabs/openglaze/actions/workflows/ci.yml/badge.svg" alt="CI">
   </a>
-  <a href="https://github.com/Pastorsimon1798/openglaze/releases">
-    <img src="https://img.shields.io/github/v/release/Pastorsimon1798/openglaze?include_prereleases" alt="Latest Release">
+  <a href="https://github.com/KyaniteLabs/openglaze/releases">
+    <img src="https://img.shields.io/github/v/release/KyaniteLabs/openglaze?include_prereleases" alt="Latest Release">
   </a>
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT">
@@ -24,8 +24,8 @@
   <a href="https://www.docker.com/">
     <img src="https://img.shields.io/badge/Docker-Ready-blue" alt="Docker Ready">
   </a>
-  <a href="https://github.com/Pastorsimon1798/openglaze/stargazers">
-    <img src="https://img.shields.io/github/stars/Pastorsimon1798/openglaze" alt="GitHub Stars">
+  <a href="https://github.com/KyaniteLabs/openglaze/stargazers">
+    <img src="https://img.shields.io/github/stars/KyaniteLabs/openglaze" alt="GitHub Stars">
   </a>
 </p>
 
@@ -59,6 +59,15 @@
 > Screenshots needed — see [docs/screenshots/README.md](docs/screenshots/README.md) for capture instructions.
 
 ---
+
+
+## Public Discovery
+
+**OpenGlaze** is open-source glaze chemistry software for potters, ceramic artists, studios, educators, and production ceramicists. It combines a ceramic glaze calculator, UMF analysis, CTE estimation, recipe management, self-hosting, and optional AI glaze consulting.
+
+**AI discovery:** [`llms.txt`](llms.txt) provides a compact project summary for AI assistants and search crawlers.
+
+**Best-fit searches:** ceramic glaze calculator, UMF calculator, glaze chemistry software, open source pottery app, self-hosted glaze recipe manager, CTE glaze calculator, Glazy alternative, ceramic recipe optimizer.
 
 ## Overview
 
@@ -114,7 +123,7 @@ The default Docker path is a single-user, self-hosted SQLite install with persis
 
 ```bash
 # Clone the repository
-git clone https://github.com/Pastorsimon1798/openglaze.git
+git clone https://github.com/KyaniteLabs/openglaze.git
 cd openglaze
 
 # Copy environment file and set a real SECRET_KEY before public use
@@ -405,8 +414,8 @@ See [SECURITY.md](SECURITY.md) for our security policy and vulnerability reporti
 
 Questions, bug reports, and feature requests:
 
-- [GitHub Discussions](https://github.com/Pastorsimon1798/openglaze/discussions) — Community help
-- [GitHub Issues](https://github.com/Pastorsimon1798/openglaze/issues) — Bug reports and feature requests
+- [GitHub Discussions](https://github.com/KyaniteLabs/openglaze/discussions) — Community help
+- [GitHub Issues](https://github.com/KyaniteLabs/openglaze/issues) — Bug reports and feature requests
 
 ## License
 
@@ -428,7 +437,7 @@ Questions, bug reports, and feature requests:
 </p>
 
 <p align="center">
-  <a href="https://github.com/Pastorsimon1798/openglaze">GitHub</a> •
-  <a href="https://github.com/Pastorsimon1798/openglaze/discussions">Discussions</a> •
+  <a href="https://github.com/KyaniteLabs/openglaze">GitHub</a> •
+  <a href="https://github.com/KyaniteLabs/openglaze/discussions">Discussions</a> •
   <a href="https://openglaze.kyanitelabs.tech">Website</a>
 </p>
