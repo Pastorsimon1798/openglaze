@@ -5,5 +5,5 @@ watchfiles>=0.21.0
 black>=24.0.0
 ruff>=0.1.0
 pytest-cov>=4.0.0
-bandit>=1.7.0
+bandit>=1.9.4
 safety>=2.0.0
