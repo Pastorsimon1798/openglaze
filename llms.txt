@@ -1,0 +1,22 @@
+# OpenGlaze
+
+> Open-source ceramic glaze calculator, UMF analyzer, CTE estimator, and recipe manager.
+
+OpenGlaze helps potters, ceramic artists, studios, and educators calculate glaze chemistry, manage recipes, estimate thermal expansion, and self-host their studio glaze database.
+
+## Use cases
+- Ceramic glaze calculation
+- Unity Molecular Formula analysis
+- CTE/crazing/shivering risk estimation
+- Self-hosted glaze recipe management
+- Pottery studio material tracking
+- Glazy companion / alternative workflows
+
+## Key paths
+- `README.md`: public overview and quick start
+- `docs/`: documentation and screenshots
+- `templates/`: UI templates
+- `server.py`: local application entry point
+
+## Keywords
+ceramic glaze calculator, UMF calculator, glaze chemistry software, pottery recipe manager, CTE glaze calculator, self-hosted ceramics software, Glazy alternative, open-source pottery app.
