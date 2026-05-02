@@ -6,4 +6,4 @@ black>=24.0.0
 ruff>=0.15.12
 pytest-cov>=4.0.0
 bandit>=1.9.4
-safety>=2.0.0
+safety>=3.7.0
